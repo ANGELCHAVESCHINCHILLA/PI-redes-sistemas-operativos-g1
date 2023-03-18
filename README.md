@@ -15,4 +15,5 @@ ignacio.robles@ucr.ac.cr
 - Camilo Suárez Sandí C17811
 camilo.suarez@ucr.ac.cr
 
-- **DAVID**
+- David Cerdas Alvarado C02001
+david.cerdasalvarado@ucr.ac.cr
