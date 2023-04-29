@@ -1,15 +1,28 @@
-const form = document.getElementById("login");
+const login = document.getElementById("login");
 
-form.addEventListener('submit', function(event) {
-  event.preventDefault(); // Evita que se envíe el formulario de forma predeterminada
-  
-  const name = form.elements['username'].value;
-  const email = form.elements['password'].value;
-  
-  if (name && email) { // Verifica si los campos del formulario están completos
-    window.location.href = 'form_solicitar_vacaciones.html'; // Redirige a otra página
-  } else {
-    alert('Por favor complete todos los campos'); // Muestra una alerta si el formulario no está completo
-  }
-});
+if (login) {
+  login.addEventListener('submit', function (event) {
+    event.preventDefault(); // Avoid default shipment
+
+    const name = form.elements['username'].value;
+    const email = form.elements['password'].value;
+
+    if (name && email) { // Check if exists
+      window.location.href = 'pagina_principal.html'; // redirection
+      //window.location.href = 'form_solicitar_vacaciones.html'; // Redirige a otra página
+    } else {
+      alert('Por favor complete todos los campos'); // 
+    }
+  });
+}
+
+
+const realizarSolicitudBtn = document.getElementById('realizar-solicitud-btn'); // get by id
+if (realizarSolicitudBtn) {
+  realizarSolicitudBtn.addEventListener('click', function () {
+    window.location.href = 'form_solicitar_vacaciones.html'; // redirect
+  });
+}
+
+
 
