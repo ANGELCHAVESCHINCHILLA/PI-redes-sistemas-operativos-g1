@@ -4,8 +4,8 @@ if (login) {
   login.addEventListener('submit', function (event) {
     event.preventDefault(); // Avoid default shipment
 
-    const name = form.elements['username'].value;
-    const email = form.elements['password'].value;
+    const name = login.elements['username'].value;
+    const email = login.elements['password'].value;
 
     if (name && email) { // Check if exists
       window.location.href = 'pagina_principal.html'; // redirection
