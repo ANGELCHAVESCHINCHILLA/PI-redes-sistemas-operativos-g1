@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Iniciar sesión</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
@@ -12,14 +12,15 @@
   </head>
   <body>
     <div class="login-container">
-      <form>
+      <form id="login">
         <h2>Iniciar sesión</h2>
         <label for="username">Usuario</label>
         <input type="text" id="username" name="username" required>
         <label for="password">Contraseña</label>
         <input type="password" id="password" name="password" required>
-        <button type="submit"> <b>ENTRAR</button>
+        <button type="submit" id="entrar" onclick="redirectToFormVacaciones()">ENTRAR</button>
       </form>
     </div>
+    <script src="app.js"></script>
   </body>
 </html>
