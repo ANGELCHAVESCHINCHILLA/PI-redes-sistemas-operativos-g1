@@ -17,13 +17,6 @@ if (login) {
 }
 
 
-const realizarSolicitudBtn = document.getElementById('realizar-solicitud-btn'); // get by id
-if (realizarSolicitudBtn) {
-  realizarSolicitudBtn.addEventListener('click', function () {
-    window.location.href = 'form_solicitar_vacaciones.html'; // redirect
-  });
-}
-
 
 /**
  * TO DO: Make a file only for button functions
