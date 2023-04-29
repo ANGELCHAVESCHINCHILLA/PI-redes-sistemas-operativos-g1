@@ -1,4 +1,4 @@
-const login = document.getElementById("login");
+const login = document.getElementById("login"); // get by id
 
 if (login) {
   login.addEventListener('submit', function (event) {
@@ -24,5 +24,17 @@ if (realizarSolicitudBtn) {
   });
 }
 
+
+/**
+ * TO DO: Make a file only for button functions
+ */
+
+function regresar() {
+  window.history.back();
+}
+
+function cancelar() {
+  /** Nothing for now ;) */
+}
 
 

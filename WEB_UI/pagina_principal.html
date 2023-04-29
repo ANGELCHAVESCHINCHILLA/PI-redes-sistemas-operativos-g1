@@ -16,7 +16,7 @@
 
 <body id="principal_container">
 
-    <button id="regresar"></button>
+    <button id="regresar" onclick="regresar()"></button>
     <div class="principal_text_container"><h1>Bienvenido Usuario, usted es un empleado</h1>
         <h2>Por favor, seleccione la consulta o solicitud que desee realizar</h2></div>
     
@@ -24,11 +24,6 @@
         <button class="realizar-consulta" type="submit"> <b>REALIZAR CONSULTA</b></button>
         <button class="realizar-solicitud" type="submit" id="realizar-solicitud-btn"> <b>REALIZAR SOLICITUD</b></button>
     </div>
-    <script>
-        function regresar() {
-            window.history.back();
-        }
-    </script>
     <script src="app.js"></script>
 </body>
 
