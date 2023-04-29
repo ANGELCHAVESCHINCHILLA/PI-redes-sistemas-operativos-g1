@@ -6,3 +6,38 @@ doc
 *.o
 *.exe
 *.out.*
+# OS generated files #
+#######################
+.DS_Store
+Thumbs.db
+
+# Node.js generated files #
+###########################
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled files #
+##################
+build/
+dist/
+*.min.js
+*.min.css
+*.min.html
+
+# Logs and databases #
+#######################
+logs
+*.log
+*.sqlite
+
+# IDE files #
+#############
+.vscode/
+.idea/
+
+# Other generated files #
+#########################
+package-lock.json
+yarn.lock
