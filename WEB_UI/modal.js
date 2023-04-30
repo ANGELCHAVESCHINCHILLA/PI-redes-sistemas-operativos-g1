@@ -1,23 +1,41 @@
-const openModal_btn = document.getElementById('realizar-solicitud-btn'); // open modal button
-const closeModal_btn = document.getElementById('close-modal'); // close modal button
-const modal = document.getElementById('solicitudes_modal'); // modal per se
-
-/** Listeners */
+const openModalBtns = document.querySelectorAll('.open-modal-btn'); // open modal buttons
+const closeBtns = document.querySelectorAll('.close-modal-btn'); // close modal buttons
+const modals = document.querySelectorAll('.modal'); // modals per se
 
 // When click to open modal
-openModal_btn.addEventListener('click', function() {
-  modal.style.display = 'flex';
+openModalBtns.forEach(function(btn, index) {
+  btn.addEventListener('click', function() {
+    modals[index].style.display = 'flex';
+  });
 });
 
 // When click to close modal
-closeModal_btn.addEventListener('click', function() {
-  modal.style.display = 'none';
+closeBtns.forEach(function(btn, index) {
+  btn.addEventListener('click', function() {
+    modals[index].style.display = 'none';
+  });
 });
 
 // When click to open vacations form
-const realizarSolicitudBtn = document.getElementById('vacaciones-btn'); // get by id
-if (realizarSolicitudBtn) {
-  realizarSolicitudBtn.addEventListener('click', function () {
-    window.location.href = 'form_solicitar_vacaciones.html'; // redirect
+const realizarSolicitudBtns = document.querySelectorAll('.vacaciones-btn'); // get by class
+if (realizarSolicitudBtns) {
+  realizarSolicitudBtns.forEach(function(btn) {
+    btn.addEventListener('click', function () {
+      window.location.href = 'form_solicitar_vacaciones.html'; // redirect
+    });
   });
+}
+
+function openModal(modal) {
+  modal.style.display = "flex";
+}
+
+function openSolicitudesModal() {
+  var modal = document.getElementById("solicitudes_modal");
+  openModal(modal);
+}
+
+function openConsultasModal() {
+  var modal = document.getElementById("consultas_modal");
+  openModal(modal);
 }
