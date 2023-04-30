@@ -39,3 +39,19 @@ function openConsultasModal() {
   var modal = document.getElementById("consultas_modal");
   openModal(modal);
 }
+
+
+/*
+function testFunc() {
+  const form = new FormBuilder('my-form')
+  .addTextField('name', 'Nombre completo')
+  .addEmailField('email', 'Correo electrónico')
+  .addSelectField('gender', 'Género', ['Masculino', 'Femenino', 'No binario'])
+  .addCheckboxField('terms', 'Acepto los términos y condiciones')
+  .addDateField("fecha", "Fecha de ingreso")
+  //.addPasswordField("pass", "Digite su contra rey")
+  .build();
+
+document.getElementById('form-container').appendChild(form);
+}
+*/

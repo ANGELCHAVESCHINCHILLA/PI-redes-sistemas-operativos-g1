@@ -1,26 +1,68 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
-    <title>Iniciar sesión</title>
+    <title>Bienvenido Usuario</title>
     <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100&family=Roboto:wght@300&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div class="login-container">
-      <form id="login">
-        <h2>Iniciar sesión</h2>
-        <label for="username">Usuario</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit" id="entrar" >ENTRAR</button>
-      </form>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100&family=Roboto:wght@300&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100&family=Public+Sans:wght@100&family=Roboto:wght@300;400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body id="principal_container">
+
+    <button id="regresar" onclick="regresar()"></button>
+    <div class="principal_text_container">
+        <h1>Bienvenido Usuario, usted es un empleado</h1>
+        <h2>Por favor, seleccione la consulta o solicitud que desee realizar</h2>
     </div>
+
+    <div class="botones">
+        <button class="realizar-consulta" type="submit" onclick="openConsultasModal()"> <b>REALIZAR CONSULTA</b></button>
+        <button class="realizar-solicitud" id="realizar-solicitud-btn" onclick="openSolicitudesModal()" type="submit"> <b>REALIZAR SOLICITUD</b></button>
+    </div>
+    <div class="modal" id="solicitudes_modal">
+        <div class="modal-header">
+            <button class="close-modal-btn">X</button>
+            <div class="title-container">
+              <h3>Solicitudes disponibles</h3>
+              <h4>Por favor, seleccione una solicitud</h4>
+            </div>
+          </div>
+        <div class="modal-body">
+            <button class="button-constancia-salarial" id="salarial-btn">CONSTANCIA SALARIAL</button>
+            <button class="button-constancia-laboral" id="laboral-btn">CONSTANCIA LABORAL</button>
+            <button class="button-comprobantes-pago" id="pago-btn">COMPROBANTES DE PAGO</button>
+            <button class="button-solicitud-vacaciones vacaciones-btn">SOLICITUD DE VACACIONES</button>
+        </div>
+    </div>
+
+    <div class="modal" id="consultas_modal">
+        <div class="modal-header">
+            <button class="close-modal-btn">X</button>
+            <div class="title-container">
+              <h3>Consultas disponibles</h3>
+              <h4>Por favor, seleccione una consulta</h4>
+            </div>
+          </div>
+        <div class="modal-body">
+            <button class="button-constancia-salarial" id="salarial-btn">SALDO DE VACACIONES</button>
+            <button class="button-constancia-laboral" id="laboral-btn">SALARIO BASE</button>
+            <button class="button-comprobantes-pago" id="pago-btn">ANOTACIONES AL EXPEDIENTE</button>
+            <button class="button-solicitud-vacaciones" id="vacaciones-btn">ESTADO DE SOLICITUDES</button>
+        </div>
+    </div>
+
+
     <script src="app.js"></script>
-  </body>
+    <script src="modal.js"></script>
+</body>
+
 </html>

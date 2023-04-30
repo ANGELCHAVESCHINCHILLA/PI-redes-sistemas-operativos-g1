@@ -8,7 +8,7 @@ if (login) {
     const email = login.elements['password'].value;
 
     if (name && email) { // Check if exists
-      window.location.href = 'pagina_principal.html'; // redirection
+      window.location.href = 'index.html'; // redirection
       //window.location.href = 'form_solicitar_vacaciones.html'; // Redirige a otra página
     } else {
       alert('Por favor complete todos los campos'); // 
