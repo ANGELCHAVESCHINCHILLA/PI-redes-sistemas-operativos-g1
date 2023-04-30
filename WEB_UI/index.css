@@ -153,7 +153,7 @@ button#regresar {
 
 /** Modal style **/
 
-.solicitudes_modal {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -230,7 +230,7 @@ button#regresar {
 }
 
 
-#close-modal {
+.close-modal-btn {
   background-color: transparent;
   border: none;
   font-size: 1.5rem;

@@ -25,12 +25,12 @@
     </div>
 
     <div class="botones">
-        <button class="realizar-consulta" type="submit"> <b>REALIZAR CONSULTA</b></button>
-        <button class="realizar-solicitud" type="submit" id="realizar-solicitud-btn"> <b>REALIZAR SOLICITUD</b></button>
+        <button class="realizar-consulta" type="submit" onclick="openConsultasModal()"> <b>REALIZAR CONSULTA</b></button>
+        <button class="realizar-solicitud" id="realizar-solicitud-btn" onclick="openSolicitudesModal()" type="submit"> <b>REALIZAR SOLICITUD</b></button>
     </div>
-    <div class="solicitudes_modal" id="solicitudes_modal">
+    <div class="modal" id="solicitudes_modal">
         <div class="modal-header">
-            <button id="close-modal">X</button>
+            <button class="close-modal-btn">X</button>
             <div class="title-container">
               <h3>Solicitudes disponibles</h3>
               <h4>Por favor, seleccione una solicitud</h4>
@@ -40,9 +40,26 @@
             <button class="button-constancia-salarial" id="salarial-btn">CONSTANCIA SALARIAL</button>
             <button class="button-constancia-laboral" id="laboral-btn">CONSTANCIA LABORAL</button>
             <button class="button-comprobantes-pago" id="pago-btn">COMPROBANTES DE PAGO</button>
-            <button class="button-solicitud-vacaciones" id="vacaciones-btn">SOLICITUD DE VACACIONES</button>
+            <button class="button-solicitud-vacaciones vacaciones-btn">SOLICITUD DE VACACIONES</button>
         </div>
     </div>
+
+    <div class="modal" id="consultas_modal">
+        <div class="modal-header">
+            <button class="close-modal-btn">X</button>
+            <div class="title-container">
+              <h3>Consultas disponibles</h3>
+              <h4>Por favor, seleccione una consulta</h4>
+            </div>
+          </div>
+        <div class="modal-body">
+            <button class="button-constancia-salarial" id="salarial-btn">SALDO DE VACACIONES</button>
+            <button class="button-constancia-laboral" id="laboral-btn">SALARIO BASE</button>
+            <button class="button-comprobantes-pago" id="pago-btn">ANOTACIONES AL EXPEDIENTE</button>
+            <button class="button-solicitud-vacaciones" id="vacaciones-btn">ESTADO DE SOLICITUDES</button>
+        </div>
+    </div>
+
 
     <script src="app.js"></script>
     <script src="modal.js"></script>
