@@ -16,6 +16,10 @@ if (login) {
   });
 }
 
+function populateRequestContainer() {
+  var requestContainer = document.getElementById("request-container");
+}
+
 
 
 /**
