@@ -1,3 +1,31 @@
+
+/**
+
+FormBuilder is a class that simplifies the process of creating HTML forms using the builder pattern.
+It uses form fields classes defined below (starts line 74).
+@class
+@example
+const form = new FormBuilder('my-form')
+.addTextField('name', 'Nombre completo')
+.addEmailField('email', 'Correo electrónico')
+.addSelectField('gender', 'Género', ['Masculino', 'Femenino', 'No binario'])
+.addCheckboxField('terms', 'Acepto los términos y condiciones')
+.addDateField("fecha", "Fecha de ingreso")
+.build();
+@method addTextField - Adds a text field to the form
+@method addEmailField - Adds an email field to the form
+@method addPasswordField - Adds a password field to the form
+@method addCheckboxField - Adds a checkbox field to the form
+@method addSelectField - Adds a select field to the form
+@method addDateField - Adds a date field to the form
+@method build - Builds the form object
+@param {string} name - The name of the form
+@param {string} label - The label for the form
+@returns {Object} form - The form object
+
+@author David Cerdas / @SrDavidC
+*/
+
 class FormBuilder {
     constructor() {
       this.fields = [];
