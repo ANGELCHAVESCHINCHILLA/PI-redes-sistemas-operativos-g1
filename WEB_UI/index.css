@@ -341,7 +341,14 @@ div#request-container {
   color: rgb(167, 33, 9);
 }
 
-.text-container {
-  color: chartreuse;
-}
 
+
+/** Blank Text Page **/
+
+div#page-blank-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20vh;
+}

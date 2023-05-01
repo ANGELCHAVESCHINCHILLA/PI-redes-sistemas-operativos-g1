@@ -1,5 +1,11 @@
+// import { NumeroALetras } from './libs/NumeroALetras.js';
+// const NumeroALetras = require('./libs/NumeroALetras');
+
 const login = document.getElementById("login"); // get by id
-const backbtn = document.querySelector("back-btn")
+const backbtn = document.querySelector("back-btn");
+const numeroALetras = new NumeroALetras();
+
+
 if (login) {
   login.addEventListener('submit', function (event) {
     event.preventDefault(); // Avoid default shipment
@@ -107,15 +113,16 @@ function searchRequest(requestId) {
   console.log(requestId);
   switch (requestId) {
     case "0":
-      requestInfo = "Es cero"
+      requestInfo = "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Marta Viquez, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nMarta Viquez";
       break;
     case "1":
-      requestInfo = "Es uno"
+      requestInfo = "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Lobo Lopez, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nLobo Lopez";
+
       break;
     case "2":
-      requestInfo = "Es dos"
+      requestInfo = "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Jonathan Beltran, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nJonathan Beltran";
       break;
-    default: "Default Of course"
+    default: "Texto no disponible. Llame a soporte"
   }
   console.log(`En request: ${requestId}`);
   return requestInfo;
@@ -128,15 +135,64 @@ function reloadDetailsBtns() {
       btn.addEventListener('click', function () {
         let requestDiv = btn.parentNode;
         let requestId = requestDiv.getAttribute('data-id');
-        // let requestInfo = searchRequest;
+        // let requestInfo = searchRequest.info;
+        // let requestTitle = searchRequest.title;
         let requestInfo = searchRequest(requestId);
-        createTextBlankPage(requestInfo);
+        let requestTitle = "Solicitud de Vacaciones"
+        createTextBlankPage(requestTitle, requestInfo);
       });
     });
   }
 }
 
-function createTextBlankPage(text) {
+ function showBaseSalary() {
+  // TODO: search 'employee' data in database
+  let salary = 5000000;
+  let salaryStr = numeroALetras.convertir(salary);
+  let title = "Salario Base";
+  const content = `Su salario base es de: CRC${salary} (${salaryStr})<br><br>
+            [Nombre y cargo del representante de la empresa] <br>
+            [Nombre de la empresa]<br>
+            [Fecha de emisión]<br>`;
+
+  createTextBlankPage(title, content);
+}
+
+function showVacationsBalance() {
+  // TODO: search 'employee' data in database
+  let vacations = 15;
+  let vacationsStr = numeroALetras.convertir(15);
+  let title = "Saldo de Vacaciones";
+  const content = `Su saldo de vacaciones es de: ${vacations} (${vacationsStr}) días.<br><br>
+            [Nombre y cargo del representante de la empresa] <br>
+            [Nombre de la empresa]<br>
+            [Fecha de emisión]<br>`;
+
+  createTextBlankPage(title, content);
+}
+
+function showExpedientAnotations() {
+  // TODO: search 'employee' data in database
+  let title = "Anotaciones al expediente";
+  const content = `- El [fecha], el empleado llegó tarde al trabajo sin previo aviso y sin una justificación válida. Se le ha recordado la política de puntualidad de la empresa y se le ha informado que otra falta similar podría resultar en una medida disciplinaria. <br><br>
+  - El [fecha], se recibió una queja de un cliente que afirma que el empleado fue poco amable y no pudo solucionar su problema de manera efectiva. Se ha hablado con el empleado y se le ha recordado la importancia de mantener un servicio al cliente de alta calidad. <br><br>
+  - El [fecha], el empleado tuvo una reunión con su supervisor para discutir su desempeño. Se discutieron áreas en las que el empleado ha mostrado fortalezas y áreas que necesitan mejorar. Se acordó un plan de acción para ayudar al empleado a alcanzar sus objetivos de desempeño. <br><br>
+  - El [fecha], el empleado recibió un reconocimiento por su excelente desempeño en la finalización de un proyecto importante. Se le agradeció por su dedicación y esfuerzo en la empresa.<br><br>
+            [Nombre y cargo del representante de la empresa] <br>
+            [Nombre de la empresa]<br>
+            [Fecha de emisión]<br>`;
+
+  createTextBlankPage(title, content);
+}
+
+function openSolicitudesPage() {
+  window.location.href = 'solicitudes.html';
+}
+
+
+
+
+function createTextBlankPage(title, content) {
   let newPage = window.open();
   newPage.document.write(`<!DOCTYPE html>
   <html>
@@ -155,15 +211,18 @@ function createTextBlankPage(text) {
         rel="stylesheet">
     </head>
     <body>
-      <div id="text-container">${text}</div>
-      <button onclick="window.close()">Regresar</button>
+      <div id="page-blank-container">
+        <h2>${title}</h2>
+        <button id="regresar" onclick="window.close()"></button>
+        <div id="text-container"><p> ${content} </p></div>
+        <button class="submit-btn imprimir-btn">IMPRIMIR</button>
+      </div>
+      <script src="scripts.js"></script>
     </body>
+
   </html>
 `);
 }
-
-
-
 
 /**
  * TO DO: Make a file only for button functions
@@ -176,5 +235,3 @@ function regresar() {
 function cancelar() {
   /** Nothing for now ;) */
 }
-
-

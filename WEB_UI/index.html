@@ -53,16 +53,13 @@
             </div>
           </div>
         <div class="modal-body">
-            <button class="button-constancia-salarial" id="salarial-btn">SALDO DE VACACIONES</button>
-            <button class="button-constancia-laboral" id="laboral-btn">SALARIO BASE</button>
-            <button class="button-comprobantes-pago" id="pago-btn">ANOTACIONES AL EXPEDIENTE</button>
-            <button class="button-estado-solicitudes" id="estado-soluciones-btn">ESTADO DE SOLICITUDES</button>
+            <button class="button-constancia-salarial" id="saldo-vacaciones-btn" onclick="showVacationsBalance()">SALDO DE VACACIONES</button>
+            <button class="button-constancia-laboral" id="salario-base-btn" onclick="showBaseSalary()">SALARIO BASE</button>
+            <button class="button-comprobantes-pago" id="expediente-btn" onclick="showExpedientAnotations()">ANOTACIONES AL EXPEDIENTE</button>
+            <button class="button-estado-solicitudes" id="estado-soluciones-btn" onclick="openSolicitudesPage()">ESTADO DE SOLICITUDES</button>
         </div>
     </div>
-
-
-    <script src="app.js"></script>
-    <script src="modal.js"></script>
+    <script src="scripts.js"></script>
 </body>
 
 </html>
