@@ -191,7 +191,11 @@ function openSolicitudesPage() {
 
 
 
-
+/**
+ * Create a simple blan page, just title and content
+ * @param {*} title title of the page
+ * @param {*} content content to be showed in div 'text-container'
+ */
 function createTextBlankPage(title, content) {
   let newPage = window.open();
   newPage.document.write(`<!DOCTYPE html>
