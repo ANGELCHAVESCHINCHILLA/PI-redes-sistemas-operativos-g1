@@ -1,3 +1,8 @@
+/**
+ * ✨Magic✨ class that converts number into letters
+ * @author: :eyes:
+ */
+
 class NumeroALetras {
     constructor() {
       this.unidades = ['', 'Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete', 'Ocho', 'Nueve'];
