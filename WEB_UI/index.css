@@ -240,3 +240,89 @@ button#regresar {
   top: 0;
   right: 0;
 }
+
+/** Requests (Solicitudes.html)**/
+
+div#request-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10vh;
+  justify-content: center;
+  align-items: center;
+}
+
+#employee-requests h1 {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 31px;
+  display: flex;
+  align-items: flex-end;
+  color: rgba(0, 120, 240, 0.5);
+}
+
+.solicitud {
+  width: 100vh;
+  max-width: 800px;
+  height: auto;
+  left: 94px;
+  top: 214px;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.1), 0px 8px 53px rgba(0, 120, 240, 0.25);
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.solicitud_body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: auto;
+}
+
+.submit-btn {
+  width: 30vh;
+  height: 10vh;
+  background-color: #0078F0;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 5px rgba(0, 120, 240, 0.25);
+  border-radius: 10px;
+  background: rgba(0, 120, 240, 0.1);
+  border: 1px solid #0078F0;
+
+  font-size: 16px;
+  font-family: var(--fuente-principal);
+  font-style: normal;
+  font-weight: 5000;
+  color: #0078F0;
+
+}
+
+.submit-btn:hover {
+  background-color: #6ea9e7;
+  color: #f2f2f2;
+  cursor: pointer;
+}
+
+#reload-requests{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15vh;
+  margin-bottom: 20vh;
+}
+
+.aprobado {
+  font-weight: 50000;
+  color: rgb(18, 132, 18);
+}
+.revision {
+  color: rgb(231, 179, 24);
+}
+.rechazado {
+  color: rgb(167, 33, 9);
+}
+

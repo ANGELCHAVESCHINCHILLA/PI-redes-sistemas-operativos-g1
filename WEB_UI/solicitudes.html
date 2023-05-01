@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>CONSULTA DE ESTADO DE SOLICITUDES HECHAS</title>
+    <meta charset="UTF-8">
+    <title>CONSULTA DE ESTADO DE SOLICITUDES HECHAS</title>
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
-  <h1>CONSULTA DE ESTADO DE SOLICITUDES HECHAS</h1>
-  <div id="solicitudes-container"></div>
-  
-  <script src="app.js"></script>
+
+<body id="employee-requests">
+    <div id="back-container"><button id="regresar" onclick="regresar()"></button></div>
+    <div id="request-container">
+        <h1>Consulta de solicitudes hechas</h1>
+    </div>
+    <div id="reload-requests"><button class="submit-btn" onclick="populateRequestContainer()">Recargar
+            Solicitudes</button></div>
+
+
+    <script src="app.js"></script>
 </body>
+
 </html>

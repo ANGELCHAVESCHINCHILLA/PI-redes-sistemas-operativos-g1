@@ -26,6 +26,17 @@ if (realizarSolicitudBtns) {
   });
 }
 
+// When click to open vacations form
+const estadoSolicitudBtns = document.querySelectorAll('.button-estado-solicitudes'); // get by class
+if (estadoSolicitudBtns) {
+  estadoSolicitudBtns.forEach(function(btn) {
+    btn.addEventListener('click', function () {
+      window.location.href = 'solicitudes.html'; // redirect
+      populateRequestContainer();
+    });
+  });
+}
+
 function openModal(modal) {
   modal.style.display = "flex";
 }
