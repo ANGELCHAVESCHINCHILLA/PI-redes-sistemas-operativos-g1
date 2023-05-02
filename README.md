@@ -6,7 +6,7 @@ Repositorio para el proyecto  del curso de Proyecto Integrador de Redes y Sistem
 
 ## 1. Integrantes (Debe ir al final del doc)
 
-- Ángel Chaves Chinchilla C12113  
+- Ángel Chaves Chinchilla C12113
 angel.chaveschinchilla@ucr.ac.cr
 
 - Ignacio Robles Mayorga B96549
