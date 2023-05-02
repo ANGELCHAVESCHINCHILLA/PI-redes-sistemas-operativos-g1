@@ -5,13 +5,6 @@
 #include <iostream>
 #include <sstream>
 
-#define DIRECTORY_COUNT 10
-#define DIRECTORY_UNDEFINED -1
-
-#define BLOCK_COUNT 10
-#define BLOCK_UNDEFINED -1
-#define BLOCK_EOF 0
-
 DirectoryEntry::DirectoryEntry() : block(DIRECTORY_UNDEFINED) {
   //
 }
@@ -22,14 +15,22 @@ DirectoryEntry::~DirectoryEntry() {
 
 DirectoryEntry::DirectoryEntry(int block, std::string name)
     : block(block), name(name) {
-  this->date = std::time(0);
+  this->date = time(0);
 }
 
 FS::FS() {
-  this->directory =
-      std::make_unique<DirectoryEntry[]>(DIRECTORY_COUNT);
-  this->fat = std::make_unique<int[]>(BLOCK_COUNT);
-  this->blocks = std::make_unique<char[]>(BLOCK_COUNT);
+  // this->directory =
+  //     std::make_unique<DirectoryEntry[]>(DIRECTORY_COUNT);
+  this->directory.reserve(DIRECTORY_COUNT);
+  // this->fat = std::make_unique<int[]>(BLOCK_COUNT);
+  this->fat.reserve(BLOCK_COUNT);
+  // this->blocks = std::make_unique<char[]>(BLOCK_COUNT);
+  this->blocks.reserve(BLOCK_COUNT);
+
+  // Initialize the directory to undefined
+  for (size_t index = 0; index < DIRECTORY_COUNT; index++) {
+    this->directory[index].block = DIRECTORY_UNDEFINED;
+  }
 
   // Initialize the fat table to undefined
   for (size_t index = 0; index < BLOCK_COUNT; index++) {
@@ -46,12 +47,13 @@ FS::~FS() {
   //
 }
 
-void FS::create(std::string name) {
+int FS::create(std::string name) {
   // Find a space in the directory
   int directory_index = this->findDirectorySpace();
 
   if (directory_index == DIRECTORY_UNDEFINED) {
-    throw std::runtime_error("There is not space in the directory.");
+    // throw std::runtime_error("There is not space in the directory.");
+    return DIRECTORY_UNDEFINED;
   }
 
   int block_index = this->findBlockSpace();
@@ -65,7 +67,8 @@ void FS::create(std::string name) {
   this->directory[directory_index] = directory_entry;
 
   this->fat[block_index] = BLOCK_EOF;
-  this->blocks[block_index] = '*';
+
+  return directory_index;
 }
 
 void FS::append(std::string name, char character) {
@@ -146,3 +149,4 @@ int FS::findBlockSpace() {
 
   return BLOCK_UNDEFINED;
 }
+
