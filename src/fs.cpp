@@ -19,18 +19,9 @@ DirectoryEntry::DirectoryEntry(int block, std::string name)
 }
 
 FS::FS() {
-  // this->directory =
-  //     std::make_unique<DirectoryEntry[]>(DIRECTORY_COUNT);
-  this->directory.reserve(DIRECTORY_COUNT);
-  // this->fat = std::make_unique<int[]>(BLOCK_COUNT);
-  this->fat.reserve(BLOCK_COUNT);
-  // this->blocks = std::make_unique<char[]>(BLOCK_COUNT);
-  this->blocks.reserve(BLOCK_COUNT);
-
-  // Initialize the directory to undefined
-  for (size_t index = 0; index < DIRECTORY_COUNT; index++) {
-    this->directory[index].block = DIRECTORY_UNDEFINED;
-  }
+  this->directory = new DirectoryEntry[DIRECTORY_COUNT];
+  this->fat = new int[BLOCK_COUNT];
+  this->blocks = new char[BLOCK_COUNT];
 
   // Initialize the fat table to undefined
   for (size_t index = 0; index < BLOCK_COUNT; index++) {
@@ -52,14 +43,13 @@ int FS::create(std::string name) {
   int directory_index = this->findDirectorySpace();
 
   if (directory_index == DIRECTORY_UNDEFINED) {
-    // throw std::runtime_error("There is not space in the directory.");
     return DIRECTORY_UNDEFINED;
   }
 
   int block_index = this->findBlockSpace();
 
   if (block_index == BLOCK_UNDEFINED) {
-    throw std::runtime_error("There is not space in the unit.");
+    return BLOCK_UNDEFINED;
   }
 
   DirectoryEntry directory_entry(block_index, name);
@@ -96,9 +86,9 @@ std::string FS::toString() {
   for (size_t index = 0; index < BLOCK_COUNT; index++) {
     int entry = this->fat[index];
 
-    if (entry == -1) {
+    if (entry == BLOCK_UNDEFINED) {
       ss << "_ ";
-    } else if (entry == 0) {
+    } else if (entry == BLOCK_EOF) {
       ss << "* ";
     } else {
       ss << entry << " ";
@@ -140,8 +130,6 @@ int FS::findDirectorySpace() {
 
 int FS::findBlockSpace() {
   for (int index = 0; index < BLOCK_COUNT; index++) {
-    std::cout << index << " ";
-
     if (this->fat[index] == BLOCK_UNDEFINED) {
       return index;
     }
@@ -149,4 +137,3 @@ int FS::findBlockSpace() {
 
   return BLOCK_UNDEFINED;
 }
-
