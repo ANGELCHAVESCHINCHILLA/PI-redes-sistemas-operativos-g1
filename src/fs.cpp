@@ -35,7 +35,9 @@ FS::FS() {
 }
 
 FS::~FS() {
-  //
+  delete this->directory;
+  delete this->fat;
+  delete this->blocks;
 }
 
 int FS::create(std::string name) {
@@ -61,8 +63,41 @@ int FS::create(std::string name) {
   return directory_index;
 }
 
-void FS::append(std::string name, char character) {
-  //
+int FS::append(std::string name, char character) {
+  // Search if the file exists in the directory
+
+  int directory_index = this->searchFile(name);
+
+  // search space for one character
+  int next_index = BLOCK_UNDEFINED;
+
+  for (int index = 0; index < BLOCK_COUNT; index++) {
+    if (this->fat[index] == BLOCK_UNDEFINED) {
+      next_index = index;
+      break;
+    }
+  }
+
+  if (next_index == BLOCK_UNDEFINED) {
+    return 14;  // error code no space
+  }
+
+  // search EOF
+  int fat_index = this->directory[directory_index].block;
+
+  while (this->fat[fat_index] != BLOCK_EOF && this->fat[fat_index] != BLOCK_UNDEFINED) {
+    fat_index = this->fat[fat_index];
+  }
+
+  if (fat_index != BLOCK_EOF) {
+    return 15;  // error code
+  }
+
+  this->blocks[fat_index] = character;
+  this->fat[fat_index] = next_index;
+  this->fat[next_index] = BLOCK_EOF;
+
+  return EXIT_SUCCESS;
 }
 
 std::string FS::toString() {
