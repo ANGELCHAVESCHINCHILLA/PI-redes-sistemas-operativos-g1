@@ -25,7 +25,7 @@ a b 2 _ _ _ _ _ _
 
 #define BLOCK_COUNT 10
 #define BLOCK_UNDEFINED -1
-#define BLOCK_EOF 0
+#define BLOCK_EOF -2
 
 struct DirectoryEntry {
  public:
@@ -41,38 +41,42 @@ struct DirectoryEntry {
 
 class FS {
  private:
-  // std::unique_ptr<DirectoryEntry[]> directory;
-  std::vector<DirectoryEntry> directory;
-  // std::unique_ptr<int[]> fat;
-  std::vector<int> fat;
-  // std::unique_ptr<char[]> blocks;
-  std::vector<char> blocks;
+  DirectoryEntry* directory;
+  int* fat;
+  char* blocks;
 
  public:
   FS();
   ~FS();
 
   /**
-   * @brief Throws an exception if there's no space to create a file.
+   * @brief Creates a file.
    *
-   * @param name
+   * @param name The name of the file.
    * @return The initial block number of the file created
    */
   int create(std::string name);
 
   /**
-   * @brief Throws an exception if there's no space to add the data to the file.
+   * @brief Adds data to a file.
    *
-   * @param name
-   * @param character
+   * @param name The name of the file.
+   * @param character The data.
    */
   void append(std::string name, char character);
 
   std::string toString();
 
  private:
+  /**
+   * @brief Returns the position of a free space in the directory.
+   *
+   */
   int findDirectorySpace();
 
+  /**
+   * @brief Returns the position of a free space in the FAT.
+   *
+   */
   int findBlockSpace();
 };
-
