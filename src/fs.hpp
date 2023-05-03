@@ -5,7 +5,50 @@
 #include <vector>
 
 /*
+Directory:
+"a.dat" 0
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
 
+FAT:
+0 1 2 3 4 5 6 7 8 9 
+* _ _ _ _ _ _ _ _ _ 
+
+Blocks:
+0 1 2 3 4 5 6 7 8 9 
+_ _ _ _ _ _ _ _ _ _
+*/
+
+/*
+Directory:
+"a.dat" 0
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+"" -1
+
+FAT:
+0 1 2 3 4 5 6 7 8 9 
+1 * _ _ _ _ _ _ _ _ 
+
+Blocks:
+0 1 2 3 4 5 6 7 8 9 
+a _ _ _ _ _ _ _ _ _
+*/
+
+/*
 Directory:
 "a.dat"   0
 "b.dat"   1
@@ -17,7 +60,6 @@ x 2 x _ _ _ _ _ _
 Blocks
 0 1 2 3 4 5 6 7 8
 a b 2 _ _ _ _ _ _
-
 */
 
 #define DIRECTORY_COUNT 10
@@ -63,7 +105,7 @@ class FS {
    * @param name The name of the file.
    * @param character The data.
    */
-  void append(std::string name, char character);
+  int append(std::string name, char character);
 
   std::string toString();
 
