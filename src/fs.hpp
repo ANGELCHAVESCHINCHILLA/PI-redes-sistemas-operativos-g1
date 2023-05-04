@@ -1,50 +1,30 @@
 //
 
-#include <memory>
 #include <string>
-#include <vector>
 
 /*
 Directory:
 "a.dat" 0
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
 
 FAT:
-0 1 2 3 4 5 6 7 8 9 
-* _ _ _ _ _ _ _ _ _ 
+0 1 2 3 4 5 6 7 8 9
+* _ _ _ _ _ _ _ _ _
 
 Blocks:
-0 1 2 3 4 5 6 7 8 9 
+0 1 2 3 4 5 6 7 8 9
 _ _ _ _ _ _ _ _ _ _
 */
 
 /*
 Directory:
 "a.dat" 0
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
-"" -1
 
 FAT:
-0 1 2 3 4 5 6 7 8 9 
-1 * _ _ _ _ _ _ _ _ 
+0 1 2 3 4 5 6 7 8 9
+1 * _ _ _ _ _ _ _ _
 
 Blocks:
-0 1 2 3 4 5 6 7 8 9 
+0 1 2 3 4 5 6 7 8 9
 a _ _ _ _ _ _ _ _ _
 */
 
@@ -53,11 +33,11 @@ Directory:
 "a.dat"   0
 "b.dat"   1
 
-FAT
+FAT:
 0 1 2 3 4 5 6 7 8
-x 2 x _ _ _ _ _ _
+* 2 * _ _ _ _ _ _
 
-Blocks
+Blocks:
 0 1 2 3 4 5 6 7 8
 a b 2 _ _ _ _ _ _
 */
@@ -120,5 +100,7 @@ class FS {
    * @brief Returns the position of a free space in the FAT.
    *
    */
-  int findBlockSpace();
+  int findFATSpace();
+
+  int searchFile(std::string name);
 };

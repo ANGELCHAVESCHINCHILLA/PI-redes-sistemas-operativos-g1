@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "error.hpp"
+
 DirectoryEntry::DirectoryEntry() : block(DIRECTORY_UNDEFINED) {
   //
 }
@@ -15,7 +17,7 @@ DirectoryEntry::~DirectoryEntry() {
 
 DirectoryEntry::DirectoryEntry(int block, std::string name)
     : block(block), name(name) {
-  this->date = time(0);
+  this->date = std::time(0);
 }
 
 FS::FS() {
@@ -35,9 +37,9 @@ FS::FS() {
 }
 
 FS::~FS() {
-  delete this->directory;
-  delete this->fat;
-  delete this->blocks;
+  delete[] this->directory;
+  delete[] this->fat;
+  delete[] this->blocks;
 }
 
 int FS::create(std::string name) {
@@ -45,55 +47,56 @@ int FS::create(std::string name) {
   int directory_index = this->findDirectorySpace();
 
   if (directory_index == DIRECTORY_UNDEFINED) {
-    return DIRECTORY_UNDEFINED;
+    return Error::NO_SPACE_IN_DIRECTORY;
   }
 
-  int block_index = this->findBlockSpace();
+  // Find a space in the fat
+  int fat_index = this->findFATSpace();
 
-  if (block_index == BLOCK_UNDEFINED) {
-    return BLOCK_UNDEFINED;
+  if (fat_index == BLOCK_UNDEFINED) {
+    return Error::NO_SPACE_IN_FAT;
   }
 
-  DirectoryEntry directory_entry(block_index, name);
+  DirectoryEntry directory_entry(fat_index, name);
 
   this->directory[directory_index] = directory_entry;
 
-  this->fat[block_index] = BLOCK_EOF;
+  this->fat[fat_index] = BLOCK_EOF;
 
   return directory_index;
 }
 
 int FS::append(std::string name, char character) {
   // Search if the file exists in the directory
-
   int directory_index = this->searchFile(name);
 
-  // search space for one character
-  int next_index = BLOCK_UNDEFINED;
-
-  for (int index = 0; index < BLOCK_COUNT; index++) {
-    if (this->fat[index] == BLOCK_UNDEFINED) {
-      next_index = index;
-      break;
-    }
+  if (directory_index == DIRECTORY_UNDEFINED) {
+    return Error::FILE_NOT_FOUND;
   }
+
+  // Find a space in the fat
+  int next_index = this->findFATSpace();
 
   if (next_index == BLOCK_UNDEFINED) {
-    return 14;  // error code no space
+    return Error::NO_SPACE_IN_FAT;
   }
 
-  // search EOF
+  // Search the EOF
   int fat_index = this->directory[directory_index].block;
 
-  while (this->fat[fat_index] != BLOCK_EOF && this->fat[fat_index] != BLOCK_UNDEFINED) {
+  while (this->fat[fat_index] != BLOCK_EOF &&
+         this->fat[fat_index] != BLOCK_UNDEFINED) {
     fat_index = this->fat[fat_index];
   }
 
-  if (fat_index != BLOCK_EOF) {
-    return 15;  // error code
+  if (this->fat[fat_index] != BLOCK_EOF) {
+    return Error::INVALID_FILE;
   }
 
+  // Write the data
   this->blocks[fat_index] = character;
+
+  // Update the EOF
   this->fat[fat_index] = next_index;
   this->fat[next_index] = BLOCK_EOF;
 
@@ -106,8 +109,10 @@ std::string FS::toString() {
   ss << "Directory:\n";
 
   for (size_t index = 0; index < DIRECTORY_COUNT; index++) {
-    ss << "\"" << this->directory[index].name << "\" "
-       << this->directory[index].block << "\n";
+    if (this->directory[index].name != "") {
+      ss << "\"" << this->directory[index].name << "\" "
+         << this->directory[index].block << "\n";
+    }
   }
 
   ss << "\nFAT:\n";
@@ -163,7 +168,7 @@ int FS::findDirectorySpace() {
   return DIRECTORY_UNDEFINED;
 }
 
-int FS::findBlockSpace() {
+int FS::findFATSpace() {
   for (int index = 0; index < BLOCK_COUNT; index++) {
     if (this->fat[index] == BLOCK_UNDEFINED) {
       return index;
@@ -171,4 +176,16 @@ int FS::findBlockSpace() {
   }
 
   return BLOCK_UNDEFINED;
+}
+
+int FS::searchFile(std::string name) {
+  for (int index = 0; index < DIRECTORY_COUNT; index++) {
+    DirectoryEntry entry = this->directory[index];
+
+    if (entry.name == name) {
+      return index;
+    }
+  }
+
+  return DIRECTORY_UNDEFINED;
 }
