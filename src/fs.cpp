@@ -190,3 +190,37 @@ int FS::searchFile(std::string name) {
 
   return DIRECTORY_UNDEFINED;
 }
+
+int FS::remove(std::string name) {
+  int directory_index = this->searchFile(name);
+  
+  if (directory_index == DIRECTORY_UNDEFINED) {
+    return Error::FILE_NOT_FOUND;
+  }
+
+  // Remove each entry of the FAT for especific file.
+  int fat_index = this->directory[directory_index].block;
+  int previous_fat_index = fat_index;
+
+  while (this->fat[fat_index] != BLOCK_EOF &&
+         this->fat[fat_index] != BLOCK_UNDEFINED) {
+    // update fat index
+    fat_index = this->fat[fat_index];
+    // remove the data of the FAT
+    this->fat[previous_fat_index] = BLOCK_UNDEFINED;
+    previous_fat_index = fat_index;
+  }
+
+  if (this->fat[fat_index] != BLOCK_EOF) {
+    return Error::INVALID_FILE;
+  }
+
+  // remove the EOF
+  this->fat[fat_index] = BLOCK_UNDEFINED;
+
+  this->directory[directory_index].block = BLOCK_UNDEFINED;
+  this->directory[directory_index].name = "";
+  this->directory[directory_index].date = 0;
+
+  return EXIT_SUCCESS;
+}

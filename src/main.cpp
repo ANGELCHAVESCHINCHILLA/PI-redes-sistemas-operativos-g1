@@ -28,6 +28,15 @@ int main(int, char**) {
 
   std::cout << fs.toString() << "\n";
 
+  error = fs.remove("a.dat");
+
+  if (error != EXIT_SUCCESS) {
+    printError(error);
+    return error;
+  }
+
+  std::cout << "After remove a.dat then\n" << fs.toString() << "\n";
+
   return error;
 }
 
