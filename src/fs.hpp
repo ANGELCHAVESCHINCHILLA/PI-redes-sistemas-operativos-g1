@@ -87,6 +87,14 @@ class FS {
    */
   int append(std::string name, char character);
 
+  /**
+   * @brief Delete the file, the unit of storage will have garbage.
+   * 
+   * @param name The filename
+   * @return int 
+   */
+  int remove(std::string name);
+
   std::string toString();
 
  private:
@@ -102,5 +110,11 @@ class FS {
    */
   int findFATSpace();
 
+  /**
+   * @brief Search the file in and return its start block
+   * 
+   * @param name 
+   * @return int 
+   */
   int searchFile(std::string name);
 };
