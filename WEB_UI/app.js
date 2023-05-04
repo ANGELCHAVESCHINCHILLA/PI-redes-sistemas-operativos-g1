@@ -23,7 +23,6 @@ if (login) {
 }
 if (backbtn) {
   backbtn.addEventListener('click', function (event) {
-    console.log("yah");
     window.history.back();
   });
 }
