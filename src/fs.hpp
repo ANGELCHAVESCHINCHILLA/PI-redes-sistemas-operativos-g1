@@ -111,10 +111,11 @@ class FS {
   int findFATSpace();
 
   /**
-   * @brief Search the file in and return its start block
+   * @brief Search the file in directory and return its index in that directory.
    * 
-   * @param name 
-   * @return int 
+   * @param name the file name
+   * @return int If the file exists then return its index in the directory.
+   * Another case return DIRECTORY_UNDEFINED
    */
   int searchFile(std::string name);
 };
