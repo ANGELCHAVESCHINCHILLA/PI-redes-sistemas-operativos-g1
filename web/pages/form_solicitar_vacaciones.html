@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Formulario</title>
-    <script src=".././scripts/scripts.js"></script>
+    <script type="module" src=".././scripts/buttonlistener.js"></script>
     <link rel="stylesheet" href=".././styles/styles.css">
     <link rel="stylesheet" href=".././styles/form_solicitar_vacaciones.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,10 +30,10 @@
         <textarea id="razon" name="razon" rows="10" cols="100" required></textarea>
         <div id="button_container">
             <button type="submit">Enviar</button>
-            <button type="cancel" onclick="cancelar()">Cancelar</button>
+            <button type="cancel">Cancelar</button>
         </div>
     </form>
-    <button id="regresar" onclick="toBackPage()"></button>
+    <button id="regresar"></button>
 </body>
 
 </html>

@@ -51,3 +51,5 @@ class NumeroALetras {
     }
   }
   
+
+  export { NumeroALetras as NAL};

@@ -1,8 +1,8 @@
-// import { NumeroALetras } from './libs/NumeroALetras.js';
+import { NAL } from '../scripts/libs/NumeroALetras.js';
 // const NumeroALetras = require('./libs/NumeroALetras');
 
 const backbtn = document.querySelector("back-btn");
-const numeroALetras = new NumeroALetras();
+const numeroALetras = new NAL();
 const PAGE_PRINCIPAL = "index.html";
 const PAGE_LOGIN = "login.html";
 const PAGE_REQUESTS = "solicitudes.html";
@@ -11,25 +11,20 @@ if (backbtn) {
   backbtn.addEventListener('click', function (event) {
     window.history.back();
   });
-}
-
-class App {
-  constructor() {
-    /** Nothing for now */
-  }
+};
 
   /**
    * Reload the requests. It used to reload requests into a requests container.
    * Used in PAGE_REQUESTS page. It calls populateRequestContainer() and reloadDetailsBtns()
    */
-  reloadRequests() {
+  function reloadRequests() {
     populateRequestContainer();
     reloadDetailsBtns();
   }
   /**
    * Popoulate a request-container with requests divs.
    */
-  populateRequestContainer() {
+  function populateRequestContainer() {
     // Get Container
     var requestContainer = document.getElementById("request-container");
     /**TODO: Read from filesystem what request have the employee reader.Then, from their
@@ -54,7 +49,7 @@ class App {
    * TO DO: Change estado and solicitud to ENUM
    * @returns 
    */
-  createSolicitudDiv(nombre, solicitud, estado, id) {
+  function createSolicitudDiv(nombre, solicitud, estado, id) {
     // Create the main div
     const solicitudDiv = document.createElement('div');
     solicitudDiv.classList.add('solicitud');
@@ -104,7 +99,7 @@ class App {
    * @param {*} requestId 
    * @returns 
    */
-  searchRequest(requestId) {
+  function searchRequest(requestId) {
     // TODO: search in FileSystem by request id the requestInfo
     // The actual implemention is weird. Just ids from zero to two.
     // Used to static actual implementation
@@ -132,7 +127,7 @@ class App {
    * Add listener event to new details buttons.
    *  TODO: Maybe this method could be more abstract. 
    */
-  reloadDetailsBtns() {
+  function reloadDetailsBtns() {
     const detailsBtns = document.querySelectorAll('.detalles-btn'); // get by class
     if (detailsBtns) {
       detailsBtns.forEach(function (btn) {
@@ -149,7 +144,7 @@ class App {
     }
   }
 
-  showBaseSalary() {
+  function showBaseSalary() {
     // TODO: search 'employee' data in database calling a method in FileSystem API
     let salary = 5000000;
     let salaryStr = numeroALetras.convertir(salary);
@@ -162,7 +157,8 @@ class App {
     createTextBlankPage(title, content);
   }
 
-  showVacationsBalance() {
+  export function showVacationsBalance() {
+    console.log("asd")
     // TODO: search 'employee' data in database calling a method in FileSystem API
     let vacations = 15;
     let vacationsStr = numeroALetras.convertir(15);
@@ -175,7 +171,7 @@ class App {
     createTextBlankPage(title, content);
   }
 
-  showExpedientAnotations() {
+  function showExpedientAnotations() {
     // TODO: search 'employee' data in database calling a method in FileSystem API
     let title = "Anotaciones al expediente";
     const content = `- El [fecha], el empleado llegó tarde al trabajo sin previo aviso y sin una justificación válida. Se le ha recordado la política de puntualidad de la empresa y se le ha informado que otra falta similar podría resultar en una medida disciplinaria. <br><br>
@@ -192,7 +188,7 @@ class App {
   /**
    * Open PAGE_REQUESTS page
    */
-  openSolicitudesPage() {
+  function openSolicitudesPage() {
     window.location.href = PAGE_REQUESTS;
   }
 
@@ -201,7 +197,7 @@ class App {
    * @param {*} title title of the page
    * @param {*} content content to be showed in div 'text-container'
    */
-  createTextBlankPage(title, content) {
+  function createTextBlankPage(title, content) {
     let newPage = window.open();
     newPage.document.write(`<!DOCTYPE html>
   <html>
@@ -240,10 +236,17 @@ class App {
   /**
    * Back to page
    */
-  toBackPage() {
+  function toBackPage() {
     window.history.back();
   }
-  cancelar() {
+  function cancelar() {
     /** Nothing for now ;) */
   }
-}
+
+export {openSolicitudesPage,
+   showExpedientAnotations,
+   //showVacationsBalance,
+   showBaseSalary,
+   reloadRequests,
+   toBackPage
+  };
