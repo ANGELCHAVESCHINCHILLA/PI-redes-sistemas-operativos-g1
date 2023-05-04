@@ -5,11 +5,12 @@
 
 
 
+
 // Numbers to letters
-document.write('<script src="libs/NumeroALetras.js"></script>');
+document.write('<script src="../scripts/libs/NumeroALetras.js"></script>');
 
 // App 
-document.write('<script src="app.js"></script>');
+document.write('<script src="../scripts/app.js"></script>');
 
 // Modals
-document.write('<script src="modal.js"></script>');
+document.write('<script src="../scripts/modal.js"></script>');

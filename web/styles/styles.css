@@ -54,14 +54,14 @@ input[type="password"] {
   border-bottom: 1px solid #ccc;
   margin-bottom: 20px;
   box-sizing: border-box;
-  background-image: url("./images/eye.png");
+  background-image: url(".././assets/images/eye.png");
   background-repeat: no-repeat;
   background-position: right center;
 }
 
 input[type="text"],
 input[type="username"] {
-  background-image: url("./images/person.png");
+  background-image: url(".././assets/images/person.png");
 }
 
 button[type="submit"] {
@@ -144,7 +144,7 @@ button#regresar {
   height: 50px;
   left: 58px;
   top: 10%;
-  background: url(./images/back.png);
+  background: url(".././assets/images/back.png");
   background-repeat: no-repeat;
   background-size: cover;
   border: 1px solid #FFFFFF;
@@ -158,7 +158,8 @@ button.back-btn {
   height: 50px;
   left: 58px;
   top: 10%;
-  background: url(./images/back.png);
+  
+  background: url(".././assets/images/back.png");
   background-repeat: no-repeat;
   background-size: cover;
   border: 1px solid #FFFFFF;

@@ -202,7 +202,7 @@ function createTextBlankPage(title, content) {
     <head>
       <title>Información de solicitud</title>
       <meta charset="UTF-8">
-      <link rel="stylesheet" href="index.css">
+      <link rel="stylesheet" href=".././styles/styles.css">
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
@@ -220,7 +220,7 @@ function createTextBlankPage(title, content) {
         <div id="text-container"><p> ${content} </p></div>
         <button class="submit-btn imprimir-btn">IMPRIMIR</button>
       </div>
-      <script src="scripts.js"></script>
+      <script src=".././scripts/scripts.js"></script>
     </body>
 
   </html>
