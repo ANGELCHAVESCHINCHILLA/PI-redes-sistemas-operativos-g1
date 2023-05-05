@@ -127,7 +127,8 @@ int FS::remove(std::string name) {
   int previous_fat_index = fat_index;
 
   while (this->fat[fat_index] != FAT_EOF &&
-         this->fat[fat_index] != FAT_UNDEFINED) {
+         this->fat[fat_index] != FAT_UNDEFINED &&
+         this->fat[fat_index] != FAT_RESERVED) {
     // Update the fat index
     fat_index = this->fat[fat_index];
     // Remove the data of the FAT
@@ -135,7 +136,7 @@ int FS::remove(std::string name) {
     previous_fat_index = fat_index;
   }
 
-  if (this->fat[fat_index] != FAT_EOF) {
+  if (this->fat[fat_index] != FAT_EOF && this->fat[fat_index] != FAT_RESERVED) {
     return Error::INVALID_FILE;
   }
 
@@ -161,7 +162,8 @@ int FS::deepRemove(std::string name) {
   int previous_fat_index = fat_index;
 
   while (this->fat[fat_index] != FAT_EOF &&
-         this->fat[fat_index] != FAT_UNDEFINED) {
+         this->fat[fat_index] != FAT_UNDEFINED &&
+         this->fat[fat_index] != FAT_RESERVED) {
     // Update the fat index
     fat_index = this->fat[fat_index];
     // Remove the data of the FAT
@@ -170,7 +172,7 @@ int FS::deepRemove(std::string name) {
     previous_fat_index = fat_index;
   }
 
-  if (this->fat[fat_index] != FAT_EOF) {
+  if (this->fat[fat_index] != FAT_EOF && this->fat[fat_index] != FAT_RESERVED) {
     return Error::INVALID_FILE;
   }
 

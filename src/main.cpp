@@ -7,7 +7,7 @@
 
 void printError(int error);
 
-int main(int argc, char** argv) {
+int main() {
   int error = EXIT_SUCCESS;
 
   FS fs;
@@ -48,8 +48,32 @@ int main(int argc, char** argv) {
   }
   std::cout << fs.toString() << "\n";
 
+  std::cout << "----- Removed a.dat -----" << "\n";
+  error = fs.remove("a.dat");
+  if (error != Error::OK) {
+    printError(error);
+    return error;
+  }
+  std::cout << fs.toString() << "\n";
+
   std::cout << "----- Deeply removed b.dat -----" << "\n";
   error = fs.deepRemove("b.dat");
+  if (error != Error::OK) {
+    printError(error);
+    return error;
+  }
+  std::cout << fs.toString() << "\n";
+
+  fs.create("c.dat");
+  std::cout << "----- Created c.dat empty -----" << "\n";
+  if (error != Error::OK) {
+    printError(error);
+    return error;
+  }
+  std::cout << fs.toString() << "\n";
+
+  std::cout << "----- Removed c.dat -----" << "\n";
+  error = fs.("c.dat");
   if (error != Error::OK) {
     printError(error);
     return error;
