@@ -37,12 +37,12 @@ FS::FS() {
   this->blocks = new char[FAT_COUNT];
 
   // Initialize the fat table to undefined
-  for (size_t index = 0; index < FAT_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; ++index) {
     this->fat[index] = FAT_UNDEFINED;
   }
 
   // Initialize the blocks to empty
-  for (size_t index = 0; index < FAT_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; ++index) {
     this->blocks[index] = '\0';
   }
 }
@@ -208,7 +208,7 @@ int FS::findDirectorySpace() {
     if (this->directory[index].startBlock == DIRECTORY_UNDEFINED) {
       found = true;
     } else {
-      index++;
+      ++index;
     }
   }
   if (!found) {
@@ -224,7 +224,7 @@ int FS::findFATSpace() {
     if (this->fat[index] == FAT_UNDEFINED) {
       found = true;
     } else {
-      index++;
+      ++index;
     }
   }
   if (!found) {
@@ -243,15 +243,21 @@ int FS::searchEOF(int index) {
 }
 
 int FS::searchFile(std::string name) {
-  for (int index = 0; index < DIRECTORY_COUNT; index++) {
+  int index = 0;
+  bool found = false;
+  while (index < DIRECTORY_COUNT && !found) {
     DirectoryEntry entry = this->directory[index];
 
     if (entry.name == name) {
-      return index;
+      found = true;
+    } else {
+      ++index;
     }
   }
-
-  return DIRECTORY_UNDEFINED;
+  if (!found) {
+    index = DIRECTORY_UNDEFINED;
+  }
+  return index;
 }
 
 std::string FS::toString() {
@@ -259,7 +265,7 @@ std::string FS::toString() {
 
   ss << "Directory:\n";
 
-  for (size_t index = 0; index < DIRECTORY_COUNT; index++) {
+  for (size_t index = 0; index < DIRECTORY_COUNT; ++index) {
     if (this->directory[index].name != "") {
       ss << "\"" << this->directory[index].name << "\" "
          << this->directory[index].startBlock << "\n";
@@ -268,13 +274,13 @@ std::string FS::toString() {
 
   ss << "\nFAT:\n";
 
-  for (size_t index = 0; index < FAT_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; ++index) {
     ss << index << " ";
   }
 
   ss << "\n";
 
-  for (size_t index = 0; index < FAT_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; ++index) {
     int entry = this->fat[index];
 
     if (entry == FAT_UNDEFINED) {
@@ -290,13 +296,13 @@ std::string FS::toString() {
 
   ss << "\n\nBlocks:\n";
 
-  for (size_t index = 0; index < FAT_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; ++index) {
     ss << index << " ";
   }
 
   ss << "\n";
 
-  for (size_t index = 0; index < FAT_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; ++index) {
     char data = this->blocks[index];
 
     if (data == '\0') {
