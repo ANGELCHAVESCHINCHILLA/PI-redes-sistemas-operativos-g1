@@ -14,26 +14,46 @@ int main(int argc, char** argv) {
 
   fs.create("a.dat");
   // std::cout << fs.toString() << "\n";
-  fs.append("a.dat", 'a');
+  error = fs.append("a.dat", 'a');
   std::cout << "----- Created a.dat and added a -----" << "\n";
+  if (error != Error::OK) {
+    printError(error);
+    return error;
+  }
   std::cout << fs.toString() << "\n";
 
   fs.create("b.dat");
   // std::cout << fs.toString() << "\n";
-  fs.append("b.dat", 'b');
+  error = fs.append("b.dat", 'b');
   std::cout << "----- Created b.dat and added b -----" << "\n";
+  if (error != Error::OK) {
+    printError(error);
+    return error;
+  }
   std::cout << fs.toString() << "\n";
 
-  fs.append("b.dat", 'b');
+  error = fs.append("b.dat", 'b');
   std::cout << "----- Added b to b.dat -----" << "\n";
+  if (error != Error::OK) {
+    printError(error);
+    return error;
+  }
   std::cout << fs.toString() << "\n";
 
-  fs.append("a.dat", 'a');
+  error = fs.append("a.dat", 'a');
   std::cout << "----- Added a to a.dat -----" << "\n";
+  if (error != Error::OK) {
+    printError(error);
+    return error;
+  }
   std::cout << fs.toString() << "\n";
 
   std::cout << "----- Deeply removed b.dat -----" << "\n";
-  fs.deepRemove("b.dat");
+  error = fs.deepRemove("b.dat");
+  if (error != Error::OK) {
+    printError(error);
+    return error;
+  }
   std::cout << fs.toString() << "\n";
 
   return error;
