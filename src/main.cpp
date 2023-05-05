@@ -73,7 +73,7 @@ int main() {
   std::cout << fs.toString() << "\n";
 
   std::cout << "----- Removed c.dat -----" << "\n";
-  error = fs.("c.dat");
+  error = fs.remove("c.dat");
   if (error != Error::OK) {
     printError(error);
     return error;
