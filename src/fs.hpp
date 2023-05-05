@@ -2,52 +2,12 @@
 
 #include <string>
 
-/*
-Directory:
-"a.dat" 0
-
-FAT:
-0 1 2 3 4 5 6 7 8 9
-* _ _ _ _ _ _ _ _ _
-
-Blocks:
-0 1 2 3 4 5 6 7 8 9
-_ _ _ _ _ _ _ _ _ _
-*/
-
-/*
-Directory:
-"a.dat" 0
-
-FAT:
-0 1 2 3 4 5 6 7 8 9
-1 * _ _ _ _ _ _ _ _
-
-Blocks:
-0 1 2 3 4 5 6 7 8 9
-a _ _ _ _ _ _ _ _ _
-*/
-
-/*
-Directory:
-"a.dat"   0
-"b.dat"   1
-
-FAT:
-0 1 2 3 4 5 6 7 8
-* 2 * _ _ _ _ _ _
-
-Blocks:
-0 1 2 3 4 5 6 7 8
-a b 2 _ _ _ _ _ _
-*/
-
 #define DIRECTORY_COUNT 10
 #define DIRECTORY_UNDEFINED -1
 
-#define BLOCK_COUNT 10
-#define BLOCK_UNDEFINED -1
-#define BLOCK_EOF -2
+#define FAT_COUNT 10
+#define FAT_UNDEFINED -1
+#define FAT_EOF -2
 
 struct DirectoryEntry {
  public:

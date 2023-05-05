@@ -14,34 +14,33 @@ int main(int, char**) {
 
   error = fs.create("a.dat");
 
-  if (error != EXIT_SUCCESS) {
+  if (error < 0) {
     printError(error);
     return error;
   }
 
-  error = fs.append("a.dat", 'a');
+  error = fs.create("b.dat");
 
-  if (error != EXIT_SUCCESS) {
+  if (error < 0) {
     printError(error);
     return error;
   }
 
   std::cout << fs.toString() << "\n";
 
-  error = fs.remove("a.dat");
-
-  if (error != EXIT_SUCCESS) {
-    printError(error);
-    return error;
-  }
-
-  std::cout << "After remove a.dat then\n" << fs.toString() << "\n";
-
   return error;
 }
 
 void printError(int error) {
   switch (error) {
+    case Error::OK:
+      std::cerr << "Everything is ok.\n";
+      break;
+
+    case Error::NOT_OK:
+      std::cerr << "Something went wrong.\n";
+      break;
+
     case Error::NO_SPACE_IN_DIRECTORY:
       std::cerr << "There is no space in the directory.\n";
       break;

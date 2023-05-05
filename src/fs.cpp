@@ -2,9 +2,9 @@
 
 #include "fs.hpp"
 
+#include <ctime>
 #include <iostream>
 #include <sstream>
-#include <ctime>
 
 #include "error.hpp"
 
@@ -23,16 +23,16 @@ DirectoryEntry::DirectoryEntry(int block, std::string name)
 
 FS::FS() {
   this->directory = new DirectoryEntry[DIRECTORY_COUNT];
-  this->fat = new int[BLOCK_COUNT];
-  this->blocks = new char[BLOCK_COUNT];
+  this->fat = new int[FAT_COUNT];
+  this->blocks = new char[FAT_COUNT];
 
   // Initialize the fat table to undefined
-  for (size_t index = 0; index < BLOCK_COUNT; index++) {
-    this->fat[index] = BLOCK_UNDEFINED;
+  for (size_t index = 0; index < FAT_COUNT; index++) {
+    this->fat[index] = FAT_UNDEFINED;
   }
 
   // Initialize the blocks to empty
-  for (size_t index = 0; index < BLOCK_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; index++) {
     this->blocks[index] = '\0';
   }
 }
@@ -54,7 +54,7 @@ int FS::create(std::string name) {
   // Find a space in the fat
   int fat_index = this->findFATSpace();
 
-  if (fat_index == BLOCK_UNDEFINED) {
+  if (fat_index == FAT_UNDEFINED) {
     return Error::NO_SPACE_IN_FAT;
   }
 
@@ -62,7 +62,7 @@ int FS::create(std::string name) {
 
   this->directory[directory_index] = directory_entry;
 
-  this->fat[fat_index] = BLOCK_EOF;
+  this->fat[fat_index] = FAT_EOF;
 
   return directory_index;
 }
@@ -78,19 +78,19 @@ int FS::append(std::string name, char character) {
   // Find a space in the fat
   int next_index = this->findFATSpace();
 
-  if (next_index == BLOCK_UNDEFINED) {
+  if (next_index == FAT_UNDEFINED) {
     return Error::NO_SPACE_IN_FAT;
   }
 
   // Search the EOF
   int fat_index = this->directory[directory_index].block;
 
-  while (this->fat[fat_index] != BLOCK_EOF &&
-         this->fat[fat_index] != BLOCK_UNDEFINED) {
+  while (this->fat[fat_index] != FAT_EOF &&
+         this->fat[fat_index] != FAT_UNDEFINED) {
     fat_index = this->fat[fat_index];
   }
 
-  if (this->fat[fat_index] != BLOCK_EOF) {
+  if (this->fat[fat_index] != FAT_EOF) {
     return Error::INVALID_FILE;
   }
 
@@ -99,7 +99,7 @@ int FS::append(std::string name, char character) {
 
   // Update the EOF
   this->fat[fat_index] = next_index;
-  this->fat[next_index] = BLOCK_EOF;
+  this->fat[next_index] = FAT_EOF;
 
   return EXIT_SUCCESS;
 }
@@ -118,18 +118,18 @@ std::string FS::toString() {
 
   ss << "\nFAT:\n";
 
-  for (size_t index = 0; index < BLOCK_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; index++) {
     ss << index << " ";
   }
 
   ss << "\n";
 
-  for (size_t index = 0; index < BLOCK_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; index++) {
     int entry = this->fat[index];
 
-    if (entry == BLOCK_UNDEFINED) {
+    if (entry == FAT_UNDEFINED) {
       ss << "_ ";
-    } else if (entry == BLOCK_EOF) {
+    } else if (entry == FAT_EOF) {
       ss << "* ";
     } else {
       ss << entry << " ";
@@ -138,13 +138,13 @@ std::string FS::toString() {
 
   ss << "\n\nBlocks:\n";
 
-  for (size_t index = 0; index < BLOCK_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; index++) {
     ss << index << " ";
   }
 
   ss << "\n";
 
-  for (size_t index = 0; index < BLOCK_COUNT; index++) {
+  for (size_t index = 0; index < FAT_COUNT; index++) {
     char data = this->blocks[index];
 
     if (data == '\0') {
@@ -170,13 +170,13 @@ int FS::findDirectorySpace() {
 }
 
 int FS::findFATSpace() {
-  for (int index = 0; index < BLOCK_COUNT; index++) {
-    if (this->fat[index] == BLOCK_UNDEFINED) {
+  for (int index = 0; index < FAT_COUNT; index++) {
+    if (this->fat[index] == FAT_UNDEFINED) {
       return index;
     }
   }
 
-  return BLOCK_UNDEFINED;
+  return FAT_UNDEFINED;
 }
 
 int FS::searchFile(std::string name) {
@@ -193,7 +193,7 @@ int FS::searchFile(std::string name) {
 
 int FS::remove(std::string name) {
   int directory_index = this->searchFile(name);
-  
+
   if (directory_index == DIRECTORY_UNDEFINED) {
     return Error::FILE_NOT_FOUND;
   }
@@ -202,23 +202,23 @@ int FS::remove(std::string name) {
   int fat_index = this->directory[directory_index].block;
   int previous_fat_index = fat_index;
 
-  while (this->fat[fat_index] != BLOCK_EOF &&
-         this->fat[fat_index] != BLOCK_UNDEFINED) {
+  while (this->fat[fat_index] != FAT_EOF &&
+         this->fat[fat_index] != FAT_UNDEFINED) {
     // update fat index
     fat_index = this->fat[fat_index];
     // remove the data of the FAT
-    this->fat[previous_fat_index] = BLOCK_UNDEFINED;
+    this->fat[previous_fat_index] = FAT_UNDEFINED;
     previous_fat_index = fat_index;
   }
 
-  if (this->fat[fat_index] != BLOCK_EOF) {
+  if (this->fat[fat_index] != FAT_EOF) {
     return Error::INVALID_FILE;
   }
 
   // remove the EOF
-  this->fat[fat_index] = BLOCK_UNDEFINED;
+  this->fat[fat_index] = FAT_UNDEFINED;
 
-  this->directory[directory_index].block = BLOCK_UNDEFINED;
+  this->directory[directory_index].block = FAT_UNDEFINED;
   this->directory[directory_index].name = "";
   this->directory[directory_index].date = 0;
 
