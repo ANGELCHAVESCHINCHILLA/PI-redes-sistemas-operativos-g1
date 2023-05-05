@@ -198,15 +198,15 @@ int FS::remove(std::string name) {
     return Error::FILE_NOT_FOUND;
   }
 
-  // Remove each entry of the FAT for especific file.
+  // Remove each block of the FAT for assigned to a file.
   int fat_index = this->directory[directory_index].block;
   int previous_fat_index = fat_index;
 
   while (this->fat[fat_index] != FAT_EOF &&
          this->fat[fat_index] != FAT_UNDEFINED) {
-    // update fat index
+    // Update the fat index
     fat_index = this->fat[fat_index];
-    // remove the data of the FAT
+    // Remove the data of the FAT
     this->fat[previous_fat_index] = FAT_UNDEFINED;
     previous_fat_index = fat_index;
   }
@@ -215,7 +215,7 @@ int FS::remove(std::string name) {
     return Error::INVALID_FILE;
   }
 
-  // remove the EOF
+  // Remove the EOF
   this->fat[fat_index] = FAT_UNDEFINED;
 
   this->directory[directory_index].block = FAT_UNDEFINED;
