@@ -211,7 +211,7 @@ int FS::remove(std::string name) {
     return Error::FILE_NOT_FOUND;
   }
 
-  // Remove each block of the FAT for assigned to a file.
+  // Remove each block of the FAT assigned to the file.
   int fat_index = this->directory[directory_index].block;
   int previous_fat_index = fat_index;
 
@@ -230,6 +230,44 @@ int FS::remove(std::string name) {
 
   // Remove the EOF
   this->fat[fat_index] = FAT_UNDEFINED;
+
+  this->directory[directory_index].block = FAT_UNDEFINED;
+  this->directory[directory_index].name = "";
+  this->directory[directory_index].date = 0;
+
+  return EXIT_SUCCESS;
+}
+
+int FS::deepRemove(std::string name) {
+  int directory_index = this->searchFile(name);
+
+  if (directory_index == DIRECTORY_UNDEFINED) {
+    return Error::FILE_NOT_FOUND;
+  }
+
+  // Remove each block of the FAT assigned to the file.
+  int fat_index = this->directory[directory_index].block;
+  int previous_fat_index = fat_index;
+
+  while (this->fat[fat_index] != FAT_EOF &&
+         this->fat[fat_index] != FAT_UNDEFINED) {
+    // Update the fat index
+    fat_index = this->fat[fat_index];
+    // Remove the data of the FAT
+    this->fat[previous_fat_index] = FAT_UNDEFINED;
+    this->blocks[previous_fat_index] = '\0';
+    previous_fat_index = fat_index;
+  }
+
+  if (this->fat[fat_index] != FAT_EOF) {
+    return Error::INVALID_FILE;
+  }
+
+  // Remove the EOF
+  this->fat[fat_index] = FAT_UNDEFINED;
+
+  // Remove unit at last block
+  this->blocks[fat_index] = '\0';
 
   this->directory[directory_index].block = FAT_UNDEFINED;
   this->directory[directory_index].name = "";

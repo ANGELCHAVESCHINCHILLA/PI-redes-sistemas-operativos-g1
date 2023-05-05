@@ -82,6 +82,14 @@ class FS {
    */
   int remove(std::string name);
 
+  /**
+   * @brief Delete the file, the unit of storage will be emptied.
+   *
+   * @param name The name of the file.
+   * @return int An error code.
+   */
+  int deepRemove(std::string name);
+
   std::string toString();
 
  private:
