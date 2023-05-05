@@ -41,6 +41,6 @@ david.cerdasalvarado@ucr.ac.cr
 
 1. Abra el navegador web de su preferencia
 
-2. Diríjase a la carpeta [pages](./web/pages/)
+2. Diríjase a la carpeta [./web/pages](./web/pages/)
 
-3. Arrastre el archivo [login](./web/pages/login.html) a la barra de búsqueda del navegador, hecho esto podrá ver la página de *login* y navegar entre las distintas páginas del sistema
+3. Arrastre el archivo [login.html](./web/pages/login.html) a la barra de búsqueda del navegador, hecho esto podrá ver la página de *login* y navegar entre las distintas páginas del sistema.

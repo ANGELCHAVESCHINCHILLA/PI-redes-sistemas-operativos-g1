@@ -115,95 +115,6 @@ int FS::append(std::string name, char character) {
   return EXIT_SUCCESS;
 }
 
-std::string FS::toString() {
-  std::stringstream ss;
-
-  ss << "Directory:\n";
-
-  for (size_t index = 0; index < DIRECTORY_COUNT; index++) {
-    if (this->directory[index].name != "") {
-      ss << "\"" << this->directory[index].name << "\" "
-         << this->directory[index].block << "\n";
-    }
-  }
-
-  ss << "\nFAT:\n";
-
-  for (size_t index = 0; index < FAT_COUNT; index++) {
-    ss << index << " ";
-  }
-
-  ss << "\n";
-
-  for (size_t index = 0; index < FAT_COUNT; index++) {
-    int entry = this->fat[index];
-
-    if (entry == FAT_UNDEFINED) {
-      ss << "_ ";
-    } else if (entry == FAT_RESERVED) {
-      ss << "R ";
-    } else if (entry == FAT_EOF) {
-      ss << "E ";
-    } else {
-      ss << entry << " ";
-    }
-  }
-
-  ss << "\n\nBlocks:\n";
-
-  for (size_t index = 0; index < FAT_COUNT; index++) {
-    ss << index << " ";
-  }
-
-  ss << "\n";
-
-  for (size_t index = 0; index < FAT_COUNT; index++) {
-    char data = this->blocks[index];
-
-    if (data == '\0') {
-      ss << "_ ";
-    } else {
-      ss << data << " ";
-    }
-  }
-
-  ss << "\n";
-
-  return ss.str();
-}
-
-int FS::findDirectorySpace() {
-  for (int index = 0; index < DIRECTORY_COUNT; index++) {
-    if (this->directory[index].block == DIRECTORY_UNDEFINED) {
-      return index;
-    }
-  }
-
-  return DIRECTORY_UNDEFINED;
-}
-
-int FS::findFATSpace() {
-  for (int index = 0; index < FAT_COUNT; index++) {
-    if (this->fat[index] == FAT_UNDEFINED) {
-      return index;
-    }
-  }
-
-  return FAT_UNDEFINED;
-}
-
-int FS::searchFile(std::string name) {
-  for (int index = 0; index < DIRECTORY_COUNT; index++) {
-    DirectoryEntry entry = this->directory[index];
-
-    if (entry.name == name) {
-      return index;
-    }
-  }
-
-  return DIRECTORY_UNDEFINED;
-}
-
 int FS::remove(std::string name) {
   int directory_index = this->searchFile(name);
 
@@ -274,4 +185,94 @@ int FS::deepRemove(std::string name) {
   this->directory[directory_index].date = 0;
 
   return EXIT_SUCCESS;
+}
+
+
+int FS::findDirectorySpace() {
+  for (int index = 0; index < DIRECTORY_COUNT; index++) {
+    if (this->directory[index].block == DIRECTORY_UNDEFINED) {
+      return index;
+    }
+  }
+
+  return DIRECTORY_UNDEFINED;
+}
+
+int FS::findFATSpace() {
+  for (int index = 0; index < FAT_COUNT; index++) {
+    if (this->fat[index] == FAT_UNDEFINED) {
+      return index;
+    }
+  }
+
+  return FAT_UNDEFINED;
+}
+
+int FS::searchFile(std::string name) {
+  for (int index = 0; index < DIRECTORY_COUNT; index++) {
+    DirectoryEntry entry = this->directory[index];
+
+    if (entry.name == name) {
+      return index;
+    }
+  }
+
+  return DIRECTORY_UNDEFINED;
+}
+
+std::string FS::toString() {
+  std::stringstream ss;
+
+  ss << "Directory:\n";
+
+  for (size_t index = 0; index < DIRECTORY_COUNT; index++) {
+    if (this->directory[index].name != "") {
+      ss << "\"" << this->directory[index].name << "\" "
+         << this->directory[index].block << "\n";
+    }
+  }
+
+  ss << "\nFAT:\n";
+
+  for (size_t index = 0; index < FAT_COUNT; index++) {
+    ss << index << " ";
+  }
+
+  ss << "\n";
+
+  for (size_t index = 0; index < FAT_COUNT; index++) {
+    int entry = this->fat[index];
+
+    if (entry == FAT_UNDEFINED) {
+      ss << "_ ";
+    } else if (entry == FAT_RESERVED) {
+      ss << "R ";
+    } else if (entry == FAT_EOF) {
+      ss << "E ";
+    } else {
+      ss << entry << " ";
+    }
+  }
+
+  ss << "\n\nBlocks:\n";
+
+  for (size_t index = 0; index < FAT_COUNT; index++) {
+    ss << index << " ";
+  }
+
+  ss << "\n";
+
+  for (size_t index = 0; index < FAT_COUNT; index++) {
+    char data = this->blocks[index];
+
+    if (data == '\0') {
+      ss << "_ ";
+    } else {
+      ss << data << " ";
+    }
+  }
+
+  ss << "\n";
+
+  return ss.str();
 }
