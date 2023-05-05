@@ -7,7 +7,8 @@
 
 #define FAT_COUNT 10
 #define FAT_UNDEFINED -1
-#define FAT_EOF -2
+#define FAT_RESERVED -2
+#define FAT_EOF -3
 
 struct DirectoryEntry {
  public:

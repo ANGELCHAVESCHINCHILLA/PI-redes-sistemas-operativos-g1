@@ -62,7 +62,7 @@ int FS::create(std::string name) {
 
   this->directory[directory_index] = directory_entry;
 
-  this->fat[fat_index] = FAT_EOF;
+  this->fat[fat_index] = FAT_RESERVED;
 
   return directory_index;
 }
@@ -75,6 +75,19 @@ int FS::append(std::string name, char character) {
     return Error::FILE_NOT_FOUND;
   }
 
+  // Search if it's reserved or if it's the EOF
+  int fat_index = this->directory[directory_index].block;
+
+  if (this->fat[fat_index] == FAT_RESERVED) {
+    // Write the data
+    this->blocks[fat_index] = character;
+
+    // Set the EOF
+    this->fat[fat_index] = FAT_EOF;
+
+    return EXIT_SUCCESS;
+  }
+
   // Find a space in the fat
   int next_index = this->findFATSpace();
 
@@ -83,8 +96,6 @@ int FS::append(std::string name, char character) {
   }
 
   // Search the EOF
-  int fat_index = this->directory[directory_index].block;
-
   while (this->fat[fat_index] != FAT_EOF &&
          this->fat[fat_index] != FAT_UNDEFINED) {
     fat_index = this->fat[fat_index];
@@ -95,7 +106,7 @@ int FS::append(std::string name, char character) {
   }
 
   // Write the data
-  this->blocks[fat_index] = character;
+  this->blocks[next_index] = character;
 
   // Update the EOF
   this->fat[fat_index] = next_index;
@@ -129,8 +140,10 @@ std::string FS::toString() {
 
     if (entry == FAT_UNDEFINED) {
       ss << "_ ";
+    } else if (entry == FAT_RESERVED) {
+      ss << "R ";
     } else if (entry == FAT_EOF) {
-      ss << "* ";
+      ss << "E ";
     } else {
       ss << entry << " ";
     }

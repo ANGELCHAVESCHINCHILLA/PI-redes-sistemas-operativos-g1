@@ -7,25 +7,22 @@
 
 void printError(int error);
 
-int main(int, char**) {
+int main(int argc, char** argv) {
   int error = EXIT_SUCCESS;
 
   FS fs;
 
-  error = fs.create("a.dat");
+  fs.create("a.dat");
+  // std::cout << fs.toString() << "\n";
+  fs.append("a.dat", 'a');
+  std::cout << fs.toString() << "\n";
 
-  if (error < 0) {
-    printError(error);
-    return error;
-  }
+  fs.create("b.dat");
+  // std::cout << fs.toString() << "\n";
+  fs.append("b.dat", 'b');
+  std::cout << fs.toString() << "\n";
 
-  error = fs.create("b.dat");
-
-  if (error < 0) {
-    printError(error);
-    return error;
-  }
-
+  fs.append("b.dat", 'b');
   std::cout << fs.toString() << "\n";
 
   return error;
