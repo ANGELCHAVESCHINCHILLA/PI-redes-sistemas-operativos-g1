@@ -15,14 +15,25 @@ int main(int argc, char** argv) {
   fs.create("a.dat");
   // std::cout << fs.toString() << "\n";
   fs.append("a.dat", 'a');
+  std::cout << "----- Created a.dat and added a -----" << "\n";
   std::cout << fs.toString() << "\n";
 
   fs.create("b.dat");
   // std::cout << fs.toString() << "\n";
   fs.append("b.dat", 'b');
+  std::cout << "----- Created b.dat and added b -----" << "\n";
   std::cout << fs.toString() << "\n";
 
   fs.append("b.dat", 'b');
+  std::cout << "----- Added b to b.dat -----" << "\n";
+  std::cout << fs.toString() << "\n";
+
+  fs.append("a.dat", 'a');
+  std::cout << "----- Added a to a.dat -----" << "\n";
+  std::cout << fs.toString() << "\n";
+
+  std::cout << "----- Deeply removed b.dat -----" << "\n";
+  fs.deepRemove("b.dat");
   std::cout << fs.toString() << "\n";
 
   return error;
