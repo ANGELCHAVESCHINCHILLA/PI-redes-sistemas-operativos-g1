@@ -16,7 +16,7 @@
 
 struct DirectoryEntry {
  public:
-  int block;
+  int startBlock;
   std::string name;
   time_t date;
 
@@ -39,6 +39,8 @@ struct DirectoryEntry {
    * @param name The name of the file.
    */
   DirectoryEntry(int block, std::string name);
+
+  void reset();
 };
 
 class FS {
@@ -97,6 +99,16 @@ class FS {
   std::string toString();
 
  private:
+  /**
+  * @brief Find the EOF in the FAT starting at @a index. Index must be a valid
+  * start block
+  * 
+  * @param index start block of a file 
+  * @return int The index of EOF in the FAT if successful, another case return
+  * FAT_UNDEFINED
+  */
+  int searchEOF(int index);
+
   /**
    * @brief Returns the position of a free space in the directory.
    *

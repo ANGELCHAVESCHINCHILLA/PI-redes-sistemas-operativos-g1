@@ -12,7 +12,7 @@
 
 #include "error.hpp"
 
-DirectoryEntry::DirectoryEntry() : block(DIRECTORY_UNDEFINED) {
+DirectoryEntry::DirectoryEntry() : startBlock(DIRECTORY_UNDEFINED) {
   //
 }
 
@@ -21,8 +21,14 @@ DirectoryEntry::~DirectoryEntry() {
 }
 
 DirectoryEntry::DirectoryEntry(int block, std::string name)
-    : block(block), name(name) {
+    : startBlock(block), name(name) {
   this->date = std::time(0);
+}
+
+void DirectoryEntry::reset() {
+  this->startBlock = FAT_UNDEFINED;
+  this->name = "";
+  this->date = 0;
 }
 
 FS::FS() {
@@ -72,146 +78,168 @@ int FS::create(std::string name) {
 }
 
 int FS::append(std::string name, char character) {
+  int error = Error::OK;
+
   // Search if the file exists in the directory
   int directory_index = this->searchFile(name);
 
-  if (directory_index == DIRECTORY_UNDEFINED) {
-    return Error::FILE_NOT_FOUND;
+  if (directory_index != DIRECTORY_UNDEFINED) {
+    int fat_index = this->directory[directory_index].startBlock;
+
+    // Search if it's reserved or if it's the EOF
+    if (this->fat[fat_index] == FAT_RESERVED) {
+      // Write the data
+      this->blocks[fat_index] = character;
+
+      // Set the EOF
+      this->fat[fat_index] = FAT_EOF;
+    } else {
+      // Find a space in the fat
+      int next_index = this->findFATSpace();
+
+      if (next_index != FAT_UNDEFINED) {
+        // Search the EOF
+        fat_index = this->searchEOF(fat_index);
+
+        if (this->fat[fat_index] == FAT_EOF) {
+          // Write the data
+          this->blocks[next_index] = character;
+
+          // Update the EOF
+          this->fat[fat_index] = next_index;
+          this->fat[next_index] = FAT_EOF;
+        } else {
+          error =  Error::INVALID_FILE;
+        }
+      } else {
+        error = Error::NO_SPACE_IN_FAT;
+      }
+    }
+  } else {
+    error = Error::FILE_NOT_FOUND;
   }
-
-  // Search if it's reserved or if it's the EOF
-  int fat_index = this->directory[directory_index].block;
-
-  if (this->fat[fat_index] == FAT_RESERVED) {
-    // Write the data
-    this->blocks[fat_index] = character;
-
-    // Set the EOF
-    this->fat[fat_index] = FAT_EOF;
-
-    return EXIT_SUCCESS;
-  }
-
-  // Find a space in the fat
-  int next_index = this->findFATSpace();
-
-  if (next_index == FAT_UNDEFINED) {
-    return Error::NO_SPACE_IN_FAT;
-  }
-
-  // Search the EOF
-  while (this->fat[fat_index] != FAT_EOF &&
-         this->fat[fat_index] != FAT_UNDEFINED) {
-    fat_index = this->fat[fat_index];
-  }
-
-  if (this->fat[fat_index] != FAT_EOF) {
-    return Error::INVALID_FILE;
-  }
-
-  // Write the data
-  this->blocks[next_index] = character;
-
-  // Update the EOF
-  this->fat[fat_index] = next_index;
-  this->fat[next_index] = FAT_EOF;
-
-  return EXIT_SUCCESS;
+  return error;
 }
 
 int FS::remove(std::string name) {
+  int error = Error::OK;
   int directory_index = this->searchFile(name);
 
-  if (directory_index == DIRECTORY_UNDEFINED) {
-    return Error::FILE_NOT_FOUND;
+  if (directory_index != DIRECTORY_UNDEFINED) {
+    // Remove each block of the FAT assigned to the file.
+    int fat_index = this->directory[directory_index].startBlock;
+    int tmp_fat_index = fat_index;
+
+    while (this->fat[fat_index] != FAT_EOF &&
+        this->fat[fat_index] != FAT_UNDEFINED &&
+        this->fat[fat_index] != FAT_RESERVED) {
+      // Update the fat index
+      fat_index = this->fat[fat_index];
+
+      // Remove the data of the FAT
+      this->fat[tmp_fat_index] = FAT_UNDEFINED;
+      tmp_fat_index = fat_index;
+    }
+
+    if (this->fat[fat_index] == FAT_EOF ||
+        this->fat[fat_index]== FAT_RESERVED) {
+      // Remove the EOF
+      this->fat[fat_index] = FAT_UNDEFINED;
+
+      // Remove directory entry
+      this->directory[directory_index].reset();
+    } else {
+      error = Error::INVALID_FILE;
+    }
+  } else {
+    error = Error::FILE_NOT_FOUND;
   }
 
-  // Remove each block of the FAT assigned to the file.
-  int fat_index = this->directory[directory_index].block;
-  int previous_fat_index = fat_index;
-
-  while (this->fat[fat_index] != FAT_EOF &&
-         this->fat[fat_index] != FAT_UNDEFINED &&
-         this->fat[fat_index] != FAT_RESERVED) {
-    // Update the fat index
-    fat_index = this->fat[fat_index];
-    // Remove the data of the FAT
-    this->fat[previous_fat_index] = FAT_UNDEFINED;
-    previous_fat_index = fat_index;
-  }
-
-  if (this->fat[fat_index] != FAT_EOF && this->fat[fat_index] != FAT_RESERVED) {
-    return Error::INVALID_FILE;
-  }
-
-  // Remove the EOF
-  this->fat[fat_index] = FAT_UNDEFINED;
-
-  this->directory[directory_index].block = FAT_UNDEFINED;
-  this->directory[directory_index].name = "";
-  this->directory[directory_index].date = 0;
-
-  return EXIT_SUCCESS;
+  return error;
 }
 
 int FS::deepRemove(std::string name) {
+  int error = Error::OK;
   int directory_index = this->searchFile(name);
 
-  if (directory_index == DIRECTORY_UNDEFINED) {
-    return Error::FILE_NOT_FOUND;
+  if (directory_index != DIRECTORY_UNDEFINED) {
+    // Remove each block of the FAT assigned to the file.
+    int fat_index = this->directory[directory_index].startBlock;
+    int tmp_fat_index = fat_index;
+
+    while (this->fat[fat_index] != FAT_EOF &&
+          this->fat[fat_index] != FAT_UNDEFINED &&
+          this->fat[fat_index] != FAT_RESERVED) {
+      // Update fat index
+      fat_index = this->fat[fat_index];
+      // Remove FAT data
+      this->fat[tmp_fat_index] = FAT_UNDEFINED;
+
+      // Remove Unit data
+      this->blocks[tmp_fat_index] = '\0';
+      // update temporal fat index
+      tmp_fat_index = fat_index;
+    }
+
+    if (this->fat[fat_index] == FAT_EOF ||
+        this->fat[fat_index]== FAT_RESERVED) {
+      // Remove the EOF
+      this->fat[fat_index] = FAT_UNDEFINED;
+
+      // Remove unit at last block
+      this->blocks[fat_index] = '\0';
+
+      // Remove directory entry
+      this->directory[directory_index].reset();
+    } else {
+      error = Error::INVALID_FILE;
+    }
+  } else {
+    error = Error::FILE_NOT_FOUND;
   }
-
-  // Remove each block of the FAT assigned to the file.
-  int fat_index = this->directory[directory_index].block;
-  int previous_fat_index = fat_index;
-
-  while (this->fat[fat_index] != FAT_EOF &&
-         this->fat[fat_index] != FAT_UNDEFINED &&
-         this->fat[fat_index] != FAT_RESERVED) {
-    // Update the fat index
-    fat_index = this->fat[fat_index];
-    // Remove the data of the FAT
-    this->fat[previous_fat_index] = FAT_UNDEFINED;
-    this->blocks[previous_fat_index] = '\0';
-    previous_fat_index = fat_index;
-  }
-
-  if (this->fat[fat_index] != FAT_EOF && this->fat[fat_index] != FAT_RESERVED) {
-    return Error::INVALID_FILE;
-  }
-
-  // Remove the EOF
-  this->fat[fat_index] = FAT_UNDEFINED;
-
-  // Remove unit at last block
-  this->blocks[fat_index] = '\0';
-
-  this->directory[directory_index].block = FAT_UNDEFINED;
-  this->directory[directory_index].name = "";
-  this->directory[directory_index].date = 0;
-
-  return EXIT_SUCCESS;
+  return error;
 }
 
 
 int FS::findDirectorySpace() {
-  for (int index = 0; index < DIRECTORY_COUNT; index++) {
-    if (this->directory[index].block == DIRECTORY_UNDEFINED) {
-      return index;
+  int index = 0;
+  bool found = false;
+  while (index < DIRECTORY_COUNT && !found) {
+    if (this->directory[index].startBlock == DIRECTORY_UNDEFINED) {
+      found = true;
+    } else {
+      index++;
     }
   }
-
-  return DIRECTORY_UNDEFINED;
+  if (!found) {
+    index = DIRECTORY_UNDEFINED;
+  }
+  return index;
 }
 
 int FS::findFATSpace() {
-  for (int index = 0; index < FAT_COUNT; index++) {
+  int index = 0;
+  bool found = false;
+  while (index < FAT_COUNT && !found) {
     if (this->fat[index] == FAT_UNDEFINED) {
-      return index;
+      found = true;
+    } else {
+      index++;
     }
   }
+  if (!found) {
+    index = FAT_UNDEFINED;
+  }
+  return index;
+}
 
-  return FAT_UNDEFINED;
+int FS::searchEOF(int index) {
+  int fat_index = index;
+  while (this->fat[fat_index] != FAT_EOF &&
+        this->fat[fat_index] != FAT_UNDEFINED) {
+    fat_index = this->fat[fat_index];
+  }
+  return fat_index;
 }
 
 int FS::searchFile(std::string name) {
@@ -234,7 +262,7 @@ std::string FS::toString() {
   for (size_t index = 0; index < DIRECTORY_COUNT; index++) {
     if (this->directory[index].name != "") {
       ss << "\"" << this->directory[index].name << "\" "
-         << this->directory[index].block << "\n";
+         << this->directory[index].startBlock << "\n";
     }
   }
 
