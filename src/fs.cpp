@@ -154,7 +154,7 @@ int FS::privateRemove(std::string name, bool deep) {
 
     while (this->fat[fat_index] != FAT_EOF &&
            this->fat[fat_index] != FAT_UNDEFINED &&
-           this->fat[fat_index] != FAT_RESERVED) {
+           this->fat[fat_index] != FAT_RESERVED && fat_index < FAT_COUNT) {
       // Update fat index
       fat_index = this->fat[fat_index];
       // Remove FAT data
@@ -235,7 +235,7 @@ int FS::searchEOF(int index) {
   int fat_index = index;
 
   while (this->fat[fat_index] != FAT_EOF &&
-         this->fat[fat_index] != FAT_UNDEFINED) {
+         this->fat[fat_index] != FAT_UNDEFINED && fat_index < FAT_COUNT) {
     fat_index = this->fat[fat_index];
   }
 
