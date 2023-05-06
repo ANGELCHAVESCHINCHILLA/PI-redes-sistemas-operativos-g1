@@ -16,8 +16,22 @@
 
 struct DirectoryEntry {
  public:
+  /**
+   * @brief The position of the first block in the FAT.
+   *
+   */
   int startBlock;
+
+  /**
+   * @brief The name of the file.
+   *
+   */
   std::string name;
+
+  /**
+   * @brief The time the file was created.
+   *
+   */
   time_t date;
 
   /**
@@ -40,13 +54,31 @@ struct DirectoryEntry {
    */
   DirectoryEntry(int block, std::string name);
 
+  /**
+   * @brief Resets all the properties of the entry.
+   *
+   */
   void reset();
 };
 
 class FS {
  private:
+  /**
+   * @brief An array that stores the directory entries.
+   *
+   */
   DirectoryEntry* directory;
+
+  /**
+   * @brief The file allocation table.
+   *
+   */
   int* fat;
+
+  /**
+   * @brief The data of the files.
+   *
+   */
   char* blocks;
 
  public:
@@ -96,18 +128,23 @@ class FS {
    */
   int deepRemove(std::string name);
 
+  /**
+   * @brief Returns the contents of the file system.
+   *
+   * @return std::string The contents of the file system.
+   */
   std::string toString();
 
  private:
   /**
-  * @brief Find the EOF in the FAT starting at @a index. Index must be a valid
-  * start block
-  * 
-  * @param index start block of a file 
-  * @return int The index of EOF in the FAT if successful, another case return
-  * FAT_UNDEFINED
-  */
-  int searchEOF(int index);
+   * @brief Delete the file. If deep is set to true the unit of storage will be
+   * emptied.
+   *
+   * @param name The name of the file.
+   * @param deep If the unit of storage will be emptied.
+   * @return int An error code.
+   */
+  int privateRemove(std::string name, bool deep);
 
   /**
    * @brief Returns the position of a free space in the directory.
@@ -122,6 +159,16 @@ class FS {
    * @return The position of a free space in the FAT.
    */
   int findFATSpace();
+
+  /**
+   * @brief Find the EOF in the FAT starting at @a index. Index must be a valid
+   * start block.
+   *
+   * @param index Start block of a file.
+   * @return int If successful it will return the index of EOF in the FAT,
+   * otherwide it returns FAT_UNDEFINED.
+   */
+  int searchEOF(int index);
 
   /**
    * @brief Search the file in directory and return its index in that directory.

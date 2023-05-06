@@ -19,8 +19,9 @@ int main() {
   fs.create("a.dat");
   // std::cout << fs.toString() << "\n";
   error = fs.append("a.dat", 'a');
-  std::cout << "----- Created a.dat and added a -----" << "\n";
-  if (error != Error::OK) {
+  std::cout << "----- Created a.dat and added a -----"
+            << "\n";
+  if (error) {
     printError(error);
     return error;
   }
@@ -29,56 +30,63 @@ int main() {
   fs.create("b.dat");
   // std::cout << fs.toString() << "\n";
   error = fs.append("b.dat", 'b');
-  std::cout << "----- Created b.dat and added b -----" << "\n";
-  if (error != Error::OK) {
+  std::cout << "----- Created b.dat and added b -----"
+            << "\n";
+  if (error) {
     printError(error);
     return error;
   }
   std::cout << fs.toString() << "\n";
 
   error = fs.append("b.dat", 'b');
-  std::cout << "----- Added b to b.dat -----" << "\n";
-  if (error != Error::OK) {
+  std::cout << "----- Added b to b.dat -----"
+            << "\n";
+  if (error) {
     printError(error);
     return error;
   }
   std::cout << fs.toString() << "\n";
 
   error = fs.append("a.dat", 'a');
-  std::cout << "----- Added a to a.dat -----" << "\n";
-  if (error != Error::OK) {
+  std::cout << "----- Added a to a.dat -----"
+            << "\n";
+  if (error) {
     printError(error);
     return error;
   }
   std::cout << fs.toString() << "\n";
 
-  std::cout << "----- Removed a.dat -----" << "\n";
+  std::cout << "----- Removed a.dat -----"
+            << "\n";
   error = fs.remove("a.dat");
-  if (error != Error::OK) {
+  if (error) {
     printError(error);
     return error;
   }
   std::cout << fs.toString() << "\n";
 
-  std::cout << "----- Deeply removed b.dat -----" << "\n";
+  std::cout << "----- Deeply removed b.dat -----"
+            << "\n";
   error = fs.deepRemove("b.dat");
-  if (error != Error::OK) {
+  if (error) {
     printError(error);
     return error;
   }
   std::cout << fs.toString() << "\n";
 
   fs.create("c.dat");
-  std::cout << "----- Created c.dat empty -----" << "\n";
-  if (error != Error::OK) {
+  std::cout << "----- Created c.dat empty -----"
+            << "\n";
+  if (error) {
     printError(error);
     return error;
   }
   std::cout << fs.toString() << "\n";
 
-  std::cout << "----- Removed c.dat -----" << "\n";
+  std::cout << "----- Removed c.dat -----"
+            << "\n";
   error = fs.remove("c.dat");
-  if (error != Error::OK) {
+  if (error) {
     printError(error);
     return error;
   }
