@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head lang="en">
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión</title>
     <link rel="stylesheet" href=".././styles/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -9,10 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   </head>
-  <body>
-    <div class="login-container">
-      <form id="login">
+  <body style="height: 100vh;">
+    <div class="w3-container w3-light-blue" >
+      <h1 style="color: rgba(0, 120, 240, 0.5);">Log in</h1>
+    </div>
+    <div class="login-container" style="margin-top: -110px;">
+      <form id="login" style="width: 35vw;">
         <h2>Iniciar sesión</h2>
         <label for="username">Usuario</label>
         <input type="text" id="username" name="username" required>
@@ -21,6 +27,9 @@
         <button type="submit" id="entrar" >ENTRAR</button>
       </form>
     </div>
+    <footer style="bottom: 0px;">
+      Sistema de Gestión de Recursos Humanos
+    </footer>
     <script src=".././scripts/login.js"></script>
   </body>
 </html>

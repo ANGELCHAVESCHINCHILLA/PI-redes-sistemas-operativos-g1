@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" style="height: 100vh;">
 
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>Formulario</title>
     <script type="module" src=".././scripts/buttonlistener.js"></script>
-    <link rel="stylesheet" href=".././styles/styles.css">
+    <!-- <link rel="stylesheet" href=".././styles/styles.css"> -->
     <link rel="stylesheet" href=".././styles/form_solicitar_vacaciones.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,27 +13,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100&family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100&family=Public+Sans:wght@100&family=Roboto:wght@300&display=swap" rel="stylesheet">
-</head>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  </head>
 
-<body id="vacationsForm_container">
+  <body id="vacationsForm_container">
+    <div class="w3-container w3-light-blue">
+      <h1 style="font-size: 26px;">Solicitud</h1>
+    </div>
     <form>
-        <h2>Formulario de solicitud</h2>
-        <label for="nombre">Nombre del empleado:</label>
-        <input type="text" id="nombre" name="nombre" value="Juan Perez" readonly>
-        <label for="dias">Días:</label>
-        <input type="number" id="dias" name="dias" required>
-        <label for="fecha_inicio">Fecha de inicio:</label>
-        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
-        <label for="fecha_fin">Fecha de fin:</label>
-        <input type="date" id="fecha_fin" name="fecha_fin" required>
-        <label for="razon">Razón:</label>
-        <textarea id="razon" name="razon" rows="10" cols="100" required></textarea>
-        <div id="button_container">
-            <button type="submit">Enviar</button>
-            <button type="cancel">Cancelar</button>
-        </div>
+      <h2>Formulario de solicitud</h2>
+      <label for="nombre">Nombre del empleado:</label>
+      <input type="text" id="nombre" name="nombre" value="Juan Perez" readonly>
+      <label for="dias">Días:</label>
+      <input type="number" id="dias" name="dias" required>
+      <label for="fecha_inicio">Fecha de inicio:</label>
+      <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+      <label for="fecha_fin">Fecha de fin:</label>
+      <input type="date" id="fecha_fin" name="fecha_fin" required>
+      <label for="razon">Razón:</label>
+      <textarea id="razon" name="razon" rows="10" cols="100" required></textarea>
+      <div id="button_container">
+        <button type="submit">Enviar</button>
+        <button type="cancel">Cancelar</button>
+      </div>
     </form>
     <button id="regresar"></button>
-</body>
+  </body>
+
+  <footer style="bottom: 0px;">
+    Sistema de Gestión de Recursos Humanos
+  </footer>
 
 </html>

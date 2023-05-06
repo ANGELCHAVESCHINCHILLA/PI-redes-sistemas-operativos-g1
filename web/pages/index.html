@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" style="height: 100vh;">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenido Usuario</title>
     <link rel="stylesheet" href=".././styles/styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,9 +24,13 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100&family=Public+Sans:wght@100&family=Roboto:wght@300;400&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   </head>
 
-  <body id="principal_container">
+  <body id="principal_container" style="height: 100vh;">
+    <div class="w3-container w3-light-blue">
+      <h1>Bienvenido!</h1>
+    </div>
     <button id="regresar"></button>
     <div class="principal_text_container">
       <h1>Bienvenido Usuario, usted es un empleado</h1>
@@ -106,6 +112,9 @@
         </button>
       </div>
     </div>
+    <footer style="bottom: 0px;">
+      Sistema de Gestión de Recursos Humanos
+    </footer>
     <script type="module" src=".././scripts/buttonlistener.js"></script>
     <script  src=".././scripts/modal.js"></script>
   </body>

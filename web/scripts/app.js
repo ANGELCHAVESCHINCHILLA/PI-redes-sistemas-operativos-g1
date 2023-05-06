@@ -214,13 +214,24 @@ function createTextBlankPage(title, content) {
       <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100&family=Public+Sans:wght@100&family=Roboto:wght@300;400&display=swap"
         rel="stylesheet">
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     </head>
-    <body>
-      <div id="page-blank-container">
-        <h2>${title}</h2>
-        <button id="regresar" onclick="window.close()"></button>
-        <div id="text-container"><p> ${content} </p></div>
-        <button class="submit-btn imprimir-btn">IMPRIMIR</button>
+    <body id="consultas">
+      <div id="holder">
+        <div id="body">
+          <div class="w3-container w3-light-blue">
+            <h1>Consulta</h1>
+          </div>
+          <div id="page-blank-container">
+            <h2>${title}</h2>
+            <button id="regresar" onclick="window.close()"></button>
+            <div id="text-container"><p> ${content} </p></div>
+            <button class="submit-btn imprimir-btn">IMPRIMIR</button>
+          </div>
+        </div>
+        <footer style="bottom: 0px">
+          Sistema de Gestión de Recursos Humanos
+        </footer>
       </div>
       <script src=".././scripts/scripts.js"></script>
     </body>

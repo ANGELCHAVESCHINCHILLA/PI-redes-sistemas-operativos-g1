@@ -5,10 +5,24 @@
     --azul-hover: #5197e2
 }
 
+html {
+  height: 100%;
+}
 
 body {
   background-color: #f2f2f2;
   font-family: var(--fuente-principal);
+  margin: 0px;
+  height: 100%;
+}
+
+#holder {
+  min-height: 100%;
+  position:relative;
+}
+
+#body {
+  padding-bottom: 5vh;
 }
 
 .login-container {
@@ -34,6 +48,22 @@ label {
   font-weight: bold;
   color: #ccc;
   font-family: var(--fuente-public-sans);
+}
+
+footer {
+  text-align: center;
+  font-family: var(--fuente-public-sans);
+  background-color: #ccc;
+  height: 5vh;
+  position: absolute;
+  width: 100vw;
+}
+
+h1 {
+  margin-bottom: 70px;
+  font-family: var(--fuente-public-sans);
+  color: #0078F0;
+  margin-left: 5vw;
 }
 
 h2 {
@@ -86,7 +116,7 @@ button[type="submit"]:hover {
   background-color: #6ea9e7;
   color: #f2f2f2;
   font-weight: 1000;
-}
+} 
 
 
 /** Principal Page **/
@@ -143,7 +173,7 @@ button#regresar {
   width: 51px;
   height: 50px;
   left: 58px;
-  top: 10%;
+  top: 10vh;
   background: url(".././assets/images/back.png");
   background-repeat: no-repeat;
   background-size: cover;
@@ -268,13 +298,22 @@ div#request-container {
 }
 
 #employee-requests h1 {
-  font-family: 'Public Sans';
+  /* font-family: 'Public Sans';
   font-style: normal;
   font-weight: 400;
   font-size: 26px;
   line-height: 31px;
   display: flex;
   align-items: flex-end;
+  color: rgba(0, 120, 240, 0.5); */
+  font-size: 26px;
+  line-height: 31px;
+  color: rgba(0, 120, 240, 0.5);
+}
+
+#consultas h1, h2 {
+  font-size: 26px;
+  line-height: 31px;
   color: rgba(0, 120, 240, 0.5);
 }
 
@@ -308,6 +347,7 @@ div#request-container {
   border-radius: 10px;
   background: rgba(0, 120, 240, 0.1);
   border: 1px solid #0078F0;
+  margin-bottom: 8vh;
 
   font-size: 16px;
   font-family: var(--fuente-principal);
