@@ -77,7 +77,7 @@ int Socket::connect(char* host, int port) {
   this->connect_addr.sin_family = AF_INET;
   this->connect_addr.sin_port = htons(port);
   this->connect_addr.sin_addr.s_addr = htons(INADDR_ANY);
-  inet_pton(AF_INET, host, &this->connect_addr.sin_addr);
+  // inet_pton(AF_INET, host, &this->connect_addr.sin_addr);
 
   error = ::connect(this->fd, (struct sockaddr*) &this->connect_addr,
       sizeof(this->connect_addr));
