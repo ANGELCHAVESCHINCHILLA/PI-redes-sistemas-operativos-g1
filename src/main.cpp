@@ -35,32 +35,35 @@ int main(int argc, char** argv) {
 int runServer() {
   int error = EXIT_SUCCESS;
 
-  Socket socket;
+  Socket server_socket;
+  Socket client_socket;
 
-  error = socket.create();
+  error = server_socket.create();
 
   if (!error) {
-    error = socket.bind("127.0.0.1", 8000);
+    error = server_socket.bind("127.0.0.1", 8000);
   }
 
   if (!error) {
-    error = socket.listen();
+    error = server_socket.listen();
   }
 
   if (!error) {
     while (true) {
-      error = socket.accept();
+      error = server_socket.accept(client_socket);
 
       std::string message;
 
       if (!error) {
         std::cout << "I will receive a message!\n";
 
-        error = socket.receive(message);
+        error = client_socket.receive(message);
       }
 
       if (!error) {
         std::cout << message << "\n";
+
+        break;
       }
     }
   }
@@ -71,18 +74,18 @@ int runServer() {
 int runClient() {
   int error = EXIT_SUCCESS;
 
-  Socket socket;
+  Socket client_socket;
 
-  error = socket.create();
+  error = client_socket.create();
 
   if (!error) {
-    error = socket.connect("127.0.0.1", 8000);
+    error = client_socket.connect("127.0.0.1", 8000);
   }
 
   if (!error) {
     std::cout << "I will send a message!\n";
 
-    error = socket.send("Hello, World!");
+    error = client_socket.send("Hello, World!");
   }
 
   return error;

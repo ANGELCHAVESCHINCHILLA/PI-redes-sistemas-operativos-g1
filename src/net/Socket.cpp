@@ -68,8 +68,7 @@ int Socket::listen() {
   return error;
 }
 
-// TODO: Fix accept
-int Socket::accept() {
+int Socket::accept(Socket& socket) {
   int error = SocketError::OK;
 
   int fd = ::accept(this->fd, (struct sockaddr*) 0, 0);
@@ -78,6 +77,10 @@ int Socket::accept() {
     std::cerr << "Can't accept the connection to the socket.\n";
 
     error = SocketError::CANT_ACCEPT_SOCKET;
+  }
+
+  if (!error) {
+    socket.fd = fd;
   }
 
   return error;

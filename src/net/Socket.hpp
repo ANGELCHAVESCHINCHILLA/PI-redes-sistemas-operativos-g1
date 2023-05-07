@@ -42,7 +42,7 @@ class Socket {
   Socket();
 
   /**
-   * @brief Destructor.
+   * @brief Destructor. Closes the socket.
    *
    */
   ~Socket();
@@ -84,9 +84,11 @@ class Socket {
    * @brief The socket accepts an incoming connection on the listening stream
    * socket.
    *
+   * @param socket A socket connected to the peer socket that performed a
+   * connection.
    * @return int A SocketError code.
    */
-  int accept();
+  int accept(Socket& socket);
 
   /**
    * @brief Connects the socket to a listening socket whose address is specified
@@ -98,11 +100,22 @@ class Socket {
    */
   int connect(const std::string& host, int port);
 
+  /**
+   * @brief Send data to the socket.
+   *
+   * @param data The sent data.
+   * @return int A SocketError code.
+   */
   int send(const std::string& data);
 
+  /**
+   * @brief Receive data from the socket.
+   *
+   * @param data The received data.
+   * @return int A SocketError code.
+   */
   int receive(std::string& data);
 
- private:
   /**
    * @brief Closes the socket.
    *
