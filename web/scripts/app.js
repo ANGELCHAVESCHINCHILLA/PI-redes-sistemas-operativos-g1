@@ -297,6 +297,53 @@ function createFormPage(title, form) {
   return newPage;
 }
 
+function createAcceptDenyPage(title, content) {
+  let newPage = window.open();
+  newPage.document.write(`<!DOCTYPE html>
+  <html>
+    <head>
+      ${HTML_HEAD}
+      <title>${title}</title>
+    </head>
+    <body id="consultas">
+      <div id="holder">
+        <div id="body">
+          <div class="w3-container w3-light-blue">
+            <h1>Consulta</h1>
+          </div>
+          <div id="page-blank-container">
+            <h2>${title}</h2>
+            <button id="regresar" onclick="window.close()"></button>
+            <div id="text-container"> ${content} </div>
+            <button class="submit-btn deny-btn">DENEGAR</button>
+            <button class="submit-btn accept-btn">APROBAR</button>
+          </div>
+        </div>
+        <footer style="bottom: 0px">
+          Sistema de Gestión de Recursos Humanos
+        </footer>
+      </div>
+    </body>
+  </html>
+  `);
+}
+
+function createUserRegistrationPage() {
+  let title = "Registrar Usuario";
+  let form = new FormBuilder()
+    .addTextField("nomnre", "Nombre:", true)
+    .addTextField("apellido-1", "Primer Apellido:", true)
+    .addTextField("apellido-2", "Segundo Apellido:", true)
+    .addTextField("cedula", "Cédula:", true)
+    .addTextField("numero", "Número telefónico:", true)
+    .addTextField("residencia", "Residencia:", true)
+    .addTextField("iban", "Número IBAN:", true)
+    .addDateField("fecha-nacimiento", "Fecha de Nacimiento:")
+    .build();
+
+  return createFormPage(title, form);
+}
+
 function openSalaryConstanceForm() {
   let title = "Constancia de Salarios";
   let form = new FormBuilder();
@@ -305,7 +352,7 @@ function openSalaryConstanceForm() {
   form
     .addReadOnlyText("empleado", "Empleado:", employeeName)
     .addTextField("motivo", "Motivo de la solicitud:", true)
-    .addTextField("informacion-adicional", "Motivo de la solicitud:", false)
+    .addTextField("informacion-adicional", "Información Adicional:", false)
     .addSubmitlButton("enviar", "Enviar")
     .addCancelButton("cancelar", "Cancelar");
   createFormPage(title, form.build());
@@ -319,7 +366,7 @@ function openEmploymentCertificateForm() {
   form
     .addReadOnlyText("empleado", "Empleado:", employeeName)
     .addTextField("motivo", "Motivo de la solicitud:", true)
-    .addTextField("informacion-adicional", "Motivo de la solicitud:", false)
+    .addTextField("informacion-adicional", "Información Adicional:", false)
     .addSubmitlButton("enviar", "Enviar")
     .addCancelButton("cancelar", "Cancelar");
   createFormPage(title, form.build());
@@ -348,7 +395,7 @@ function openPaymentProofForm() {
   form
     .addReadOnlyText("empleado", "Empleado:", employeeName)
     .addTextField("motivo", "Motivo de la solicitud:", true)
-    .addTextField("informacion-adicional", "Motivo de la solicitud:", false)
+    .addTextField("informacion-adicional", "Información Adicional:", false)
     .addSubmitlButton("enviar", "Enviar")
     .addCancelButton("cancelar", "Cancelar");
   createFormPage(title, form.build());
