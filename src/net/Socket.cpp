@@ -34,13 +34,13 @@ int Socket::create() {
   return error;
 }
 
-int Socket::bind(const std::string& host, int port) {
+int Socket::bind(const std::string& address, int port) {
   int error = SocketError::OK;
 
   this->addr.sin_family = AF_INET;
   this->addr.sin_port = htons(port);
   this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  // inet_pton(AF_INET, host, &this->addr.sin_addr);
+  // inet_pton(AF_INET, address, &this->addr.sin_addr);
 
   error = ::bind(this->fd, (struct sockaddr*) &this->addr, sizeof(this->addr));
 
@@ -85,13 +85,13 @@ int Socket::accept(Socket& socket) {
   return error;
 }
 
-int Socket::connect(const std::string& host, int port) {
+int Socket::connect(const std::string& address, int port) {
   int error = SocketError::OK;
 
   this->addr.sin_family = AF_INET;
   this->addr.sin_port = htons(port);
   this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  // inet_pton(AF_INET, host, &this->addr.sin_addr);
+  // inet_pton(AF_INET, address, &this->addr.sin_addr);
 
   error =
       ::connect(this->fd, (struct sockaddr*) &this->addr, sizeof(this->addr));

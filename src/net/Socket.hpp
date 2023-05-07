@@ -68,9 +68,11 @@ class Socket {
   /**
    * @brief Binds a socket to an address specified by the host and the port.
    *
+   * @param address The address of the socket.
+   * @param port The port of the socket.
    * @return int A SocketError code.
    */
-  int bind(const std::string& host, int port);
+  int bind(const std::string& address, int port);
 
   /**
    * @brief The socket will be used to accept connections for other sockets.
@@ -93,11 +95,11 @@ class Socket {
    * @brief Connects the socket to a listening socket whose address is specified
    * by the host and the port.
    *
-   * @param host The host of the listening socket.
+   * @param address The address of the listening socket.
    * @param port The port of the listening socket.
    * @return int A SocketError code.
    */
-  int connect(const std::string& host, int port);
+  int connect(const std::string& address, int port);
 
   /**
    * @brief Send data to the socket.
