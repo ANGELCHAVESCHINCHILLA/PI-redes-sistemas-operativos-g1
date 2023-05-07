@@ -29,6 +29,11 @@ export class FormBuilder {
     this.fields = [];
   }
 
+  addNumericField(name, label, isRequired) {
+    this.fields.push(new NumericField(name, label, isRequired));
+    return this;
+  }
+
   addTextField(name, label, isRequired) {
     this.fields.push(new TextField(name, label, isRequired));
     return this;
@@ -100,6 +105,32 @@ class Form {
     });
 
     return form;
+  }
+}
+
+class NumericField {
+  constructor(name, label, isRequired) {
+    this.name = name;
+    this.label = label;
+    this.isRequired = isRequired;
+  }
+
+  render() {
+    const field = document.createElement("div");
+    field.classList.add("form-field");
+
+    const label = document.createElement("label");
+    label.innerHTML = this.label;
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.name = this.name;
+    input.required = this.isRequired == true ? this.isRequired : false;
+
+    field.appendChild(label);
+    field.appendChild(input);
+
+    return field;
   }
 }
 
