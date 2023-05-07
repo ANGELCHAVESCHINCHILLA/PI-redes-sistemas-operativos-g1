@@ -371,7 +371,7 @@ function openRequestForm(id) {
       openVacationsForm();
       break;
     default:
-      console.log(`Error: the button with id ${id} couldn't be handled`);
+      console.error(`Error: the button with id ${id} couldn't be handled`);
   }
 }
 
