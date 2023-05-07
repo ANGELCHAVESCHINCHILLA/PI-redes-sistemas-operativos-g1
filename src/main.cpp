@@ -1,128 +1,81 @@
-// @Copyright 2023 Universidad de Costa Rica
+// Copyright © 2023 Universidad de Costa Rica
 // Ángel Chaves Chinchilla (c12113) angel.chaveschichilla@ucr.ac.cr
-// David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Camilo Suárez Sandí (C17811) camilo.suarez@ucr.ac.cr
+// David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
+
+#include <string.h>
 
 #include <iostream>
 
-#include "error.hpp"
-#include "fs.hpp"
+#include "net/Socket.hpp"
 
-void printError(int error);
+int runServer();
 
-int main() {
+int runClient();
+
+int main(int argc, char** argv) {
   int error = EXIT_SUCCESS;
 
-  FS fs;
+  if (argc == 1) {
+    std::cout << "Running server...\n";
 
-  fs.create("a.dat");
-  // std::cout << fs.toString() << "\n";
-  error = fs.append("a.dat", 'a');
-  std::cout << "----- Created a.dat and added a -----"
-            << "\n";
-  if (error) {
-    printError(error);
-    return error;
+    error = runServer();
   }
-  std::cout << fs.toString() << "\n";
 
-  fs.create("b.dat");
-  // std::cout << fs.toString() << "\n";
-  error = fs.append("b.dat", 'b');
-  std::cout << "----- Created b.dat and added b -----"
-            << "\n";
-  if (error) {
-    printError(error);
-    return error;
-  }
-  std::cout << fs.toString() << "\n";
+  if (argc == 2) {
+    std::cout << "Running client...\n";
 
-  error = fs.append("b.dat", 'b');
-  std::cout << "----- Added b to b.dat -----"
-            << "\n";
-  if (error) {
-    printError(error);
-    return error;
+    error = runClient();
   }
-  std::cout << fs.toString() << "\n";
 
-  error = fs.append("a.dat", 'a');
-  std::cout << "----- Added a to a.dat -----"
-            << "\n";
-  if (error) {
-    printError(error);
-    return error;
-  }
-  std::cout << fs.toString() << "\n";
-
-  std::cout << "----- Removed a.dat -----"
-            << "\n";
-  error = fs.remove("a.dat");
-  if (error) {
-    printError(error);
-    return error;
-  }
-  std::cout << fs.toString() << "\n";
-
-  std::cout << "----- Deeply removed b.dat -----"
-            << "\n";
-  error = fs.deepRemove("b.dat");
-  if (error) {
-    printError(error);
-    return error;
-  }
-  std::cout << fs.toString() << "\n";
-
-  fs.create("c.dat");
-  std::cout << "----- Created c.dat empty -----"
-            << "\n";
-  if (error) {
-    printError(error);
-    return error;
-  }
-  std::cout << fs.toString() << "\n";
-
-  std::cout << "----- Removed c.dat -----"
-            << "\n";
-  error = fs.remove("c.dat");
-  if (error) {
-    printError(error);
-    return error;
-  }
-  std::cout << fs.toString() << "\n";
+  std::cout << error << "\n";
 
   return error;
 }
 
-void printError(int error) {
-  switch (error) {
-    case Error::OK:
-      std::cerr << "Everything is ok.\n";
-      break;
+int runServer() {
+  int error = EXIT_SUCCESS;
 
-    case Error::NOT_OK:
-      std::cerr << "Something went wrong.\n";
-      break;
+  Socket socket;
 
-    case Error::NO_SPACE_IN_DIRECTORY:
-      std::cerr << "There is no space in the directory.\n";
-      break;
+  error = socket.create();
 
-    case Error::NO_SPACE_IN_FAT:
-      std::cerr << "There is no space in the FAT.\n";
-      break;
-
-    case Error::FILE_NOT_FOUND:
-      std::cerr << "File not found in the directory.\n";
-      break;
-
-    case Error::INVALID_FILE:
-      std::cerr << "Found an invalid file.\n";
-      break;
-
-    default:
-      std::cerr << "Unknown error happened.\n";
-      break;
+  if (!error) {
+    error = socket.bind("127.0.0.1", 8000);
   }
+
+  std::cout << error << "\n";
+
+  if (!error) {
+    error = socket.listen();
+  }
+
+  std::cout << error << "\n";
+
+  if (!error) {
+    while (true) {
+      error = socket.accept();
+    }
+  }
+
+  std::cout << error << "\n";
+
+  return error;
+}
+
+int runClient() {
+  int error = EXIT_SUCCESS;
+
+  Socket socket;
+
+  error = socket.create();
+
+  if (!error) {
+    error = socket.connect("127.0.0.1", 8000);
+  }
+
+  std::cout << error << "\n";
+
+  return error;
 }
