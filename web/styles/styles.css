@@ -25,13 +25,16 @@ body {
   padding-bottom: 5vh;
 }
 
+#entrar {
+  margin: auto;
+}
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
-
 
 form {
   background-color: #fff;
@@ -87,7 +90,7 @@ h2 {
   font-family: var(--fuente-public-sans);
   color: #0078F0;
 }
-
+#username,
 input[type="password"] {
   display: block;
   width: 100%;
@@ -103,7 +106,7 @@ input[type="password"] {
   background-position: right center;
 }
 
-button.username-login {
+#username {
   background-image: url(".././assets/images/person.png");
 }
 
@@ -474,4 +477,29 @@ form.form-container {
 }
 form button {
   margin-top: 30px ;
+}
+
+button.deny-btn,
+button.cancel-btn {
+  display: block;
+  background-color: #fff;
+  color: #ff5b5b;
+  padding: 10px;
+  border: 1px solid #ff5b5b;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  font-family: var(--fuente-principal);
+  font-style: normal;
+  font-weight: 5000;
+  color: #ff5b5b;
+  max-width: 200px;
+  transition: background-color 0.3s ease-in-out;
+}
+button.deny-btn:hover,
+button.cancel-btn:hover {
+  background-color: #ea4b4b;
+  color: #fff;
+  font-weight: 1000;
 }
