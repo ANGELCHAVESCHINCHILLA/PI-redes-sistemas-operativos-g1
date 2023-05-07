@@ -47,16 +47,16 @@ class Socket {
   ~Socket();
 
   // Copy Constructor
-  // Socket(const Socket& other);
+  Socket(const Socket& other) = delete;
 
   // Copy Assignment Operator
-  // Socket& operator=(const Socket& other) = delete;
+  Socket& operator=(const Socket& other) = delete;
 
   // Move Constructor
-  // Socket(Socket&& other);
+  Socket(Socket&& other) = delete;
 
   // Move Assignment Operator
-  // Socket& operator=(Socket&& other);
+  Socket& operator=(Socket&& other) = delete;
 
   /**
    * @brief Creates a new socket.
