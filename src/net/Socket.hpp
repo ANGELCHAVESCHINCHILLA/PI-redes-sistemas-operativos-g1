@@ -31,8 +31,7 @@ enum SocketError {
 class Socket {
  private:
   int fd;
-  struct sockaddr_in bind_addr;
-  struct sockaddr_in connect_addr;
+  struct sockaddr_in addr;
 
  public:
   /**

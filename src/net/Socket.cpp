@@ -11,8 +11,8 @@
 #define BUFFER_SIZE 1024
 
 Socket::Socket() {
-  ::memset(&this->bind_addr, 0, sizeof(this->bind_addr));
-  ::memset(&this->connect_addr, 0, sizeof(this->connect_addr));
+  //
+  ::memset(&this->addr, 0, sizeof(this->addr));
 }
 
 Socket::~Socket() {
@@ -37,13 +37,12 @@ int Socket::create() {
 int Socket::bind(const std::string& host, int port) {
   int error = SocketError::OK;
 
-  this->bind_addr.sin_family = AF_INET;
-  this->bind_addr.sin_port = htons(port);
-  this->bind_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  // inet_pton(AF_INET, host, &this->bind_addr.sin_addr);
+  this->addr.sin_family = AF_INET;
+  this->addr.sin_port = htons(port);
+  this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  // inet_pton(AF_INET, host, &this->addr.sin_addr);
 
-  error = ::bind(
-      this->fd, (struct sockaddr*) &this->bind_addr, sizeof(this->bind_addr));
+  error = ::bind(this->fd, (struct sockaddr*) &this->addr, sizeof(this->addr));
 
   if (error == -1) {
     std::cerr << "Can't bind the socket.\n";
@@ -89,13 +88,13 @@ int Socket::accept(Socket& socket) {
 int Socket::connect(const std::string& host, int port) {
   int error = SocketError::OK;
 
-  this->connect_addr.sin_family = AF_INET;
-  this->connect_addr.sin_port = htons(port);
-  this->connect_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  // inet_pton(AF_INET, host, &this->connect_addr.sin_addr);
+  this->addr.sin_family = AF_INET;
+  this->addr.sin_port = htons(port);
+  this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  // inet_pton(AF_INET, host, &this->addr.sin_addr);
 
-  error = ::connect(this->fd, (struct sockaddr*) &this->connect_addr,
-      sizeof(this->connect_addr));
+  error =
+      ::connect(this->fd, (struct sockaddr*) &this->addr, sizeof(this->addr));
 
   if (error == -1) {
     std::cerr << "Can't connect to the socket.\n";
