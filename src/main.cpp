@@ -29,8 +29,6 @@ int main(int argc, char** argv) {
     error = runClient();
   }
 
-  std::cout << error << "\n";
-
   return error;
 }
 
@@ -45,21 +43,27 @@ int runServer() {
     error = socket.bind("127.0.0.1", 8000);
   }
 
-  std::cout << error << "\n";
-
   if (!error) {
     error = socket.listen();
   }
 
-  std::cout << error << "\n";
-
   if (!error) {
     while (true) {
       error = socket.accept();
+
+      std::string message;
+
+      if (!error) {
+        std::cout << "I will receive a message!\n";
+
+        error = socket.receive(message);
+      }
+
+      if (!error) {
+        std::cout << message << "\n";
+      }
     }
   }
-
-  std::cout << error << "\n";
 
   return error;
 }
@@ -75,7 +79,11 @@ int runClient() {
     error = socket.connect("127.0.0.1", 8000);
   }
 
-  std::cout << error << "\n";
+  if (!error) {
+    std::cout << "I will send a message!\n";
+
+    error = socket.send("Hello, World!");
+  }
 
   return error;
 }

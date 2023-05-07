@@ -8,14 +8,20 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 
+#include <string>
+
 enum SocketError {
   OK = EXIT_SUCCESS,
   NOT_OK = EXIT_FAILURE,
+  //
   CANT_CREATE_SOCKET,
   CANT_BIND_SOCKET,
   CANT_LISTEN_SOCKET,
   CANT_ACCEPT_SOCKET,
   CANT_CONNECT_SOCKET,
+  //
+  CANT_SEND_DATA,
+  CANT_RECEIVE_DATA,
 };
 
 /**
@@ -65,7 +71,7 @@ class Socket {
    *
    * @return int A SocketError code.
    */
-  int bind(char* host, int port);
+  int bind(const std::string& host, int port);
 
   /**
    * @brief The socket will be used to accept connections for other sockets.
@@ -90,7 +96,11 @@ class Socket {
    * @param port The port of the listening socket.
    * @return int A SocketError code.
    */
-  int connect(char* host, int port);
+  int connect(const std::string& host, int port);
+
+  int send(const std::string& data);
+
+  int receive(std::string& data);
 
  private:
   /**
