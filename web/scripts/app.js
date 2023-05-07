@@ -305,6 +305,50 @@ function openSalaryConstanceForm() {
   form
     .addReadOnlyText("empleado", "Empleado:", employeeName)
     .addTextField("motivo", "Motivo de la solicitud:", true)
+    .addTextField("informacion-adicional", "Motivo de la solicitud:", false)
+    .addSubmitlButton("enviar", "Enviar")
+    .addCancelButton("cancelar", "Cancelar");
+  createFormPage(title, form.build());
+}
+
+function openEmploymentCertificateForm() {
+  let title = "Constancia laboral";
+  let form = new FormBuilder();
+  // TODO: get employee name via backend
+  let employeeName = "Marta Gonzalez Beltrán";
+  form
+    .addReadOnlyText("empleado", "Empleado:", employeeName)
+    .addTextField("motivo", "Motivo de la solicitud:", true)
+    .addTextField("informacion-adicional", "Motivo de la solicitud:", false)
+    .addSubmitlButton("enviar", "Enviar")
+    .addCancelButton("cancelar", "Cancelar");
+  createFormPage(title, form.build());
+}
+function openVacationsForm() {
+  let title = "Solicitud de Vacaciones";
+  let form = new FormBuilder();
+  // TODO: get employee name via backend
+  let employeeName = "Marta Gonzalez Beltrán";
+  form
+    .addReadOnlyText("empleado", "Empleado:", employeeName)
+    .addNumericField("dias-vacaciones", "Especifique la cantidad de días", true)
+    .addDateField("inicio-vacaciones", "Fecha de inicio de las vacaciones")
+    .addDateField("final-vacaciones", "Fecha final de las vacaciones")
+    .addTextField("motivo", "Motivo de la solicitud:", true)
+    .addTextField("informacion-adicional", "Información Adicional:", false)
+    .addSubmitlButton("enviar", "Enviar")
+    .addCancelButton("cancelar", "Cancelar");
+  createFormPage(title, form.build());
+}
+function openPaymentProofForm() {
+  let title = "Constancia de Pago";
+  let form = new FormBuilder();
+  // TODO: get employee name via backend
+  let employeeName = "Marta Gonzalez Beltrán";
+  form
+    .addReadOnlyText("empleado", "Empleado:", employeeName)
+    .addTextField("motivo", "Motivo de la solicitud:", true)
+    .addTextField("informacion-adicional", "Motivo de la solicitud:", false)
     .addSubmitlButton("enviar", "Enviar")
     .addCancelButton("cancelar", "Cancelar");
   createFormPage(title, form.build());
@@ -330,10 +374,6 @@ function openRequestForm(id) {
       console.log(`Error: the button with id ${id} couldn't be handled`);
   }
 }
-
-function openEmploymentCertificateForm() {}
-function openVacationsForm() {}
-function openPaymentProofForm() {}
 
 /**
  * TODO: Make a file only for button functions
