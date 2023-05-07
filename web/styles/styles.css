@@ -1,8 +1,8 @@
 :root {
   --fuente-principal: 'Roboto', sans-serif;
   --fuente-public-sans: 'Public Sans', sans-serif;
-  --azul-primario: "#0078F0"
-    --azul-hover: #5197e2
+  --azul-primario: "#0078F0";
+  --azul-hover: #5197e2
 }
 
 html {
@@ -30,7 +30,6 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  ;
 }
 
 
@@ -49,6 +48,22 @@ label {
   color: #ccc;
   font-family: var(--fuente-public-sans);
 }
+.form-field label {
+  margin-top: 30px;
+}
+.form-field input{
+  border: none;
+  display: block;
+  width: 100%;
+  padding: 5px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #ccc;
+  font-family: var(--fuente-ibm-plex);
+  box-sizing: border-box;
+}
+
 
 footer {
   text-align: center;
@@ -73,7 +88,6 @@ h2 {
   color: #0078F0;
 }
 
-input[type="text"],
 input[type="password"] {
   display: block;
   width: 100%;
@@ -89,8 +103,7 @@ input[type="password"] {
   background-position: right center;
 }
 
-input[type="text"],
-input[type="username"] {
+button.username-login {
   background-image: url(".././assets/images/person.png");
 }
 
@@ -392,4 +405,73 @@ div#page-blank-container {
   align-items: center;
   justify-content: center;
   padding: 20vh;
+}
+
+
+button[type="submit"] {
+  display: block;
+  background-color: #0078F0;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  font-family: var(--fuente-principal);
+  font-style: normal;
+  font-weight: 5000;
+  color: #0078F0;
+  background: rgba(0, 120, 240, 0.1);
+  border: 1px solid #0078F0;
+  border-radius: 10px;
+  max-width: 200px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button[type="submit"]:hover {
+  background-color: #6ea9e7;
+  color: #f2f2f2;
+  font-weight: 1000;
+}
+
+
+button[type="cancel"] {
+  display: block;
+  background-color: #fff;
+  color: #ff5b5b;
+  padding: 10px;
+  border: 1px solid #ff5b5b;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  font-family: var(--fuente-principal);
+  font-style: normal;
+  font-weight: 5000;
+  color: #ff5b5b;
+  max-width: 200px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button[type="cancel"]:hover {
+  background-color: #ea4b4b;
+  color: #fff;
+  font-weight: 1000;
+}
+
+button.submit:hover {
+  background-color: #6ea9e7;
+  color: #f2f2f2;
+  font-weight: 1000;
+}
+
+form.form-container {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+}
+form button {
+  margin-top: 30px ;
 }
