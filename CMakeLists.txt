@@ -8,6 +8,10 @@ add_executable(PI-redes-sistemas-operativos-g1
     src/main.cpp
     src/net/Socket.cpp
     src/net/Socket.hpp
+    src/net/TcpServer.cpp
+    src/net/TcpServer.hpp
+    src/http/HttpServer.cpp
+    src/http/HttpServer.hpp
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
