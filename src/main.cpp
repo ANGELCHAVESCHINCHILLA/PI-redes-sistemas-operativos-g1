@@ -6,7 +6,7 @@
 
 #include "error.hpp"
 #include "fs.hpp"
-#include "hash.hpp"
+// #include "hash.hpp"
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -24,12 +24,13 @@ int main() {
   // std::cout << Hash::fromString("Camilo123") << "\n";
 
   FS fs;
-  const std::string usersFileName = "usuarios.dat";
+  const std::string usersFileName = "usuarios.csv";
   fs.create(usersFileName);
 
-  const std::string usersSourceFileName = "usuarios.dat";
+  const std::string usersSourceFileName = "usuarios.csv";
 
   error = writeUsers(&fs, usersFileName, usersSourceFileName);
+   std::cout << fs.toString() << "\n";
   if (error == EXIT_SUCCESS) {
     const std::string userName =
         readString(std::cin, "Indique el nombre de usuario:");

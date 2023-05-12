@@ -161,13 +161,13 @@ char FS::read(std::string fileName, size_t position, char *permissions) {
   if (!error) {
     // start block of the file
     const int start_block = this->directory[directory_index].startBlock;
-    // The amount of blocks to to traverse to reach the desired character
+    // The amount of blocks to traverse to reach the desired character
     const int block_number = position / static_cast<int>(BLOCK_SIZE);
     // Number of positions to go through in the block to reach the desired
     // character
     const int char_number = position - block_number * BLOCK_SIZE;
 
-    // Find the block in which is stored the character
+    // Find the block in which the character is stored
     int fat_index = start_block;
     int block_count = 0;
     while (block_count < block_number) {
@@ -362,7 +362,7 @@ std::string FS::toString() {
   ss << "\n\nBlocks:\n";
 
   for (size_t index = 0; index < FAT_COUNT; ++index) {
-    ss << index << " ";
+    // ss << index << " ";
     for (size_t unit_index = 0; unit_index < BLOCK_SIZE; ++unit_index) {
       char data = this->unit[unit_index + index * BLOCK_SIZE];
 
