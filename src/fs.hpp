@@ -6,13 +6,16 @@
 
 #include <string>
 
-#define DIRECTORY_COUNT 10
+#define DIRECTORY_COUNT 8
 #define DIRECTORY_UNDEFINED -1
 
-#define FAT_COUNT 10
+#define FAT_COUNT 8
 #define FAT_UNDEFINED -1
 #define FAT_RESERVED -2
 #define FAT_EOF -3
+
+#define BLOCK_SIZE 64
+#define BLOCK_EOF '\0'
 
 struct DirectoryEntry {
  public:
@@ -35,6 +38,22 @@ struct DirectoryEntry {
   time_t date;
 
   /**
+  */
+  std::string owner;
+
+  /**
+  */
+  char* permissions;
+
+  /**
+  */
+  std::string belongsFolder;
+
+  /**
+  */
+  bool isFile;
+
+  /**
    * @brief Default constructor.
    *
    */
@@ -52,7 +71,7 @@ struct DirectoryEntry {
    * @param block The index of the block.
    * @param name The name of the file.
    */
-  DirectoryEntry(int block, std::string name);
+  DirectoryEntry(int block, std::string name, char* permissions = "111", std::string belongsFolder = "");
 
   /**
    * @brief Resets all the properties of the entry.
@@ -79,7 +98,7 @@ class FS {
    * @brief The data of the files.
    *
    */
-  char* blocks;
+  char* unit;
 
  public:
   /**
@@ -111,6 +130,10 @@ class FS {
    * @return int An error code.
    */
   int append(std::string name, char character);
+
+  /**
+  */
+  char read(std::string fileName, size_t position, char *permissions);
 
   /**
    * @brief Delete the file, the unit of storage will have garbage.
@@ -178,4 +201,6 @@ class FS {
    * Otherwise it returns an error code.
    */
   int searchFile(std::string name);
+
+  std::string& validateUser(const std::string& userName, const std::string& hashKey);
 };
