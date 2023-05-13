@@ -7,6 +7,7 @@
 #include "fs.hpp"
 
 #include <time.h>
+
 #include <cstring>
 #include <iostream>
 #include <sstream>
@@ -21,9 +22,11 @@ DirectoryEntry::~DirectoryEntry() {
   //
 }
 
-DirectoryEntry::DirectoryEntry(int block, std::string name, char *permissions,
-                               std::string belongsFolder)
-    : startBlock(block), name(name), permissions(permissions),
+DirectoryEntry::DirectoryEntry(
+    int block, std::string name, char *permissions, std::string belongsFolder)
+    : startBlock(block),
+      name(name),
+      permissions(permissions),
       belongsFolder(belongsFolder) {
   this->date = ::time(0);
 }
@@ -57,27 +60,31 @@ int FS::create(std::string name) {
   // Find a space in the directory
   const int directory_index = this->findDirectorySpace();
 
-  if (directory_index != DIRECTORY_UNDEFINED) {
+  if (directory_index == DIRECTORY_UNDEFINED) {
+    error = Error::NO_SPACE_IN_DIRECTORY;
+  }
+
+  if (!error) {
     // Find a space in the fat
     const int fat_index = this->findFATSpace();
 
-    if (fat_index != FAT_UNDEFINED) {
+    if (fat_index == FAT_UNDEFINED) {
+      error = Error::NO_SPACE_IN_FAT;
+    }
+
+    if (!error) {
       DirectoryEntry directory_entry(fat_index, name);
 
       this->directory[directory_index] = directory_entry;
 
       this->fat[fat_index] = FAT_RESERVED;
-    } else {
-      error = Error::NO_SPACE_IN_FAT;
     }
-  } else {
-    error = Error::NO_SPACE_IN_DIRECTORY;
   }
 
   if (!error) {
     return directory_index;
   } else {
-    return error;
+    return -1;
   }
 }
 
@@ -158,7 +165,9 @@ int FS::getFileSize(const std::string &filename) {
   if (directory_index != DIRECTORY_UNDEFINED) {
     int fat_index = this->directory[directory_index].startBlock;
     // find size of full blocks
-    while (this->fat[fat_index] != FAT_EOF && this->fat[fat_index] != FAT_RESERVED && this->fat[fat_index] != FAT_UNDEFINED) {
+    while (this->fat[fat_index] != FAT_EOF &&
+           this->fat[fat_index] != FAT_RESERVED &&
+           this->fat[fat_index] != FAT_UNDEFINED) {
       size += static_cast<int>(BLOCK_SIZE);
       fat_index = this->fat[fat_index];
     }
@@ -207,7 +216,7 @@ char FS::read(std::string fileName, size_t position, char *permissions) {
       // Find the char in the block
       int char_index = 0;
       while (this->unit[fat_index * BLOCK_SIZE + char_index] != BLOCK_EOF &&
-            char_index < char_number) {
+             char_index < char_number) {
         ++char_index;
       }
 

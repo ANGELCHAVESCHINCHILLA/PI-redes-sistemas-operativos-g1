@@ -38,19 +38,19 @@ struct DirectoryEntry {
   time_t date;
 
   /**
-  */
+   */
   std::string owner;
 
   /**
-  */
+   */
   char* permissions;
 
   /**
-  */
+   */
   std::string belongsFolder;
 
   /**
-  */
+   */
   bool isFile;
 
   /**
@@ -71,7 +71,8 @@ struct DirectoryEntry {
    * @param block The index of the block.
    * @param name The name of the file.
    */
-  DirectoryEntry(int block, std::string name, char* permissions = "111", std::string belongsFolder = "");
+  DirectoryEntry(int block, std::string name, char* permissions = "111",
+      std::string belongsFolder = "");
 
   /**
    * @brief Resets all the properties of the entry.
@@ -117,8 +118,8 @@ class FS {
    * @brief Creates a file.
    *
    * @param name The name of the file.
-   * @return int The position of the first block of the file created or an error
-   * code.
+   * @return int The position of the first block of the file created or a -1 if
+   * there's an error.
    */
   int create(std::string name);
 
@@ -133,15 +134,15 @@ class FS {
 
   /**
    * @brief Get the size in bytes of a file
-   * 
+   *
    * @param filename the name of the file
    * @return int the size of the file
    */
-  int getFileSize(const std::string &filename);
+  int getFileSize(const std::string& filename);
 
   /**
-  */
-  char read(std::string fileName, size_t position, char *permissions);
+   */
+  char read(std::string fileName, size_t position, char* permissions);
 
   /**
    * @brief Delete the file, the unit of storage will have garbage.
@@ -210,5 +211,6 @@ class FS {
    */
   int searchFile(std::string name);
 
-  std::string& validateUser(const std::string& userName, const std::string& hashKey);
+  std::string& validateUser(
+      const std::string& userName, const std::string& hashKey);
 };
