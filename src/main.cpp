@@ -16,7 +16,7 @@ void printError(int error);
 std::string readString(std::istream &input, std::string message);
 
 int writeUsers(FS *fs, const std::string &usersFileName,
-               const std::string &usersSourceFileName);
+    const std::string &usersSourceFileName);
 
 int main() {
   int error = EXIT_SUCCESS;
@@ -30,7 +30,7 @@ int main() {
   const std::string usersSourceFileName = "usuarios.csv";
 
   error = writeUsers(&fs, usersFileName, usersSourceFileName);
-   std::cout << fs.toString() << "\n";
+  std::cout << fs.toString() << "\n";
   if (error == EXIT_SUCCESS) {
     const std::string userName =
         readString(std::cin, "Indique el nombre de usuario:");
@@ -46,7 +46,6 @@ int main() {
      std::cout << "\nCharacter read: '" << characterRead << "'" << std::endl;
     */
   }
-
 
   printError(error);
 
@@ -64,7 +63,7 @@ std::string readString(std::istream &input, std::string message) {
 }
 
 int writeUsers(FS *fs, const std::string &usersFileName,
-               const std::string &usersSourceFileName) {
+    const std::string &usersSourceFileName) {
   assert(fs);
   int error = EXIT_SUCCESS;
   // Open the source file
@@ -87,32 +86,32 @@ int writeUsers(FS *fs, const std::string &usersFileName,
 
 void printError(int error) {
   switch (error) {
-  case Error::OK:
-    std::cerr << "Everything is ok.\n";
-    break;
+    case Error::OK:
+      std::cerr << "Everything is ok.\n";
+      break;
 
-  case Error::NOT_OK:
-    std::cerr << "Something went wrong.\n";
-    break;
+    case Error::NOT_OK:
+      std::cerr << "Something went wrong.\n";
+      break;
 
-  case Error::NO_SPACE_IN_DIRECTORY:
-    std::cerr << "There is no space in the directory.\n";
-    break;
+    case Error::NO_SPACE_IN_DIRECTORY:
+      std::cerr << "There is no space in the directory.\n";
+      break;
 
-  case Error::NO_SPACE_IN_FAT:
-    std::cerr << "There is no space in the FAT.\n";
-    break;
+    case Error::NO_SPACE_IN_FAT:
+      std::cerr << "There is no space in the FAT.\n";
+      break;
 
-  case Error::FILE_NOT_FOUND:
-    std::cerr << "File not found in the directory.\n";
-    break;
+    case Error::FILE_NOT_FOUND:
+      std::cerr << "File not found in the directory.\n";
+      break;
 
-  case Error::INVALID_FILE:
-    std::cerr << "Found an invalid file.\n";
-    break;
+    case Error::INVALID_FILE:
+      std::cerr << "Found an invalid file.\n";
+      break;
 
-  default:
-    std::cerr << "Unknown error happened.\n";
-    break;
+    default:
+      std::cerr << "Unknown error happened.\n";
+      break;
   }
 }
