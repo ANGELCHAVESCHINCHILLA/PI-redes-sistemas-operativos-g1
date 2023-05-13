@@ -6,8 +6,11 @@ enable_testing()
 
 add_executable(PI-redes-sistemas-operativos-g1
     src/main.cpp
+    src/error.hpp
     src/fs.cpp
     src/fs.hpp
+    src/hash.cpp
+    src/hash.hpp
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
