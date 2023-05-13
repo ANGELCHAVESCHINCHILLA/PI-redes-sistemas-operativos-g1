@@ -132,6 +132,14 @@ class FS {
   int append(std::string name, char character);
 
   /**
+   * @brief Get the size in bytes of a file
+   * 
+   * @param filename the name of the file
+   * @return int the size of the file
+   */
+  int getFileSize(const std::string &filename);
+
+  /**
   */
   char read(std::string fileName, size_t position, char *permissions);
 

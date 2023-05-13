@@ -151,6 +151,32 @@ int FS::append(std::string name, char character) {
   return error;
 }
 
+int FS::getFileSize(const std::string &filename) {
+  int size = 0;
+  int directory_index = this->searchFile(filename);
+
+  if (directory_index != DIRECTORY_UNDEFINED) {
+    int fat_index = this->directory[directory_index].startBlock;
+    // find size of full blocks
+    while (this->fat[fat_index] != FAT_EOF && this->fat[fat_index] != FAT_RESERVED && this->fat[fat_index] != FAT_UNDEFINED) {
+      std::cout << this->fat[fat_index] << std::endl;
+      size += static_cast<int>(BLOCK_SIZE);
+      fat_index = this->fat[fat_index];
+    }
+
+    // find size of uncomplete blocks
+    int block_index = fat_index * static_cast<int>(BLOCK_SIZE);
+    while (this->unit[block_index] != BLOCK_EOF) {
+      size++;
+      block_index++;
+    }
+  } else {
+    std::cerr << "directory undefined" << std::endl;
+  }
+
+  return size;
+}
+
 char FS::read(std::string fileName, size_t position, char *permissions) {
   int error = Error::OK;
   int directory_index = this->searchFile(fileName);
