@@ -159,7 +159,6 @@ int FS::getFileSize(const std::string &filename) {
     int fat_index = this->directory[directory_index].startBlock;
     // find size of full blocks
     while (this->fat[fat_index] != FAT_EOF && this->fat[fat_index] != FAT_RESERVED && this->fat[fat_index] != FAT_UNDEFINED) {
-      std::cout << this->fat[fat_index] << std::endl;
       size += static_cast<int>(BLOCK_SIZE);
       fat_index = this->fat[fat_index];
     }
@@ -185,34 +184,38 @@ char FS::read(std::string fileName, size_t position, char *permissions) {
   }
 
   if (!error) {
-    // start block of the file
-    const int start_block = this->directory[directory_index].startBlock;
-    // The amount of blocks to traverse to reach the desired character
-    const int block_number = position / static_cast<int>(BLOCK_SIZE);
-    // Number of positions to go through in the block to reach the desired
-    // character
-    const int char_number = position - block_number * BLOCK_SIZE;
+    // validate if position is out of bounds or not
+    error = this->getFileSize(fileName) >= position ? Error::OK : Error::NOT_OK;
 
-    // Find the block in which the character is stored
-    int fat_index = start_block;
-    int block_count = 0;
-    while (block_count < block_number) {
-      fat_index = this->fat[fat_index];
-      ++block_count;
+    if (!error) {
+      // start block of the file
+      const int start_block = this->directory[directory_index].startBlock;
+      // The amount of blocks to traverse to reach the desired character
+      const int block_number = position / static_cast<int>(BLOCK_SIZE);
+      // Number of positions to go through in the block to reach the desired
+      // character
+      const int char_number = position - block_number * BLOCK_SIZE;
+
+      // Find the block in which the character is stored
+      int fat_index = start_block;
+      int block_count = 0;
+      while (block_count < block_number) {
+        fat_index = this->fat[fat_index];
+        ++block_count;
+      }
+
+      // Find the char in the block
+      int char_index = 0;
+      while (this->unit[fat_index * BLOCK_SIZE + char_index] != BLOCK_EOF &&
+            char_index < char_number) {
+        ++char_index;
+      }
+
+      const char result = this->unit[fat_index * BLOCK_SIZE + char_index];
+      return result;
     }
-
-    // Find the char in the block
-    int char_index = 0;
-    while (this->unit[fat_index * BLOCK_SIZE + char_index] != BLOCK_EOF &&
-           char_index < char_number) {
-      ++char_index;
-    }
-
-    const char result = this->unit[fat_index * BLOCK_SIZE + char_index];
-    return result;
-  } else {
-    return '\0';
   }
+  return '\0';
 }
 
 int FS::remove(std::string name) {
