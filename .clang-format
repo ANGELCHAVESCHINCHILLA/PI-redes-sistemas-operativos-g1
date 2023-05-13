@@ -3,3 +3,8 @@ BasedOnStyle: Google
 AlignAfterOpenBracket: DontAlign
 SpaceAfterCStyleCast: true
 ...
+---
+BasedOnStyle: Google
+AlignAfterOpenBracket: DontAlign
+AllowShortBlocksOnASingleLine: Never
+...
