@@ -17,11 +17,14 @@ add_executable(PI-redes-sistemas-operativos-g1
     src/http/HttpRequest.cpp
     src/http/HttpRequest.hpp
     src/http/HttpResponse.cpp
+    src/error.hpp
     src/http/HttpResponse.hpp
     src/http/HttpServer.cpp
     src/http/HttpServer.hpp
     src/url/URL.cpp
     src/url/URL.hpp
+    src/hash.cpp
+    src/hash.hpp
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
