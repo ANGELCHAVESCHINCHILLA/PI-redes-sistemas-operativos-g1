@@ -227,6 +227,50 @@ char FS::read(std::string fileName, size_t position, char *permissions) {
   return '\0';
 }
 
+bool FS::validateUser(const std::string& userName, const std::string& hashKey) {
+  // int error = Error::OK;
+  bool is_valid = false;
+  // open users file
+  std::string usersFile = "usuarios.csv";
+  int directory_index = this->searchFile(usersFile);
+  if (directory_index == DIRECTORY_UNDEFINED) {
+    // error = Error::FILE_NOT_FOUND;
+    std::cout << "Directory not found" << std::endl;
+  }
+
+  if (directory_index != DIRECTORY_UNDEFINED) {
+    size_t index = 0;
+    while (index < this->getFileSize(usersFile) && !is_valid) {
+      is_valid = true;
+      char current_char = '\0';
+      size_t user_index = 0;
+      while (current_char != ',') {
+        current_char = this->read(usersFile, index, nullptr);
+        if (current_char != userName[user_index] && current_char != ',') {
+          is_valid = false;
+        }
+        index++;
+        user_index++;
+      }
+      if (!is_valid) {
+        index += 29;
+      } else {
+        size_t hash_index = 0;
+        for (int i = index; i < index + 27; ++i) {
+          current_char = this->read(usersFile, i, nullptr);
+          if (current_char != hashKey[hash_index]) {
+            is_valid = false;
+          }
+          hash_index++;
+        } 
+        if (!is_valid) index++;
+      }
+    }
+  }
+
+  return is_valid;
+}
+
 int FS::remove(std::string name) {
   //
   return this->privateRemove(name, false);
