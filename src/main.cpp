@@ -31,6 +31,7 @@ int main() {
 
   error = writeUsers(&fs, usersFileName, usersSourceFileName);
   std::cout << fs.toString() << "\n";
+  std::cout << "user is " << (fs.validateUser("BritaniaRo", "FgXEzHzXypq0klZoClkYjIfRWQ2") ? "valid" : "invalid") << std::endl;
   if (error == EXIT_SUCCESS) {
     const std::string userName =
         readString(std::cin, "Indique el nombre de usuario:");
