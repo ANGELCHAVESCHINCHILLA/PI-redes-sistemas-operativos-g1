@@ -211,6 +211,6 @@ class FS {
    */
   int searchFile(std::string name);
 
-  std::string& validateUser(
-      const std::string& userName, const std::string& hashKey);
+ public:
+  bool validateUser(const std::string& userName, const std::string& hashKey);
 };
