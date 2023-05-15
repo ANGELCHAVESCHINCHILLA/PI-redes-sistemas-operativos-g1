@@ -1,8 +1,11 @@
-// @Copyright 2023 Universidad de Costa Rica
+// Copyright © 2023 Universidad de Costa Rica
 // Ángel Chaves Chinchilla (c12113) angel.chaveschichilla@ucr.ac.cr
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Camilo Suárez Sandí (C17811) camilo.suarez@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
+
+#ifndef FS_HPP_
+#define FS_HPP_
 
 #include <string>
 
@@ -214,3 +217,5 @@ class FS {
  public:
   bool validateUser(const std::string& userName, const std::string& hashKey);
 };
+
+#endif  // FS_HPP_
