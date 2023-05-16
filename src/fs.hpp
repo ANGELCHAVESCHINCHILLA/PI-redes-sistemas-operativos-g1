@@ -147,6 +147,8 @@ class FS {
    */
   char read(std::string fileName, size_t position, char* permissions);
 
+  char* readAddress(std::string file_name, size_t position);
+
   /**
    * @brief Delete the file, the unit of storage will have garbage.
    *
