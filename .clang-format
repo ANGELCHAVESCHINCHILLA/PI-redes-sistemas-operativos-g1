@@ -2,4 +2,7 @@
 BasedOnStyle: Google
 AlignAfterOpenBracket: DontAlign
 AllowShortBlocksOnASingleLine: Never
+DerivePointerAlignment: false
+PointerAlignment: Left
+ReferenceAlignent: Left
 ...
