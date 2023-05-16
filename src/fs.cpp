@@ -1,4 +1,4 @@
-// @Copyright 2023 Universidad de Costa Rica
+// Copyright © 2023 Universidad de Costa Rica
 // Ángel Chaves Chinchilla (C12113) angel.chaveschichilla@ucr.ac.cr
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Camilo Suárez Sandí (C17811) camilo.suarez@ucr.ac.cr
@@ -23,7 +23,7 @@ DirectoryEntry::~DirectoryEntry() {
 }
 
 DirectoryEntry::DirectoryEntry(
-    int block, std::string name, char *permissions, std::string belongsFolder)
+    int block, std::string name, char* permissions, std::string belongsFolder)
     : startBlock(block),
       name(name),
       permissions(permissions),
@@ -158,7 +158,7 @@ int FS::append(std::string name, char character) {
   return error;
 }
 
-int FS::getFileSize(const std::string &filename) {
+int FS::getFileSize(const std::string& filename) {
   int size = 0;
   int directory_index = this->searchFile(filename);
 
@@ -185,7 +185,7 @@ int FS::getFileSize(const std::string &filename) {
   return size;
 }
 
-char FS::read(std::string fileName, size_t position, char *permissions) {
+char FS::read(std::string fileName, size_t position, char* permissions) {
   int error = Error::OK;
   int directory_index = this->searchFile(fileName);
   if (directory_index == DIRECTORY_UNDEFINED) {
@@ -227,6 +227,50 @@ char FS::read(std::string fileName, size_t position, char *permissions) {
   return '\0';
 }
 
+char* FS::readAddress(std::string file_name, size_t position) {
+  int error = Error::OK;
+  int directory_index = this->searchFile(file_name);
+
+  if (directory_index == DIRECTORY_UNDEFINED) {
+    error = Error::FILE_NOT_FOUND;
+  }
+
+  if (!error) {
+    // validate if position is out of bounds or not
+    error =
+        this->getFileSize(file_name) >= position ? Error::OK : Error::NOT_OK;
+
+    if (!error) {
+      // start block of the file
+      const int start_block = this->directory[directory_index].startBlock;
+      // The amount of blocks to traverse to reach the desired character
+      const int block_number = position / static_cast<int>(BLOCK_SIZE);
+      // Number of positions to go through in the block to reach the desired
+      // character
+      const int char_number = position - block_number * BLOCK_SIZE;
+
+      // Find the block in which the character is stored
+      int fat_index = start_block;
+      int block_count = 0;
+      while (block_count < block_number) {
+        fat_index = this->fat[fat_index];
+        ++block_count;
+      }
+
+      // Find the char in the block
+      int char_index = 0;
+      while (this->unit[fat_index * BLOCK_SIZE + char_index] != BLOCK_EOF &&
+             char_index < char_number) {
+        ++char_index;
+      }
+
+      return &this->unit[fat_index * BLOCK_SIZE + char_index];
+    }
+  }
+
+  return nullptr;
+}
+
 bool FS::validateUser(const std::string& userName, const std::string& hashKey) {
   // int error = Error::OK;
   bool is_valid = false;
@@ -262,7 +306,7 @@ bool FS::validateUser(const std::string& userName, const std::string& hashKey) {
             is_valid = false;
           }
           hash_index++;
-        } 
+        }
         if (!is_valid) index++;
       }
     }

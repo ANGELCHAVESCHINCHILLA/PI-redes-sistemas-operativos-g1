@@ -1,0 +1,63 @@
+// 
+
+#ifndef FS_MENU_HPP_
+#define FS_MENU_HPP_
+
+#include <functional>
+#include <string>
+
+#include "../fs.hpp"
+
+class FSMenu {
+ private:
+  static const std::string TEXT;
+
+  static FSMenu* instance;
+
+  static const std::string PEPPER;
+
+  FS fs;
+
+  FSMenu();
+
+  ~FSMenu() = default;
+
+  // Copy Constructor
+  FSMenu(const FSMenu& other) = delete;
+
+  // Copy Assignment Operator
+  FSMenu& operator=(const FSMenu& other) = delete;
+
+  // Move Constructor
+  FSMenu(FSMenu&& other) = delete;
+
+  // Move Assignment Operator
+  FSMenu& operator=(FSMenu&& other) = delete;
+
+ public:
+  static FSMenu* getInstance();
+
+  void start();
+
+ private:
+  void addUser();
+
+  void authenticateUser();
+
+  void updateUsersFile();
+
+  void writeString(const std::string& file, const std::string& string);
+
+  static int readInteger(const std::string& message,
+      const std::string& error_message, std::function<bool(int)> predicate);
+
+  static std::string readString(const std::string& message,
+      const std::string& error_message,
+      std::function<bool(std::string&)> predicate);
+
+  static void padLeft(std::string& string, size_t length);
+
+  static void trimLeft(std::string& string);
+};
+
+#endif  // FS_MENU_HPP_

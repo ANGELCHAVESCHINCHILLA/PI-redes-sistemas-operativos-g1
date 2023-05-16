@@ -4,67 +4,31 @@
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
 
-#include "error.hpp"
-#include "fs.hpp"
-// #include "hash.hpp"
-#include <cassert>
+#include <assert.h>
+
 #include <fstream>
 #include <iostream>
 
+#include "error.hpp"
+#include "menu/FSMenu.hpp"
+
 void printError(int error);
 
-std::string readString(std::istream &input, std::string message);
-
-int writeUsers(FS *fs, const std::string &usersFileName,
-    const std::string &usersSourceFileName);
+int writeUsers(FS* fs, const std::string& usersFileName,
+    const std::string& usersSourceFileName);
 
 int main() {
   int error = EXIT_SUCCESS;
 
-  // std::cout << Hash::fromString("Camilo123") << "\n";
+  FSMenu* menu = FSMenu::getInstance();
 
-  FS fs;
-  const std::string usersFileName = "usuarios.csv";
-  fs.create(usersFileName);
-
-  const std::string usersSourceFileName = "usuarios.csv";
-
-  error = writeUsers(&fs, usersFileName, usersSourceFileName);
-  std::cout << fs.toString() << "\n";
-  std::cout << "user is " << (fs.validateUser("BritaniaRo", "FgXEzHzXypq0klZoClkYjIfRWQ2") ? "valid" : "invalid") << std::endl;
-  if (error == EXIT_SUCCESS) {
-    const std::string userName =
-        readString(std::cin, "Indique el nombre de usuario:");
-    const std::string hashPassword = readString(std::cin, "Indique la clave");
-
-    /*
-    // For debugging
-    // fs.append(usersFileName, 'c');
-    // fs.append(usersFileName, 'a');
-    // fs.append(usersFileName, 'b');
-    std::cout << fs.toString() << "\n";
-    const char characterRead = fs.read(usersFileName, 205, "hola");
-     std::cout << "\nCharacter read: '" << characterRead << "'" << std::endl;
-    */
-  }
-
-  printError(error);
+  menu->start();
 
   return error;
 }
 
-std::string readString(std::istream &input, std::string message) {
-  std::string result;
-
-  std::cout << message << std::endl;
-
-  input >> result;
-
-  return result;
-}
-
-int writeUsers(FS *fs, const std::string &usersFileName,
-    const std::string &usersSourceFileName) {
+int writeUsers(FS* fs, const std::string& usersFileName,
+    const std::string& usersSourceFileName) {
   assert(fs);
   int error = EXIT_SUCCESS;
   // Open the source file
