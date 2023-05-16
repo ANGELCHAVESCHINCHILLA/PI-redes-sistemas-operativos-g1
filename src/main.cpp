@@ -6,16 +6,12 @@
 
 #include <assert.h>
 
-#include <fstream>
 #include <iostream>
 
 #include "error.hpp"
 #include "menu/FSMenu.hpp"
 
 void printError(int error);
-
-int writeUsers(FS* fs, const std::string& usersFileName,
-    const std::string& usersSourceFileName);
 
 int main() {
   int error = EXIT_SUCCESS;
@@ -24,28 +20,6 @@ int main() {
 
   menu->start();
 
-  return error;
-}
-
-int writeUsers(FS* fs, const std::string& usersFileName,
-    const std::string& usersSourceFileName) {
-  assert(fs);
-  int error = EXIT_SUCCESS;
-  // Open the source file
-  std::ifstream usersSourceFile(usersSourceFileName, std::ifstream::in);
-  // If could open the users source file
-  if (usersSourceFile) {
-    // Read from the file and write in our file system
-    char character = '\0';
-
-    while (usersSourceFile >> character && error == EXIT_SUCCESS) {
-      error = fs->append(usersFileName, character);
-    }
-
-    usersSourceFile.close();
-  } else {
-    error = FILE_NOT_FOUND;
-  }
   return error;
 }
 

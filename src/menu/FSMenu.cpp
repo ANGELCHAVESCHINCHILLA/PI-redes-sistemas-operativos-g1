@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "../error.hpp"
 #include "../hash.hpp"
 
 const std::string FSMenu::TEXT =
@@ -24,7 +25,8 @@ const std::string FSMenu::PEPPER = "Universidad de Costa Rica";
 
 FSMenu::FSMenu() {
   //
-  this->fs.create("usuarios.dat");
+
+  this->readFromFile("usuarios.dat");
 }
 
 FSMenu* FSMenu::getInstance() {
@@ -60,7 +62,7 @@ void FSMenu::start() {
 
       case 3: {
         // [3]: Actualizar usuarios.
-        this->updateUsersFile();
+        this->writeToFile("usuarios.dat");
         break;
       }
 
@@ -162,8 +164,36 @@ void FSMenu::authenticateUser() {
   }
 }
 
-void FSMenu::updateUsersFile() {
-  //
+void FSMenu::readFromFile(const std::string& source_file_name) {
+  int error = Error::OK;
+
+  this->fs.create(source_file_name);
+
+  std::ifstream source_file(source_file_name);
+
+  if (source_file) {
+    char character = '\0';
+
+    while (source_file >> std::noskipws >> character && !error) {
+      error = fs.append(source_file_name, character);
+    }
+
+    source_file.close();
+  }
+}
+
+void FSMenu::writeToFile(const std::string& source_file_name) {
+  int error = Error::OK;
+
+  std::ofstream source_file(source_file_name);
+
+  if (source_file) {
+    char* address = this->fs.readAddress(source_file_name, 0);
+
+    std::string info = address;
+
+    source_file << info;
+  }
 }
 
 void FSMenu::writeString(const std::string& file, const std::string& string) {

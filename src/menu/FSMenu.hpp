@@ -1,4 +1,4 @@
-// 
+//
 
 #ifndef FS_MENU_HPP_
 #define FS_MENU_HPP_
@@ -44,7 +44,9 @@ class FSMenu {
 
   void authenticateUser();
 
-  void updateUsersFile();
+  void readFromFile(const std::string& source_file_name);
+
+  void writeToFile(const std::string& source_file_name);
 
   void writeString(const std::string& file, const std::string& string);
 
