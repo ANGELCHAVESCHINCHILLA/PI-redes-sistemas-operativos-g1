@@ -223,6 +223,14 @@ class FS {
    */
   int searchFile(std::string name);
 
+  /**
+   * @brief Change the permissions into a directory entry.
+   * 
+   * @param name directory entry name.
+   * @param newPermissions new permissions to set to the directory entry.
+   * @return int code error, if successfully or not.
+   */
+  int changePermissionsToEntry(std::string name, char* newPermissions);
  public:
   bool validateUser(const std::string& userName, const std::string& hashKey);
 };
