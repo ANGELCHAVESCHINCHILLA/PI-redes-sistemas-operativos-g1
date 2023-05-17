@@ -509,3 +509,19 @@ std::string FS::toString() {
 
   return ss.str();
 }
+
+int FS::changePermissionsToEntry(std::string name, char* newPermissions) {
+  int error = Error::OK;
+  // Search directory entry
+  int directory_index = this->searchFile(name);
+  // If not exists change error value
+  if (directory_index == DIRECTORY_UNDEFINED) {
+    error = Error::FILE_NOT_FOUND;
+  }
+  // If not error, so the entry exists
+  if(!error) {
+    // change permissions
+    this->directory->changePermissions(newPermissions);
+  }
+  return error;
+}
