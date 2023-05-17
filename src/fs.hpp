@@ -82,6 +82,13 @@ struct DirectoryEntry {
    *
    */
   void reset();
+
+  /**
+   * @brief Changes the current permissions to new permisssions given by param.
+   *
+   * @param newPermissions The new permissions to set to the directory.
+   */
+  void changePermissions(char* newPermissions);
 };
 
 class FS {

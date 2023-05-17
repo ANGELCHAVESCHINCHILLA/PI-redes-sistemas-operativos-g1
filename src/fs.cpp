@@ -37,6 +37,10 @@ void DirectoryEntry::reset() {
   this->date = 0;
 }
 
+void DirectoryEntry::changePermissions(char* newPermissions) {
+  this->permissions = newPermissions;
+}
+
 FS::FS() {
   this->directory = new DirectoryEntry[DIRECTORY_COUNT];
   this->fat = new int[FAT_COUNT];
