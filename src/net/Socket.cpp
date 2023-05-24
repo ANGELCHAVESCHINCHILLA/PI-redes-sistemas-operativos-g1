@@ -141,6 +141,9 @@ int Socket::receive(std::string& data) {
 }
 
 void Socket::close() {
-  //
-  ::close(this->fd);
+  if (this->fd != -1) {
+    ::close(this->fd);
+
+    this->fd = -1;
+  }
 }
