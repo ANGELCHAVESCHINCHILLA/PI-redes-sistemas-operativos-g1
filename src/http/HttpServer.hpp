@@ -8,6 +8,30 @@
 class HttpServer : public TcpServer {
  private:
  public:
+  /**
+   * @brief Default constructor.
+   *
+   */
+  HttpServer();
+
+  /**
+   * @brief Destructor.
+   *
+   */
+  ~HttpServer();
+
+  // Copy Constructor
+  HttpServer(const HttpServer& other) = delete;
+
+  // Copy Assignment Operator
+  HttpServer& operator=(const HttpServer& other) = delete;
+
+  // Move Constructor
+  HttpServer(HttpServer&& other) = delete;
+
+  // Move Assignment Operator
+  HttpServer& operator=(HttpServer&& other) = delete;
+
   std::string run(const std::string& request) override;
 };
 

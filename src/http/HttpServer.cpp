@@ -4,6 +4,14 @@
 
 #include <iostream>
 
+HttpServer::HttpServer() {
+  //
+}
+
+HttpServer::~HttpServer() {
+  //
+}
+
 std::string HttpServer::run(const std::string& request) {
   std::cout << request << "\n";
 
