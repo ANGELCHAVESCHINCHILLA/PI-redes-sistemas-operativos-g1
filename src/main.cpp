@@ -11,11 +11,17 @@
 int main(int argc, char** argv) {
   int error = EXIT_SUCCESS;
 
+  int port = 8000;
+
+  if (argc == 2) {
+    port = std::stoi(argv[1]);
+  }
+
   HttpServer server;
 
-  std::cout << "Server running at http://127.0.0.1:8000\n";
+  std::cout << "Server running at http://127.0.0.1:" << port << "\n";
 
-  error = server.start("127.0.0.1", 8000);
+  error = server.start("127.0.0.1", port);
 
   return error;
 }
