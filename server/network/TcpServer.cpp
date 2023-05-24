@@ -18,10 +18,12 @@
 
 TcpServer::TcpServer() {
   // Set initial values for searching for a suitable network address
-  ::memset(&hints, 0, sizeof(hints));
-  hints.ai_flags = AI_PASSIVE;  // Fill with my local IP
-  hints.ai_family = AF_UNSPEC;  // Use IPv4 or IPv6, whichever
-  hints.ai_socktype = SOCK_STREAM;  // Use TCP
+  ::memset(&hints, 0, sizeof(this->hints));
+  // AI_PASSIVE: Indica que se utilizará el resultado para un socket en modo de
+  // escucha
+  this->hints.ai_flags = AI_PASSIVE;  // Fill with my local IP
+  this->hints.ai_family = AF_UNSPEC;  // Use IPv4 or IPv6, whichever
+  this->hints.ai_socktype = SOCK_STREAM;  // Use TCP
 }
 
 TcpServer::~TcpServer() {
@@ -47,6 +49,8 @@ void TcpServer::listenForConnections(const char* port) {
   // Get a socket for the first available address that works for the given port
   this->openConnectionRequestSocket(port);
   // Ask the operating system to enqueue connection requests on this socket
+  // connectionRequestSocket indica el socket que creamos para escuchar por soli
+  // citudes.
   int error = ::listen(this->connectionRequestSocket
     , this->connectionQueueCapacity);
   // If OS was unable to start listening for connections, raise an exception
@@ -59,6 +63,8 @@ void TcpServer::fetchAvailableAddresses(const char* port) {
   // This function is designed to be called once
   assert(this->availableAddresses == nullptr);
   // Fetch all available addresses and store results in object attributes
+  // El hints posee las configuraciones deseadas, osea establece que tipo de
+  // direccioens queremos que retorne.
   int error = ::getaddrinfo(nullptr, port, &this->hints
     , &this->availableAddresses);
   // If getaddrinfo failed, raise an exception
@@ -85,6 +91,8 @@ void TcpServer::openConnectionRequestSocket(const char* port) {
         , SO_REUSEADDR, &yes, sizeof yes);
       if (error == 0) {
         // Bind the socket to the port we passed in to getaddrinfo()
+        // Bind significa enlazar el socket con una dirección de red
+        // (la address->ai_addr) y con el puerto.
         error = ::bind(this->connectionRequestSocket, address->ai_addr
           , address->ai_addrlen);
         if (error == 0) {

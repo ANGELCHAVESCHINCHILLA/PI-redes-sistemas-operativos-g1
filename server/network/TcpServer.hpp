@@ -10,6 +10,17 @@
 class NetworkAddress;
 class Socket;
 
+// struct addrinfo {
+//     int ai_flags;           // Opciones adicionales
+//     int ai_family;          // Familia de direcciones (IPv4, IPv6, etc.)
+//     int ai_socktype;        // Tipo de socket (TCP, UDP, etc.)
+//     int ai_protocol;        // Protocolo de transporte (IP, ICMP, etc.)
+//     socklen_t ai_addrlen;   // Longitud de la dirección
+//     struct sockaddr* ai_addr;   // Puntero a la dirección
+//     char* ai_canonname;     // Nombre canónico del host
+//     struct addrinfo* ai_next;   // Puntero al siguiente resultado en la lista
+// };
+
 class TcpServer {
   DISABLE_COPY(TcpServer);
 
@@ -25,6 +36,9 @@ class TcpServer {
   /// Selected network address for this TCP server
   const struct addrinfo* selectedAddress = nullptr;
   /// Socket for listening for incoming connection requests
+  // Indica el file descriptor del socket ya que en linux los sockets son vistos
+  // como archivos. se utiliza para identificar un socket abierto y establecer
+  // comunicación con él.
   int connectionRequestSocket = -1;
   /// Maximum number of pending connection requests allowed in the queue
   /// This queue is called backlog in the Unix sockets manual (man listen)

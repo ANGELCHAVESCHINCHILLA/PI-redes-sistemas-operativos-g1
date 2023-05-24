@@ -21,7 +21,7 @@
 class HttpApp;
 
 /// TODO: Documentation
-class HttpServer : public TcpServer {
+class HttpServer : TcpServer {
   DISABLE_COPY(HttpServer);
 
  protected:
@@ -95,5 +95,6 @@ class HttpServer : public TcpServer {
   /// This method is called each time a client connection request is accepted.
   void handleClientConnection(Socket& client) override;
 };
+
 
 #endif  // HTTPSERVER_H

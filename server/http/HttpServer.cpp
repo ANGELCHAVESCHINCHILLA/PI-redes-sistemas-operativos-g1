@@ -33,7 +33,7 @@ HttpServer& HttpServer::getInstance() {
   }
 
 void HttpServer::listenForever(const char* port) {
-  return TcpServer::listenForever(port);
+  // return TcpServer::listenForever(port);
 }
 
 void HttpServer::handleClientConnection(Socket& client) {
