@@ -99,7 +99,7 @@ int Socket::connect(const std::string& address, int port) {
   if (error == -1) {
     std::cerr << "Can't connect to the socket.\n";
 
-    error == SocketError::CANT_CONNECT_SOCKET;
+    error = SocketError::CANT_CONNECT_SOCKET;
   }
 
   return error;
@@ -110,7 +110,7 @@ int Socket::send(const std::string& data) {
 
   size_t bytes = ::send(this->fd, data.c_str(), data.size(), 0);
 
-  if (bytes == -1) {
+  if (bytes == (size_t) -1) {
     std::cerr << "Can't send the data.\n";
 
     error = SocketError::CANT_SEND_DATA;
@@ -126,7 +126,7 @@ int Socket::receive(std::string& data) {
 
   size_t bytes = ::recv(this->fd, buffer, BUFFER_SIZE - 1, 0);
 
-  if (bytes == -1) {
+  if (bytes == (size_t) -1) {
     std::cerr << "Can't receive the data.\n";
 
     error = SocketError::CANT_RECEIVE_DATA;
