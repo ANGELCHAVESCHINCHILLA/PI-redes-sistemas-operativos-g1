@@ -12,8 +12,8 @@ HttpServer::~HttpServer() {
   //
 }
 
-std::string HttpServer::run(const std::string& request) {
+void HttpServer::run(const std::string& request, std::string& response) {
   std::cout << request << "\n";
 
-  return "HTTP/1.1 200 OK\n\nHello, World!";
+  response = "HTTP/1.1 200 OK\n\nHello, World!";
 };

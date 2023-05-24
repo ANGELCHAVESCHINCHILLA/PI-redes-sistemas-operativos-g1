@@ -32,7 +32,7 @@ class HttpServer : public TcpServer {
   // Move Assignment Operator
   HttpServer& operator=(HttpServer&& other) = delete;
 
-  std::string run(const std::string& request) override;
+  void run(const std::string& request, std::string& response) override;
 };
 
 #endif  // HTTP_SERVER_HPP_

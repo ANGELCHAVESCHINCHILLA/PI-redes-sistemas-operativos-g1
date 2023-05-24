@@ -2,8 +2,6 @@
 
 #include "ThreadPool.hpp"
 
-#include <iostream>
-
 ThreadPool::ThreadPool() : stop(false) {
   //
 }
@@ -36,17 +34,17 @@ void ThreadPool::start(size_t count) {
           std::unique_lock<std::mutex> lock(this->mutex);
 
           // Wait for a signal to execute a task
-          while (!this->stop && this->tasks.empty()) {
+          while (this->tasks.empty()) {
             this->condition_variable.wait(lock);
           }
 
-          // Pop a task from the queue
+          // Stop condition
           if (this->stop && this->tasks.empty()) {
             return;
           }
 
+          // Pop a task from the queue
           task = this->tasks.front();
-
           this->tasks.pop();
         }
 

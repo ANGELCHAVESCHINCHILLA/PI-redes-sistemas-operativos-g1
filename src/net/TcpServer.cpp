@@ -26,33 +26,49 @@ int TcpServer::start(const std::string& address, int port) {
   }
 
   while (!error) {
-    this->thread_pool.execute([this]() {
-      int error = SocketError::OK;
+    Socket client_socket;
 
-      Socket client_socket;
+    if (!error) {
+      error = this->server_socket.accept(client_socket);
+    }
 
-      if (!error) {
-        error = this->server_socket.accept(client_socket);
-      }
+    // Serial
 
-      std::string request;
+    std::string request;
+    std::string response;
 
-      if (!error) {
-        error = client_socket.receive(request);
-      }
+    if (!error) {
+      error = client_socket.receive(request);
+    }
 
-      if (!error) {
-        std::string response = this->run(request);
+    if (!error) {
+      this->run(request, response);
 
-        error = client_socket.send(response);
-      }
+      error = client_socket.send(response);
+    }
 
-      client_socket.close();
+    client_socket.close();
 
-      if (error) {
-        return;
-      }
-    });
+    // Concurrent
+
+    // if (!error) {
+    //   this->thread_pool.execute([&]() {
+    //     std::string request;
+    //     std::string response;
+
+    //     if (!error) {
+    //       error = client_socket.receive(request);
+    //     }
+
+    //     if (!error) {
+    //       this->run(request, response);
+
+    //       error = client_socket.send(response);
+    //     }
+
+    //     client_socket.close();
+    //   });
+    // }
   }
 
   return error;

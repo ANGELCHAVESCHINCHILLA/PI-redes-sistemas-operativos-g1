@@ -2,7 +2,6 @@
 
 #include "Socket.hpp"
 
-#include <errno.h>
 #include <string.h>
 #include <unistd.h>
 

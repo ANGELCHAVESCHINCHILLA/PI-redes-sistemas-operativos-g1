@@ -33,7 +33,7 @@ class TcpServer {
 
   int start(const std::string& address, int port);
 
-  virtual std::string run(const std::string& request) = 0;
+  virtual void run(const std::string& request, std::string& response) = 0;
 };
 
 #endif  // TCP_SERVER_HPP_
