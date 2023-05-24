@@ -14,6 +14,8 @@ add_executable(PI-redes-sistemas-operativos-g1
     src/net/TcpServer.hpp
     src/http/HttpServer.cpp
     src/http/HttpServer.hpp
+    src/url/URL.cpp
+    src/url/URL.hpp
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
