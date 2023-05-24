@@ -6,6 +6,8 @@ enable_testing()
 
 add_executable(PI-redes-sistemas-operativos-g1
     src/main.cpp
+    src/concurrent/ThreadPool.cpp
+    src/concurrent/ThreadPool.hpp
     src/net/Socket.cpp
     src/net/Socket.hpp
     src/net/TcpServer.cpp
