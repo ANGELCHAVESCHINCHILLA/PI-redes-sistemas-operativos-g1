@@ -3,12 +3,14 @@
 #ifndef TCP_SERVER_HPP_
 #define TCP_SERVER_HPP_
 
+#include "../concurrent/ThreadPool.hpp"
 #include "Socket.hpp"
 
 class TcpServer {
  private:
   Socket server_socket;
-  Socket client_socket;
+
+  ThreadPool thread_pool;
 
  public:
   // Default Constructor
