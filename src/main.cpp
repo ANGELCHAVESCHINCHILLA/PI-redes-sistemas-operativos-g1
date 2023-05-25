@@ -11,6 +11,7 @@
 int main(int argc, char** argv) {
   int error = EXIT_SUCCESS;
 
+  std::string address = "127.0.0.1";
   int port = 8000;
 
   if (argc == 2) {
@@ -19,9 +20,9 @@ int main(int argc, char** argv) {
 
   HttpServer server;
 
-  std::cout << "Server running at http://127.0.0.1:" << port << "\n";
+  std::cout << "Server running at http://" << address << ":" << port << "\n";
 
-  error = server.start("127.0.0.1", port);
+  error = server.start(address, port);
 
   return error;
 }

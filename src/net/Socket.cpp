@@ -69,7 +69,10 @@ int Socket::listen() {
 int Socket::accept(Socket& socket) {
   int error = SocketError::OK;
 
-  int fd = ::accept(this->fd, (struct sockaddr*) 0, 0);
+  struct sockaddr_in addr;
+  size_t addrlen = sizeof(addr);
+
+  int fd = ::accept(this->fd, (struct sockaddr*) &addr, (socklen_t*) &addrlen);
 
   if (fd == -1) {
     std::cerr << "Can't accept the connection to the socket.\n";
