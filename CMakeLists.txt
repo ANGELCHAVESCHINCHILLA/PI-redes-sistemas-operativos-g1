@@ -12,6 +12,12 @@ add_executable(PI-redes-sistemas-operativos-g1
     src/net/Socket.hpp
     src/net/TcpServer.cpp
     src/net/TcpServer.hpp
+    src/http/HttpApp.cpp
+    src/http/HttpApp.hpp
+    src/http/HttpRequest.cpp
+    src/http/HttpRequest.hpp
+    src/http/HttpResponse.cpp
+    src/http/HttpResponse.hpp
     src/http/HttpServer.cpp
     src/http/HttpServer.hpp
     src/url/URL.cpp
