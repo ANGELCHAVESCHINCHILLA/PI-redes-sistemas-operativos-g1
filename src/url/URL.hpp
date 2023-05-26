@@ -41,6 +41,12 @@ class URL {
    * @brief Default constructor.
    *
    */
+  explicit URL();
+
+  /**
+   * @brief Constructor.
+   *
+   */
   explicit URL(const std::string& input);
 
   /**
@@ -59,7 +65,7 @@ class URL {
   URL(URL&& other) = delete;
 
   // Move Assignment Operator
-  URL& operator=(URL&& other) = delete;
+  URL& operator=(URL&& other);
 
   /**
    * @brief Returns all of the url.
@@ -91,6 +97,8 @@ class URL {
   const std::string& getFragment() const;
 
  private:
+  URL& move(URL&& other);
+
   /**
    * @brief Parses all of the input.
    *

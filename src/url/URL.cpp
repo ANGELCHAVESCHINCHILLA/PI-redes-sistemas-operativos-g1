@@ -2,6 +2,10 @@
 
 #include "URL.hpp"
 
+URL::URL() {
+  //
+}
+
 URL::URL(const std::string& input) : input(input) {
   std::string copy = this->input;
 
@@ -10,6 +14,11 @@ URL::URL(const std::string& input) : input(input) {
 
 URL::~URL() {
   //
+}
+
+URL& URL::operator=(URL&& other) {
+  //
+  return this->move(std::move(other));
 }
 
 const std::string& URL::getInput() const {
@@ -30,6 +39,15 @@ const std::map<std::string, std::string>& URL::getQuery() const {
 const std::string& URL::getFragment() const {
   //
   return this->fragment;
+}
+
+URL& URL::move(URL&& other) {
+  std::swap(this->input, other.input);
+  std::swap(this->path, other.path);
+  std::swap(this->query, other.query);
+  std::swap(this->fragment, other.fragment);
+
+  return *this;
 }
 
 void URL::parse(std::string& input) {
