@@ -3,10 +3,15 @@
 #ifndef HTTP_SERVER_HPP_
 #define HTTP_SERVER_HPP_
 
+#include <vector>
+
 #include "../net/TcpServer.hpp"
+#include "HttpApp.hpp"
 
 class HttpServer : public TcpServer {
  private:
+  std::vector<HttpApp*> apps;
+
  public:
   /**
    * @brief Default constructor.

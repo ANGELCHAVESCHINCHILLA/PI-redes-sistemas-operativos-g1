@@ -3,14 +3,18 @@
 #ifndef HTTP_RESPONSE_HPP_
 #define HTTP_RESPONSE_HPP_
 
+#include <string>
+
 class HttpResponse {
  private:
+  std::string input;
+
  public:
   /**
    * @brief Default constructor.
    *
    */
-  HttpResponse();
+  explicit HttpResponse(const std::string& input);
 
   /**
    * @brief Destructor.

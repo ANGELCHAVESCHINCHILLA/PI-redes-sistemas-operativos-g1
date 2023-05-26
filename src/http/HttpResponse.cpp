@@ -2,7 +2,7 @@
 
 #include "HttpResponse.hpp"
 
-HttpResponse::HttpResponse() {
+HttpResponse::HttpResponse(const std::string& input) : input(input) {
   //
 }
 

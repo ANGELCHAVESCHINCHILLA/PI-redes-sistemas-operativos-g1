@@ -13,7 +13,12 @@ HttpServer::~HttpServer() {
 }
 
 void HttpServer::run(const std::string& request, std::string& response) {
-  std::cout << request << "\n";
+  HttpRequest http_request(request);
+  HttpResponse http_response(response);
 
-  response = "HTTP/1.1 200 OK\n\nHello, World!";
+  for (HttpApp* app : this->apps) {
+    if (app->run(http_request, http_response)) {
+      break;
+    }
+  }
 };
