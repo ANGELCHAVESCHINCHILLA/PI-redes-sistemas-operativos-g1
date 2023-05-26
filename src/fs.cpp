@@ -288,6 +288,7 @@ bool FS::validateUser(const std::string& userName, const std::string& hashKey) {
 
   if (directory_index != DIRECTORY_UNDEFINED) {
     size_t index = 0;
+    // validate name
     while (index < this->getFileSize(usersFile) && !is_valid) {
       is_valid = true;
       char current_char = '\0';
@@ -300,6 +301,7 @@ bool FS::validateUser(const std::string& userName, const std::string& hashKey) {
         index++;
         user_index++;
       }
+      // validate hashkey
       if (!is_valid) {
         index += 29;
       } else {
@@ -521,7 +523,7 @@ int FS::changePermissionsToEntry(std::string name, char* newPermissions) {
   // If not error, so the entry exists
   if(!error) {
     // change permissions
-    this->directory->changePermissions(newPermissions);
+    this->directory[directory_index].changePermissions(newPermissions);
   }
   return error;
 }
