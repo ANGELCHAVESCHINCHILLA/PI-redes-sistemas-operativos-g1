@@ -25,6 +25,8 @@ int TcpServer::start(const std::string& address, int port) {
     error = this->server_socket.listen();
   }
 
+  this->acceptConnections();
+
   while (!error) {
     Socket client_socket;
 
@@ -72,4 +74,29 @@ int TcpServer::start(const std::string& address, int port) {
   }
 
   return error;
+}
+
+void TcpServer::acceptConnections () {
+  int error = SocketError::OK;
+
+  while (!error) {
+    Socket client_socket;
+
+    if (!error) {
+      error = this->server_socket.accept(client_socket);
+    }
+
+    std::string request;
+    std::string response;
+
+    if (!error) {
+      error = client_socket.receive(request);
+    }
+
+    if (!error) {
+      this->run(request, response, client_socket);
+
+      error = client_socket.send(response);
+    }
+  }
 }

@@ -12,7 +12,8 @@ HttpServer::~HttpServer() {
   //
 }
 
-void HttpServer::run(const std::string& request, std::string& response) {
+void HttpServer::run(const std::string& request, std::string& response
+    , Socket& client) {
   HttpRequest http_request(request);
   HttpResponse http_response(response);
 

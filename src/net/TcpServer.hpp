@@ -1,4 +1,4 @@
-// Copyright © 2023 Camilo Suárez Sandí
+// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
 
 #ifndef TCP_SERVER_HPP_
 #define TCP_SERVER_HPP_
@@ -33,7 +33,9 @@ class TcpServer {
 
   int start(const std::string& address, int port);
 
-  virtual void run(const std::string& request, std::string& response) = 0;
+  virtual void run(const std::string& request, std::string& response, Socket& client) = 0;
+
+  void acceptConnections();
 };
 
 #endif  // TCP_SERVER_HPP_
