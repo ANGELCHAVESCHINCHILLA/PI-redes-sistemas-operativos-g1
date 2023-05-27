@@ -35,7 +35,7 @@ class TcpServer {
 
   virtual void run(const std::string& request, std::string& response, Socket& client) = 0;
 
-  void acceptConnections();
+  int acceptConnections();
 };
 
 #endif  // TCP_SERVER_HPP_
