@@ -22,6 +22,8 @@ std::string NetworkAddress::getIP() const {
     const struct sockaddr_in* address4 =
       reinterpret_cast<const struct sockaddr_in*>(this->address);
     char ip[INET_ADDRSTRLEN];
+    // Convierte una dirección IP en formato binario a una representación de
+    // cadena legible por humanos
     ::inet_ntop(address4->sin_family, &address4->sin_addr, ip, INET_ADDRSTRLEN);
     return ip;
   } else if (address->sa_family == AF_INET6) {  // IPv6
@@ -43,6 +45,11 @@ port_t NetworkAddress::getPort() const {
   if (this->address->sa_family == AF_INET) {  // IPv4
     const struct sockaddr_in* address4 =
       reinterpret_cast<const struct sockaddr_in*>(this->address);
+    // convertir un número de puerto de network byte order a host byte order.
+    // Esto es porque en network byte order puede utilizar una infraestructura
+    // distinta en cuanto a la forma en que se almacena el puerto (little
+    // endian, big endian) entonces se convierte a la forma en que se represente
+    // en el host (la máquina).
     return ntohs(address4->sin_port);
   } else if (address->sa_family == AF_INET6) {  // IPv6
     const struct sockaddr_in6* address6 =
