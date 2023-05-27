@@ -1,4 +1,4 @@
-// Copyright © 2023 Camilo Suárez Sandí
+// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
 
 #include "Socket.hpp"
 
@@ -6,146 +6,214 @@
 #include <unistd.h>
 
 #include <iostream>
+#include <sstream>
 
 #define BUFFER_SIZE 1024
 
-Socket::Socket() {
-  //
-  ::memset(&this->addr, 0, sizeof(this->addr));
-}
+struct SharedSocket {
+  /// Cannot be coppied
+  DISABLE_COPY(SharedSocket);
 
-Socket::~Socket() {
-  //
-  this->close();
-}
-
-int Socket::create() {
-  int error = SocketError::OK;
-
-  this->fd = ::socket(AF_INET, SOCK_STREAM, 0);
-
-  if (this->fd == -1) {
-    std::cerr << "Can't create the socket.\n";
-
-    error = SocketError::CANT_CREATE_SOCKET;
-  }
-
-  return error;
-}
-
-int Socket::bind(const std::string& address, int port) {
-  int error = SocketError::OK;
-
-  this->addr.sin_family = AF_INET;
-  this->addr.sin_port = htons(port);
-  this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  // inet_pton(AF_INET, address, &this->addr.sin_addr);
-
-  error = ::bind(this->fd, (struct sockaddr*) &this->addr, sizeof(this->addr));
-
-  if (error == -1) {
-    std::cerr << "Can't bind the socket.\n";
-
-    error = SocketError::CANT_BIND_SOCKET;
-  }
-
-  return error;
-}
-
-int Socket::listen() {
-  int error = SocketError::OK;
-
-  error = ::listen(this->fd, SOMAXCONN);
-
-  if (error == -1) {
-    std::cerr << "Can't listen to the socket.\n";
-
-    error = SocketError::CANT_LISTEN_SOCKET;
-  }
-
-  return error;
-}
-
-int Socket::accept(Socket& socket) {
-  int error = SocketError::OK;
-
+ public:
+  int fileDescriptor;
+  /// IPv4 address of the peer on the other side of the connection
   struct sockaddr_in addr;
-  size_t addrlen = sizeof(addr);
+  /// Buffer to extract data before a read of received data
+  std::ostringstream output;
+  /// Buffer to store data in memory before sending to the peer
+  std::ostringstream input;
 
-  int fd = ::accept(this->fd, (struct sockaddr*) &addr, (socklen_t*) &addrlen);
-
-  if (fd == -1) {
-    std::cerr << "Can't accept the connection to the socket.\n";
-
-    error = SocketError::CANT_ACCEPT_SOCKET;
+ public:
+  // Constructor
+  SharedSocket() {
+    ::memset(&this->addr, 0, sizeof(this->addr));
   }
 
-  if (!error) {
-    socket.fd = fd;
+  /// Destructor. Closes the socket file descriptor
+  ~SharedSocket() {
+    this->close();
   }
 
-  return error;
-}
+  /// CLose the socket file descrtpr
+  void close() {
+    if (this->fileDescriptor > 0) {
+      ::close(this->fileDescriptor);
 
-int Socket::connect(const std::string& address, int port) {
-  int error = SocketError::OK;
+      // En caso de manejar reportes, aquí se reporta el socket que se ha
+      // cerrado. 
 
-  this->addr.sin_family = AF_INET;
-  this->addr.sin_port = htons(port);
-  this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  // inet_pton(AF_INET, address, &this->addr.sin_addr);
-
-  error =
-      ::connect(this->fd, (struct sockaddr*) &this->addr, sizeof(this->addr));
-
-  if (error == -1) {
-    std::cerr << "Can't connect to the socket.\n";
-
-    error = SocketError::CANT_CONNECT_SOCKET;
+      this->fileDescriptor = -1;
+    }
   }
 
-  return error;
-}
+  int create() {
+    int error = SocketError::OK;
 
-int Socket::send(const std::string& data) {
-  int error = SocketError::OK;
+    this->fileDescriptor = ::socket(AF_INET, SOCK_STREAM, 0);
 
-  size_t bytes = ::send(this->fd, data.c_str(), data.size(), 0);
+    if (this->fileDescriptor == -1) {
+      std::cerr << "Can't create the socket.\n";
 
-  if (bytes == (size_t) -1) {
-    std::cerr << "Can't send the data.\n";
+      error = SocketError::CANT_CREATE_SOCKET;
+    }
 
-    error = SocketError::CANT_SEND_DATA;
+    return error;
   }
 
-  return error;
-}
+  int bind(const std::string& address, int port) {
+    int error = SocketError::OK;
 
-int Socket::receive(std::string& data) {
-  int error = SocketError::OK;
+    this->addr.sin_family = AF_INET;
+    this->addr.sin_port = htons(port);
+    this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    // inet_pton(AF_INET, address, &this->addr.sin_addr);
 
-  char buffer[BUFFER_SIZE];
+    error = ::bind(this->fileDescriptor, (struct sockaddr*) &this->addr
+                  , sizeof(this->addr));
 
-  size_t bytes = ::recv(this->fd, buffer, BUFFER_SIZE - 1, 0);
+    if (error == -1) {
+      std::cerr << "Can't bind the socket.\n";
 
-  if (bytes == (size_t) -1) {
-    std::cerr << "Can't receive the data.\n";
+      error = SocketError::CANT_BIND_SOCKET;
+    }
 
-    error = SocketError::CANT_RECEIVE_DATA;
+    return error;
   }
 
-  if (!error) {
-    buffer[bytes] = '\0';
-    data = buffer;
+  int listen() {
+    int error = SocketError::OK;
+
+    error = ::listen(this->fileDescriptor, SOMAXCONN);
+
+    if (error == -1) {
+      std::cerr << "Can't listen to the socket.\n";
+
+      error = SocketError::CANT_LISTEN_SOCKET;
+    }
+
+    return error;
   }
 
-  return error;
+  int accept(Socket& socket) {
+    int error = SocketError::OK;
+
+    struct sockaddr_in addr;
+    size_t addrlen = sizeof(addr);
+
+    int fd = ::accept(this->fileDescriptor, (struct sockaddr*) &addr
+              , (socklen_t*) &addrlen);
+
+    if (fd == -1) {
+      std::cerr << "Can't accept the connection to the socket.\n";
+
+      error = SocketError::CANT_ACCEPT_SOCKET;
+    }
+
+    if (!error) {
+      socket.setFileDescriptor(fd);
+    }
+
+    return error;
+  }
+
+  int connect(const std::string& address, int port) {
+    int error = SocketError::OK;
+
+    this->addr.sin_family = AF_INET;
+    this->addr.sin_port = htons(port);
+    this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    // inet_pton(AF_INET, address, &this->addr.sin_addr);
+
+    error = ::connect(this->fileDescriptor, (struct sockaddr*) &this->addr
+            , sizeof(this->addr));
+
+    if (error == -1) {
+      std::cerr << "Can't connect to the socket.\n";
+
+      error = SocketError::CANT_CONNECT_SOCKET;
+    }
+
+    return error;
+  }
+
+  int send(const std::string& data) {
+    int error = SocketError::OK;
+
+    size_t bytes = ::send(this->fileDescriptor, data.c_str(), data.size(), 0);
+
+    if (bytes == (size_t) -1) {
+      std::cerr << "Can't send the data.\n";
+
+      error = SocketError::CANT_SEND_DATA;
+    }
+
+    return error;
+  }
+
+  int receive(std::string& data) {
+    int error = SocketError::OK;
+
+    char buffer[BUFFER_SIZE];
+
+    size_t bytes = ::recv(this->fileDescriptor, buffer, BUFFER_SIZE - 1, 0);
+
+    if (bytes == (size_t) -1) {
+      std::cerr << "Can't receive the data.\n";
+
+      error = SocketError::CANT_RECEIVE_DATA;
+    }
+
+    if (!error) {
+      buffer[bytes] = '\0';
+      data = buffer;
+    }
+
+    return error;
+  }
+};
+
+Socket::Socket()
+  : sharedSocket(new SharedSocket()) {
 }
 
 void Socket::close() {
-  if (this->fd != -1) {
-    ::close(this->fd);
+  this->sharedSocket->close();
+}
 
-    this->fd = -1;
-  }
+int Socket::create() {
+  return this->sharedSocket->create();
+}
+
+int Socket::getFileDescriptor() const {
+  return this->sharedSocket->fileDescriptor;
+}
+
+void Socket::setFileDescriptor(int fd) {
+  this->sharedSocket->fileDescriptor = fd;
+}
+
+
+int Socket::bind(const std::string& address, int port) {
+  return this->sharedSocket->bind(address, port);
+}
+
+int Socket::listen() {
+  return this->sharedSocket->listen();
+}
+
+int Socket::accept(Socket& socket) {
+  return this->sharedSocket->accept(socket);
+}
+
+int Socket::connect(const std::string& address, int port) {
+  return this->sharedSocket->connect(address, port);
+}
+
+int Socket::send(const std::string& data) {
+  return this->sharedSocket->send(data);
+}
+
+int Socket::receive(std::string& data) {
+  return this->sharedSocket->receive(data);
+
 }

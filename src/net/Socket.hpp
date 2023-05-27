@@ -1,4 +1,4 @@
-// Copyright © 2023 Camilo Suárez Sandí
+// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
 
 #ifndef SOCKET_HPP_
 #define SOCKET_HPP_
@@ -7,8 +7,10 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <sys/socket.h>
-
+#include <memory>
 #include <string>
+
+#include "common.hpp"
 
 enum SocketError {
   OK = EXIT_SUCCESS,
@@ -24,14 +26,19 @@ enum SocketError {
   CANT_RECEIVE_DATA,
 };
 
+struct SharedSocket;
 /**
  * @brief A wrapper class for a socket.
  *
  */
 class Socket {
- private:
-  int fd;
-  struct sockaddr_in addr;
+  /// Objects of this class can be copied, but avoid innecesary copies
+  DECLARE_RULE4(Socket, default);
+
+ protected:
+  /// Copies of this object share the same socket file descriptor and buffers
+  /// The sharedSocket contents all the info of this Socket
+  std::shared_ptr<SharedSocket> sharedSocket;
 
  public:
   /**
@@ -41,10 +48,11 @@ class Socket {
   Socket();
 
   /**
-   * @brief Destructor. Closes the socket.
+   * @brief Destructor. Closes the socket file descriptor JUST if this is the
+   * last object using a shared socket
    *
    */
-  ~Socket();
+  ~Socket() = default;
 
   // Copy Constructor
   Socket(const Socket& other) = delete;
@@ -57,6 +65,12 @@ class Socket {
 
   // Move Assignment Operator
   Socket& operator=(Socket&& other) = delete;
+
+ public:  // Access
+  int getFileDescriptor() const;
+
+ public:  // Setters
+  void setFileDescriptor(int fd);
 
   /**
    * @brief Creates a new socket.
