@@ -7,7 +7,7 @@
 #include "Socket.hpp"
 
 class TcpServer {
- private:
+ protected:
   Socket server_socket;
 
   ThreadPool thread_pool;
@@ -31,9 +31,10 @@ class TcpServer {
   // Move Assignment Operator
   TcpServer& operator=(TcpServer&& other) = delete;
 
-  int start(const std::string& address, int port);
+  virtual int start(const std::string& address, int port) = 0;
 
-  virtual void run(const std::string& request, std::string& response, Socket& client) = 0;
+  virtual void handleClientConnection(const std::string& request, std::string& response
+    , Socket& client) = 0;
 
   int acceptConnections();
 };

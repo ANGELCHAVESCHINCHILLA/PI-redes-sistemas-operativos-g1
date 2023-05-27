@@ -12,21 +12,18 @@ TcpServer::~TcpServer() {
   //
 }
 
-int TcpServer::start(const std::string& address, int port) {
-  int error = SocketError::OK;
+// int TcpServer::start(const std::string& address, int port) {
+//   int error = SocketError::OK;
 
-  error = this->server_socket.create();
+//   error = this->server_socket.create();
 
-  if (!error) {
-    error = this->server_socket.bind(address, port);
-  }
+//   if (!error) {
+//     error = this->server_socket.bind(address, port);
+//   }
 
-  if (!error) {
-    error = this->server_socket.listen();
-  }
-
-  error = this->acceptConnections();
-
+//   if (!error) {
+//     error = this->server_socket.listen();
+//   }
 
     // if (!error) {
     //   error = this->server_socket.accept(client_socket);
@@ -73,8 +70,8 @@ int TcpServer::start(const std::string& address, int port) {
     // }
   // }
 
-  return error;
-}
+//   return error;
+// }
 
 int TcpServer::acceptConnections () {
   int error = SocketError::OK;
@@ -94,7 +91,7 @@ int TcpServer::acceptConnections () {
     }
 
     if (!error) {
-      this->run(request, response, client_socket);
+      this->handleClientConnection(request, response, client_socket);
 
       error = client_socket.send(response);
     }
