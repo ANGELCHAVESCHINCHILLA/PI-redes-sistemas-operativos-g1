@@ -10,7 +10,7 @@
 #include <memory>
 #include <string>
 
-#include "common.hpp"
+#include "../common/common.hpp"
 
 enum SocketError {
   OK = EXIT_SUCCESS,

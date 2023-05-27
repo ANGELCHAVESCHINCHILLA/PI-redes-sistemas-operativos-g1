@@ -7,8 +7,7 @@
 #include <string>
 
 #include "../url/URL.hpp"
-
-#define HTTP_VERSION "HTTP/1.1"
+#include "../common/common.hpp"
 
 class HttpRequest {
  private:
