@@ -2,6 +2,8 @@
 
 #include "Socket.hpp"
 
+#include <sys/socket.h>
+#include <netdb.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -25,8 +27,9 @@ struct SharedSocket {
 
  public:
   // Constructor
-  SharedSocket() {
-    ::memset(&this->addr, 0, sizeof(this->addr));
+  SharedSocket() 
+    : fileDescriptor(-1) {
+      ::memset(&this->addr, 0, sizeof(this->addr));
   }
 
   /// Destructor. Closes the socket file descriptor
@@ -60,6 +63,21 @@ struct SharedSocket {
     return error;
   }
 
+  int create(const struct addrinfo* address) {
+    int error = SocketError::OK;
+
+    this->fileDescriptor = ::socket(address->ai_family, address->ai_socktype
+            , address->ai_protocol);
+
+    if (this->fileDescriptor == -1) {
+      std::cerr << "Can't create the socket.\n";
+
+      error = SocketError::CANT_CREATE_SOCKET;
+    }
+
+    return error;
+  }
+
   int bind(const std::string& address, int port) {
     int error = SocketError::OK;
 
@@ -70,6 +88,20 @@ struct SharedSocket {
 
     error = ::bind(this->fileDescriptor, (struct sockaddr*) &this->addr
                   , sizeof(this->addr));
+
+    if (error == -1) {
+      std::cerr << "Can't bind the socket.\n";
+
+      error = SocketError::CANT_BIND_SOCKET;
+    }
+
+    return error;
+  }
+
+  int bind(const struct addrinfo* address) {
+    int error = SocketError::OK;
+
+    error = ::bind(this->fileDescriptor, address->ai_addr, address->ai_addrlen);
 
     if (error == -1) {
       std::cerr << "Can't bind the socket.\n";
@@ -97,11 +129,11 @@ struct SharedSocket {
   int accept(Socket& socket) {
     int error = SocketError::OK;
 
-    struct sockaddr_in addr;
-    size_t addrlen = sizeof(addr);
+    struct sockaddr_storage addr;
+    socklen_t addrlen = sizeof(addr);
 
     int fd = ::accept(this->fileDescriptor, (struct sockaddr*) &addr
-              , (socklen_t*) &addrlen);
+              , &addrlen);
 
     if (fd == -1) {
       std::cerr << "Can't accept the connection to the socket.\n";
@@ -170,6 +202,13 @@ struct SharedSocket {
 
     return error;
   }
+
+  int allowReuse() {
+    int yes = 1;
+    int error = ::setsockopt(this->fileDescriptor, SOL_SOCKET, SO_REUSEADDR
+                , &yes, sizeof(yes));
+    return error;
+  }
 };
 
 Socket::Socket()
@@ -184,6 +223,10 @@ int Socket::create() {
   return this->sharedSocket->create();
 }
 
+int Socket::create(const struct addrinfo* address) {
+  return this->sharedSocket->create(address);
+}
+
 int Socket::getFileDescriptor() const {
   return this->sharedSocket->fileDescriptor;
 }
@@ -195,6 +238,10 @@ void Socket::setFileDescriptor(int fd) {
 
 int Socket::bind(const std::string& address, int port) {
   return this->sharedSocket->bind(address, port);
+}
+
+int Socket::bind(const struct addrinfo* address) {
+  return this->sharedSocket->bind(address);
 }
 
 int Socket::listen() {
@@ -215,5 +262,8 @@ int Socket::send(const std::string& data) {
 
 int Socket::receive(std::string& data) {
   return this->sharedSocket->receive(data);
+}
 
+int Socket::allowReuse() {
+  return this->sharedSocket->allowReuse();
 }
