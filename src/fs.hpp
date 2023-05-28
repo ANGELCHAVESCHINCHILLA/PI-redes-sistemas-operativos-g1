@@ -151,9 +151,31 @@ class FS {
   int getFileSize(const std::string& filename);
 
   /**
+   * @brief Return the char in the position @a position of the file @a filename
+   * 
+   * @param fileName 
+   * @param position 
+   * @param permissions 
+   * @return char the char at position, if there's an error like:
+   * - Invalid file name
+   * - No permissions
+   * - Position out of range
+   * Then return '\0'
    */
   char read(std::string fileName, size_t position, char* permissions);
 
+  /**
+   * @brief Return a ponter to the char in the position @a position of the file
+   * @a filename
+   * 
+   * @param file_name 
+   * @param position 
+   * @return char* the pinter to the char at position, if there's an error like:
+   * - Invalid file name
+   * - No permissions
+   * - Position out of range
+   * Then return nullptr
+   */
   char* readAddress(std::string file_name, size_t position);
 
   /**

@@ -190,6 +190,7 @@ int FS::getFileSize(const std::string& filename) {
 }
 
 char FS::read(std::string fileName, size_t position, char* permissions) {
+  (void)permissions;
   int error = Error::OK;
   int directory_index = this->searchFile(fileName);
   if (directory_index == DIRECTORY_UNDEFINED) {
@@ -198,7 +199,8 @@ char FS::read(std::string fileName, size_t position, char* permissions) {
 
   if (!error) {
     // validate if position is out of bounds or not
-    error = this->getFileSize(fileName) >= position ? Error::OK : Error::NOT_OK;
+    error = static_cast<size_t>(this->getFileSize(fileName)) >= position
+            ? Error::OK : Error::NOT_OK;
 
     if (!error) {
       // start block of the file
@@ -241,8 +243,8 @@ char* FS::readAddress(std::string file_name, size_t position) {
 
   if (!error) {
     // validate if position is out of bounds or not
-    error =
-        this->getFileSize(file_name) >= position ? Error::OK : Error::NOT_OK;
+    error = static_cast<size_t>(this->getFileSize(file_name)) >= position
+            ? Error::OK : Error::NOT_OK;
 
     if (!error) {
       // start block of the file
@@ -289,7 +291,8 @@ bool FS::validateUser(const std::string& userName, const std::string& hashKey) {
   if (directory_index != DIRECTORY_UNDEFINED) {
     size_t index = 0;
     // validate name
-    while (index < this->getFileSize(usersFile) && !is_valid) {
+    while (index < static_cast<size_t>(this->getFileSize(usersFile))
+          && !is_valid) {
       is_valid = true;
       char current_char = '\0';
       size_t user_index = 0;
@@ -306,7 +309,7 @@ bool FS::validateUser(const std::string& userName, const std::string& hashKey) {
         index += 29;
       } else {
         size_t hash_index = 0;
-        for (int i = index; i < index + 27; ++i) {
+        for (size_t i = index; i < index + 27; ++i) {
           current_char = this->read(usersFile, i, nullptr);
           if (current_char != hashKey[hash_index]) {
             is_valid = false;
