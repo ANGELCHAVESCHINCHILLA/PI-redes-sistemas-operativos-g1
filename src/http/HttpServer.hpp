@@ -7,35 +7,27 @@
 
 #include "../net/TcpServer.hpp"
 #include "HttpApp.hpp"
+#include "../common/common.hpp"
 
 class HttpServer : public TcpServer {
+  DISABLE_COPY(HttpServer);
+
  private:
   std::vector<HttpApp*> apps;
 
- public:
-  /**
-   * @brief Default constructor.
-   *
-   */
+ private:
+  /// Constructor
   HttpServer();
+
+ public:
+  /// Get instance (Singleton pattern)
+  static HttpServer& getInstance();
 
   /**
    * @brief Destructor.
    *
    */
   ~HttpServer();
-
-  // Copy Constructor
-  HttpServer(const HttpServer& other) = delete;
-
-  // Copy Assignment Operator
-  HttpServer& operator=(const HttpServer& other) = delete;
-
-  // Move Constructor
-  HttpServer(HttpServer&& other) = delete;
-
-  // Move Assignment Operator
-  HttpServer& operator=(HttpServer&& other) = delete;
 
   /**
    * @brief Create the server socket with address IP and port. Then start to

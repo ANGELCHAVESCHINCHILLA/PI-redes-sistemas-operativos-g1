@@ -4,6 +4,12 @@
 
 #include <iostream>
 
+HttpServer& HttpServer::getInstance() {
+  static HttpServer server;
+  return server;
+}
+
+
 HttpServer::HttpServer() {
   //
 }
@@ -26,6 +32,8 @@ int HttpServer::start(const std::string& address, int port) {
   }
 
   error = this->acceptConnections();
+
+  return error;
 }
 
 // En este momento es serial, por lo tanto el server procesará una solicitud a
@@ -43,7 +51,7 @@ void HttpServer::handleClientConnection(const std::string& request, std::string&
     const bool handled = this->route(http_request, http_response);
 
     // If subclass did not handle the request or the client used HTTP/1.0
-    if (!handled || HTTP_VERSION == "HTTP/1.0") {
+    if (!handled || http_request.getHttpVersion() == "HTTP/1.0") {
       // The socket will not be more used, close the connection
       client.close();
       // break;

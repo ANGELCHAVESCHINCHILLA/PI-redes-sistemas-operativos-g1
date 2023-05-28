@@ -18,11 +18,9 @@ int main(int argc, char** argv) {
     port = std::stoi(argv[1]);
   }
 
-  HttpServer server;
+  HttpServer::getInstance().start(address, port);
 
   std::cout << "Server running at http://" << address << ":" << port << "\n";
-
-  error = server.start(address, port);
 
   return error;
 }

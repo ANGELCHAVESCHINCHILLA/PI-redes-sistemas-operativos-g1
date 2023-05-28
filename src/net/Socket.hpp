@@ -54,18 +54,6 @@ class Socket {
    */
   ~Socket() = default;
 
-  // Copy Constructor
-  Socket(const Socket& other) = delete;
-
-  // Copy Assignment Operator
-  Socket& operator=(const Socket& other) = delete;
-
-  // Move Constructor
-  Socket(Socket&& other) = delete;
-
-  // Move Assignment Operator
-  Socket& operator=(Socket&& other) = delete;
-
  public:  // Access
   int getFileDescriptor() const;
 
