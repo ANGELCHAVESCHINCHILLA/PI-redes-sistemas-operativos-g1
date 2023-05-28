@@ -24,6 +24,8 @@ enum SocketError {
   //
   CANT_SEND_DATA,
   CANT_RECEIVE_DATA,
+  
+  CANT_FETCH_ADDRESSES,
 };
 
 struct SharedSocket;
@@ -67,6 +69,8 @@ class Socket {
    */
   int create();
 
+  int create(const struct addrinfo* address);
+
   /**
    * @brief Binds a socket to an address specified by the host and the port.
    *
@@ -75,6 +79,8 @@ class Socket {
    * @return int A SocketError code.
    */
   int bind(const std::string& address, int port);
+
+  int bind(const struct addrinfo* address);
 
   /**
    * @brief The socket will be used to accept connections for other sockets.
@@ -118,6 +124,8 @@ class Socket {
    * @return int A SocketError code.
    */
   int receive(std::string& data);
+
+  int allowReuse();
 
   /**
    * @brief Closes the socket.
