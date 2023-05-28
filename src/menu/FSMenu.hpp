@@ -7,6 +7,7 @@
 #include <string>
 
 #include "../fs.hpp"
+#include "../authenticator.hpp"
 
 class FSMenu {
  private:
@@ -14,9 +15,9 @@ class FSMenu {
 
   static FSMenu* instance;
 
-  static const std::string PEPPER;
-
   FS fs;
+
+	Authenticator authenticator;
 
   FSMenu();
 
@@ -56,10 +57,6 @@ class FSMenu {
   static std::string readString(const std::string& message,
       const std::string& error_message,
       std::function<bool(std::string&)> predicate);
-
-  static void padLeft(std::string& string, size_t length);
-
-  static void trimLeft(std::string& string);
 };
 
 #endif  // FS_MENU_HPP_
