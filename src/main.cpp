@@ -26,19 +26,20 @@ int main1(int argc, char** argv) {
   return error;
 }
 
-#endif FS_MENU
+#endif
 
 #ifdef WEBSERVER
 
 #include "http/HttpServer.hpp"
 
+#include <csignal>
 #include <iostream>
 
 /// Start the web server
 int main(int argc, char* argv[]) {
-  // TODO(ANY): Register the ctrl + c and kill signals for program termination
-  // std::signal(SIGTERM, HttpServer::stopServer);
-  // std::signal(SIGINT, HttpServer::stopServer);
+  // Register the ctrl + c and kill signals for program termination
+  std::signal(SIGTERM, HttpServer::stopServer);
+  std::signal(SIGINT, HttpServer::stopServer);
 
   std::string address = "127.0.0.1";
 

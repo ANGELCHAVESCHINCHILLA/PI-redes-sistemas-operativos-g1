@@ -12,7 +12,7 @@ TcpServer::TcpServer() {
   this->serverSocketSettings.ai_family = AF_UNSPEC;
   this->serverSocketSettings.ai_socktype = SOCK_STREAM; 
 
-  this->thread_pool.start(count);
+  // this->thread_pool.start(count);
 }
 
 TcpServer::~TcpServer() {
@@ -113,6 +113,13 @@ int TcpServer::acceptConnections () {
   }
 
   return error;
+}
+
+void TcpServer::stopListening() {
+  // An ugly way to stop incoming connections is closing the socket
+  if (this->server_socket.getFileDescriptor() >= 0) {
+    this->server_socket.close();
+  }
 }
 
 int TcpServer::fetchPossibleAddresses(const char* port) {

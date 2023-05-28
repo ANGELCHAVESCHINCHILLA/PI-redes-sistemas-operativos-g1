@@ -18,6 +18,16 @@ HttpServer::~HttpServer() {
   //
 }
 
+void HttpServer::stopServer(int signal) {
+  std::cerr << "Signal " << signal << " received" << std::endl;
+  HttpServer::getInstance().stop();
+}
+
+void HttpServer::stop() {
+  // Stop listening for incoming client connection requests
+  this->stopListening();
+}
+
 int HttpServer::start(const std::string& address, int port) {
   int error = SocketError::OK_SOCKET;
 

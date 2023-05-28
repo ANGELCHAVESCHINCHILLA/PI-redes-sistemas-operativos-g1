@@ -24,6 +24,10 @@ class HttpServer : public TcpServer {
   /// Get instance (Singleton pattern)
   static HttpServer& getInstance();
 
+  static void stopServer(int signal);
+
+  void stop();
+
   /**
    * @brief Destructor.
    *

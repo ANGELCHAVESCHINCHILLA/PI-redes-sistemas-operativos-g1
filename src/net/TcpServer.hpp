@@ -40,6 +40,8 @@ class TcpServer {
   // Move Assignment Operator
   TcpServer& operator=(TcpServer&& other) = delete;
 
+  void stopListening();
+
   virtual int start(const std::string& address, int port) = 0;
 
   virtual void handleClientConnection(const std::string& request, std::string& response
