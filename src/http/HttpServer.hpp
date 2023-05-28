@@ -1,4 +1,5 @@
-// Copyright © 2023 Camilo Suárez Sandí
+// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
+
 
 #ifndef HTTP_SERVER_HPP_
 #define HTTP_SERVER_HPP_

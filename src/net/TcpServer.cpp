@@ -1,4 +1,4 @@
-// Copyright © 2023 Camilo Suárez Sandí
+// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
 
 #include "TcpServer.hpp"
 
