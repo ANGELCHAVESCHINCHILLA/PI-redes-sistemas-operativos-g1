@@ -1,8 +1,11 @@
-#include <iostream>
+//
 
 #include "authenticator.hpp"
-#include "hash.hpp"
+
+#include <iostream>
+
 #include "./common/Util.hpp"
+#include "hash.hpp"
 
 const std::string Authenticator::PEPPER = "Universidad de Costa Rica";
 
@@ -15,11 +18,11 @@ Authenticator::Authenticator(FS* fs) {
 }
 
 Authenticator::~Authenticator() {
-    // delete this->fs;
+  // delete this->fs;
 }
 
-int Authenticator::authPass(const std::string& usersFile
-    , const std::string& username, const std::string& password) {
+int Authenticator::authPass(const std::string& usersFile,
+    const std::string& username, const std::string& password) {
   int error = Error::OK;
 
   bool found_user = false;
@@ -29,7 +32,7 @@ int Authenticator::authPass(const std::string& usersFile
   const size_t user_bytes = 41;
 
   while (!found_user &&
-        user_offset < static_cast<size_t>(this->fs->getFileSize(usersFile))) {
+         user_offset < static_cast<size_t>(this->fs->getFileSize(usersFile))) {
     char* address = this->fs->readAddress(usersFile, user_offset);
 
     std::string info(address, address + user_bytes);
@@ -47,7 +50,7 @@ int Authenticator::authPass(const std::string& usersFile
 
       // Calculate the hash with the input password and the salt stored in FS
       std::string hashed_password =
-          Hash::getString(password, info_salt, Authenticator::PEPPER);
+          Hash::getHash(password, 15, info_salt, Authenticator::PEPPER);
 
       if (hashed_password == info_hashed_password) {
         error = Error::OK;
@@ -66,5 +69,3 @@ int Authenticator::authPass(const std::string& usersFile
   }
   return error;
 }
-
-

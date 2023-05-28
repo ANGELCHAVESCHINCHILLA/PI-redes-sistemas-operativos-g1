@@ -5,9 +5,9 @@
 #include <fstream>
 #include <iostream>
 
+#include "../common/Util.hpp"
 #include "../error.hpp"
 #include "../hash.hpp"
-#include "../common/Util.hpp"
 
 const std::string FSMenu::TEXT =
     "-------------\n"
@@ -22,9 +22,7 @@ const std::string FSMenu::TEXT =
 
 FSMenu* FSMenu::instance = nullptr;
 
-
-FSMenu::FSMenu() 
-  : authenticator(&this->fs) {
+FSMenu::FSMenu() : authenticator(&this->fs) {
   //
 
   this->readFromFile("usuarios.dat");
@@ -107,9 +105,8 @@ void FSMenu::addUser() {
 
   std::string salt = Hash::getSalt(15);
 
-  std::string hashed_password = Hash::getString(password, salt
-                                , Authenticator::PEPPER);
-  Util::padLeft(hashed_password, 15);
+  std::string hashed_password =
+      Hash::getHash(password, 15, salt, Authenticator::PEPPER);
 
   this->writeString(users_file, username);
   this->writeString(users_file, hashed_password);
@@ -219,4 +216,3 @@ std::string FSMenu::readString(const std::string& message,
 
   return result;
 }
-

@@ -3,22 +3,37 @@
 #include "hash.hpp"
 
 #include <math.h>
+#include <openssl/sha.h>
 #include <stdlib.h>
 #include <time.h>
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
 const std::string Hash::MAP =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-size_t Hash::getHash(const std::string& input) {
-  size_t hash = HASH_PRIME_NUMBER;
+std::string Hash::getHash(const std::string& input, size_t length,
+    const std::string& salt, const std::string& pepper) {
+  std::string copy = input + salt + pepper;
 
-  for (size_t index = 0; index < input.size(); index++) {
-    hash = ((hash << 5) + hash) + input.at(index);
+  SHA256_CTX sha_256;
+
+  unsigned char hash[SHA256_DIGEST_LENGTH];
+
+  SHA256_Init(&sha_256);
+  SHA256_Update(&sha_256, copy.c_str(), copy.length());
+  SHA256_Final(hash, &sha_256);
+
+  std::stringstream ss;
+
+  for (size_t index = 0; index < SHA256_DIGEST_LENGTH; index++) {
+    ss << std::hex << std::setfill('0') << std::setw(2)
+       << static_cast<int>(hash[index]);
   }
 
-  return hash;
+  return ss.str().substr(0, length);
 }
 
 std::string Hash::getSalt(size_t length) {
@@ -33,29 +48,4 @@ std::string Hash::getSalt(size_t length) {
   }
 
   return salt;
-}
-
-std::string Hash::getString(const std::string& input, const std::string& salt,
-  const std::string& pepper) {
-  std::string new_input = input + salt + pepper;
-
-  size_t hash = Hash::getHash(new_input);
-
-  return Hash::toBase64(hash);
-}
-
-std::string Hash::toBase64(size_t number) {
-  std::string output;
-
-  while (number > 0) {
-    size_t remainder = number % 64;
-
-    char character = Hash::MAP[remainder];
-
-    output = character + output;
-
-    number /= 64;
-  }
-
-  return output;
 }
