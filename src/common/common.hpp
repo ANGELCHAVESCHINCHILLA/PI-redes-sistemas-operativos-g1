@@ -18,3 +18,5 @@
 typedef unsigned char byte;
 
 #endif  // COMMON_HPP
+
+#endif  // COMMON_HPP
