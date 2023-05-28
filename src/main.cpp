@@ -10,8 +10,9 @@
 
 #include "error.hpp"
 #include "menu/FSMenu.hpp"
+#include "http/HttpServer.hpp"
 
-int main(int argc, char** argv) {
+int main1(int argc, char** argv) {
   int error = EXIT_SUCCESS;
 
   FSMenu* menu = FSMenu::getInstance();
@@ -19,4 +20,24 @@ int main(int argc, char** argv) {
   menu->start();
 
   return error;
+}
+
+/// Start the web server
+int main(int argc, char* argv[]) {
+  // TODO(ANY): Register the ctrl + c and kill signals for program termination
+  // std::signal(SIGTERM, HttpServer::stopServer);
+  // std::signal(SIGINT, HttpServer::stopServer);
+
+  std::string address = "127.0.0.1";
+
+  int port = 8000;
+
+  if (argc == 2) {
+    port = std::stoi(argv[1]);
+  }
+
+  // Start the web server
+  return HttpServer::getInstance().start(address, port);
+
+  std::cout << "Servidor finalizado";
 }

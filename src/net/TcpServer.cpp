@@ -20,7 +20,7 @@ TcpServer::~TcpServer() {
 }
 
 // int TcpServer::start(const std::string& address, int port) {
-//   int error = SocketError::OK;
+//   int error = SocketError::OK_SOCKET;
 
 //   error = this->server_socket.create();
 
@@ -82,7 +82,7 @@ TcpServer::~TcpServer() {
 
 int TcpServer::acceptConnections () {
   std::cout << "Voy a aceptar conexiones";
-  int error = SocketError::OK;
+  int error = SocketError::OK_SOCKET;
 
   while (!error) {
     Socket client_socket;
@@ -125,13 +125,13 @@ int TcpServer::fetchPossibleAddresses(const char* port) {
   if (error) {
     error = SocketError::CANT_FETCH_ADDRESSES;
   } else {
-    error = SocketError::OK;
+    error = SocketError::OK_SOCKET;
   }
   return error;
 }
 
 int TcpServer::openServerSocket() {
-  int error = SocketError::OK;
+  int error = SocketError::OK_SOCKET;
   assert(this->server_socket.getFileDescriptor() == -1);
   // Traverse the available addresses and select the first one that works
   for (const struct addrinfo* address = this->possibleAddresses; address;
