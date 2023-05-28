@@ -21,17 +21,26 @@ HttpServer::~HttpServer() {
 int HttpServer::start(const std::string& address, int port) {
   int error = SocketError::OK;
 
-  error = this->server_socket.create();
+  const std::string sport = std::to_string(port);
+
+  error = this->fetchPossibleAddresses(sport.data());
 
   if (!error) {
-    error = this->server_socket.bind(address, port);
+    error = this->openServerSocket();
   }
+
+  // if (!error) {
+  //   error = this->server_socket.bind(address, port);
+  // }
 
   if (!error) {
     error = this->server_socket.listen();
+    std::cout << "Server running at http://" << address << ":" << port << "\n";
   }
 
   error = this->acceptConnections();
+  std::cout << "Terminé de aceptar conexiones\n";
+
 
   return error;
 }
@@ -41,6 +50,7 @@ int HttpServer::start(const std::string& address, int port) {
 // TODO(everyone): Pensar en si es necesario agregar estos handlers.
 void HttpServer::handleClientConnection(const std::string& request, std::string& response
     , Socket& client) {
+  std::cout << "Solicitud realizada:\0" << request << std::endl;
 // While the same client asks for HTTP requests in the same connection
   // while (true) {
     // Revisar si el parse falla, en teoría no debería cerrarse la conexión aún
