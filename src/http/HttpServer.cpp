@@ -19,7 +19,7 @@ HttpServer::~HttpServer() {
 }
 
 int HttpServer::start(const std::string& address, int port) {
-  int error = SocketError::OK;
+  int error = SocketError::OK_SOCKET;
 
   const std::string sport = std::to_string(port);
 

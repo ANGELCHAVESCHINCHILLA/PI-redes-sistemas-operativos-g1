@@ -13,8 +13,8 @@
 #include "../common/common.hpp"
 
 enum SocketError {
-  OK = EXIT_SUCCESS,
-  NOT_OK = EXIT_FAILURE,
+  OK_SOCKET = EXIT_SUCCESS,
+  NOT_OK_SOCKET = EXIT_FAILURE,
   //
   CANT_CREATE_SOCKET,
   CANT_BIND_SOCKET,

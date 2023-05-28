@@ -50,7 +50,7 @@ struct SharedSocket {
   }
 
   int create() {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     this->fileDescriptor = ::socket(AF_INET, SOCK_STREAM, 0);
 
@@ -64,7 +64,7 @@ struct SharedSocket {
   }
 
   int create(const struct addrinfo* address) {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     this->fileDescriptor = ::socket(address->ai_family, address->ai_socktype
             , address->ai_protocol);
@@ -79,7 +79,7 @@ struct SharedSocket {
   }
 
   int bind(const std::string& address, int port) {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     this->addr.sin_family = AF_INET;
     this->addr.sin_port = htons(port);
@@ -99,7 +99,7 @@ struct SharedSocket {
   }
 
   int bind(const struct addrinfo* address) {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     error = ::bind(this->fileDescriptor, address->ai_addr, address->ai_addrlen);
 
@@ -113,7 +113,7 @@ struct SharedSocket {
   }
 
   int listen() {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     error = ::listen(this->fileDescriptor, SOMAXCONN);
 
@@ -127,7 +127,7 @@ struct SharedSocket {
   }
 
   int accept(Socket& socket) {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     struct sockaddr_storage addr;
     socklen_t addrlen = sizeof(addr);
@@ -149,7 +149,7 @@ struct SharedSocket {
   }
 
   int connect(const std::string& address, int port) {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     this->addr.sin_family = AF_INET;
     this->addr.sin_port = htons(port);
@@ -169,7 +169,7 @@ struct SharedSocket {
   }
 
   int send(const std::string& data) {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     size_t bytes = ::send(this->fileDescriptor, data.c_str(), data.size(), 0);
 
@@ -183,7 +183,7 @@ struct SharedSocket {
   }
 
   int receive(std::string& data) {
-    int error = SocketError::OK;
+    int error = SocketError::OK_SOCKET;
 
     char buffer[BUFFER_SIZE];
 
