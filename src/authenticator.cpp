@@ -18,7 +18,7 @@ Authenticator::~Authenticator() {
     // delete this->fs;
 }
 
-int Authenticator::authUser(const std::string& usersFile
+int Authenticator::authPass(const std::string& usersFile
     , const std::string& username, const std::string& password) {
   int error = Error::OK;
 
@@ -66,4 +66,5 @@ int Authenticator::authUser(const std::string& usersFile
   }
   return error;
 }
+
 

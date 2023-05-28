@@ -127,7 +127,7 @@ void FSMenu::authenticateUser() {
   std::string password = FSMenu::readString("Escribe su contraseña: ", "",
       [](std::string& string) { return string.length() > 0; });
 
-  switch (this->authenticator.authUser(users_file, username, password)) {
+  switch (this->authenticator.authPass(users_file, username, password)) {
     case Error::OK: {
       std::cout << "Contraseña correcta.\n";
       break;
