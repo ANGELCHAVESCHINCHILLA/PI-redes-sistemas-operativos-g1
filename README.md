@@ -24,14 +24,16 @@ david.cerdasalvarado@ucr.ac.cr
 
 1. Abra la terminal/consola de comandos y ubíquese en la carpeta del programa donte tiene el archivo `Makefile`
 
-2. Ejecute el siguiente comando para crear los archivos “.o” y el ejecutable. Es decir, para compilar su programa.
+2. Instalar las dependencias con `make install`
+
+3. Ejecute el siguiente comando para crear los archivos “.o” y el ejecutable. Es decir, para compilar su programa.
 
         # genera un ejecutable sin optimizaciones
         make
         # genera un ejecutable con optimizaciones
         make release
 
-3. Usar el comando 
+4. Usar el comando 
 
         bin/PI-redes-sistemas-operativos-g1
 
