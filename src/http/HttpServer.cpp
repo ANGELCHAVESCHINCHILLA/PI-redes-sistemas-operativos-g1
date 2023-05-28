@@ -28,6 +28,9 @@ int HttpServer::start(const std::string& address, int port) {
   error = this->acceptConnections();
 }
 
+// En este momento es serial, por lo tanto el server procesará una solicitud a
+// la vez, se deben agregar HttpConnectionHandler si se quiere hacer concurrente
+// TODO(everyone): Pensar en si es necesario agregar estos handlers.
 void HttpServer::handleClientConnection(const std::string& request, std::string& response
     , Socket& client) {
 // While the same client asks for HTTP requests in the same connection
@@ -35,12 +38,6 @@ void HttpServer::handleClientConnection(const std::string& request, std::string&
     // Revisar si el parse falla, en teoría no debería cerrarse la conexión aún
     HttpRequest http_request(request);
     HttpResponse http_response(response);
-
-    for (HttpApp* app : this->apps) {
-      if (app->run(http_request, http_response)) {
-        break;
-      }
-    }
 
     // Dar la oportunidad a las apps que se encarguen del request
     const bool handled = this->route(http_request, http_response);
