@@ -19,6 +19,9 @@ enum Error {
   INVALID_FILE,
 
   FILE_NOT_FOUND,
+
+  USER_NOT_FOUND,
+  INVALID_PASSWORD
 };
 
 #endif  // ERROR_HPP_
