@@ -17,6 +17,4 @@
 /// For data transmissions
 typedef unsigned char byte;
 
-#define HTTP_VERSION "HTTP/1.1"
-
 #endif  // COMMON_HPP

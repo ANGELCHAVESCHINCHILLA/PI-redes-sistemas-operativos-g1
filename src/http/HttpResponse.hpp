@@ -4,8 +4,9 @@
 #define HTTP_RESPONSE_HPP_
 
 #include <string>
+#include "HttpMessage.hpp"
 
-class HttpResponse {
+class HttpResponse : public HttpMessage{
  private:
   std::string input;
 

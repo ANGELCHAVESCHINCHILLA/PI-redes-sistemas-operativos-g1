@@ -4,12 +4,12 @@
 #define HTTP_REQUEST_HPP_
 
 #include <map>
-#include <string>
 
+#include "HttpMessage.hpp"
 #include "../url/URL.hpp"
 #include "../common/common.hpp"
 
-class HttpRequest {
+class HttpRequest : public HttpMessage {
  private:
   std::string input;
 
