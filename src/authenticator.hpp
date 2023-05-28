@@ -19,9 +19,11 @@ class Authenticator {
   // Authenticator();
   /// @brief Default Destructor
   ~Authenticator();
+
   /// @brief Constructs an auth using a predefined fs
   /// @param fs predefined fs
   Authenticator(FS* fs);
+
   /// @brief Authenticates a user by their username and password.
   /// @param userName user's username to be identificate
   /// @param password user's password
@@ -30,6 +32,7 @@ class Authenticator {
   /// OK if auth
   /// INVALID_PASSWORD if the password is invalid
   /// USER_NOT_FOUND -2 if the users was not found.
-  int authUser(const std::string& usersFile, const std::string& userFame,
+  int authPass(const std::string& usersFile, const std::string& userName,
     const std::string& password);
 };  // end class Authenticator
+
