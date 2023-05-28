@@ -33,6 +33,8 @@ class HttpApp {
   // Move Assignment Operator
   HttpApp& operator=(HttpApp&& other) = delete;
 
+  virtual bool start() = 0;
+
   virtual bool run(const HttpRequest& request, HttpResponse& response) = 0;
 };
 
