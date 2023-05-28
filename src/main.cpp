@@ -20,7 +20,9 @@ int main(int argc, char** argv) {
 
   HttpServer::getInstance().start(address, port);
 
-  std::cout << "Server running at http://" << address << ":" << port << "\n";
+  // std::cout << "Server running at http://" << address << ":" << port << "\n";
+  std::cout << "Servidor finalizado";
+
 
   return error;
 }

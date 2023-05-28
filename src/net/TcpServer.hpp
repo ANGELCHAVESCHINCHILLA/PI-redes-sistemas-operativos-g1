@@ -3,6 +3,10 @@
 #ifndef TCP_SERVER_HPP_
 #define TCP_SERVER_HPP_
 
+// #include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
 #include "../concurrent/ThreadPool.hpp"
 #include "Socket.hpp"
 
@@ -11,6 +15,11 @@ class TcpServer {
   Socket server_socket;
 
   ThreadPool thread_pool;
+
+  struct addrinfo serverSocketSettings;
+
+  struct addrinfo* possibleAddresses = nullptr;
+
 
  public:
   // Default Constructor
@@ -35,6 +44,10 @@ class TcpServer {
 
   virtual void handleClientConnection(const std::string& request, std::string& response
     , Socket& client) = 0;
+  
+  int fetchPossibleAddresses(const char* port);
+
+  int openServerSocket();
 
   int acceptConnections();
 };
