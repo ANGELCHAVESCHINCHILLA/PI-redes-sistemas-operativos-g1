@@ -20,6 +20,10 @@ int main() {
 
   menu->start();
 
+  // std::cout << "Server running at http://" << address << ":" << port << "\n";
+  std::cout << "Servidor finalizado";
+
+
   return error;
 }
 
