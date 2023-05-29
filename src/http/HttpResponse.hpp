@@ -16,7 +16,8 @@ class HttpResponse : public HttpMessage{
  protected:
   std::string input;
 
-  std::map<std::string, std::string> headers;
+  typedef std::map<std::string, std::string> Headers;
+  Headers headers;
 
   std::string reasonPhrase;
 
@@ -57,6 +58,14 @@ class HttpResponse : public HttpMessage{
   inline const std::stringstream& getBody() const { return this->body; }
 
   inline std::stringstream& getBody() { return this->body; }
+
+  std::string getHeader(const std::string& key
+    , const std::string& defaultvalue = "");
+
+  /// e.g: "HTTP/1.1 200 OK" or "HTTP/1.0 404 Not found"
+  std::string buildStatusLine() const;
+
+  std::string buildResponse();
 
  public:
   inline void setHeader(const std::string& key, const std::string& value) {

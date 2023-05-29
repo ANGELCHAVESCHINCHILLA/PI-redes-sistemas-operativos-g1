@@ -7,7 +7,41 @@ HttpResponse::HttpResponse(const std::string& input) : input(input) {
 }
 
 HttpResponse::~HttpResponse() {
-  //
+}
+
+std::string HttpResponse::buildResponse() {
+  this->input += this->buildStatusLine();
+
+   // Send message header
+  for (HttpResponse::Headers::const_iterator itr = this->headers.begin();
+    itr != this->headers.end(); ++itr) {
+    // e.g: "Server: My Web Server"
+    this->input += itr->first;
+    this->input += ": ";
+    this->input += HttpMessage::lineSeparator;
+  }
+
+  const std::string& contentType = this->getHeader("Content-Type");
+
+  // Check Content-length was provided
+  const std::string& contentLength = this->getHeader("Content-Length");
+  if (contentLength.empty()) {
+    // No Content-length was set, send the body length
+    if (!(this->socket << "Content-Length: " << this->getBodyLength() << sep)) {
+      // return false;
+    }
+  }
+}
+
+std::string HttpResponse::buildStatusLine() const {
+  return this->httpVersion + ' ' + std::to_string(this->statusCode) + ' '
+    + this->reasonPhrase;
+}
+
+std::string HttpResponse::getHeader(const std::string& key
+  , const std::string& defaultvalue) {
+  const Headers::const_iterator& itr = this->headers.find(key);
+  return itr != this->headers.end() ? itr->second : defaultvalue;
 }
 
 // {Code, "Reason-Phrase"}

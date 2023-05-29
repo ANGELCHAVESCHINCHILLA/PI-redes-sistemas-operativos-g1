@@ -57,8 +57,6 @@ class HttpRequest : public HttpMessage {
 
   inline const URL& getTarget() const { return this->target; }
 
-  inline const Headers& getHeaders() const { return this->headers; }
-
   inline const std::string& getBody() const { return this->body; }
 
  private:
