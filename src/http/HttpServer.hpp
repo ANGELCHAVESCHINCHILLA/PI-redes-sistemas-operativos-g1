@@ -64,6 +64,8 @@ class HttpServer : public TcpServer {
    * @return false another case.
    */
   bool route(HttpRequest& request, HttpResponse& response);
+
+  int appendApp(HttpApp* application);
 };
 
 #endif  // HTTP_SERVER_HPP_

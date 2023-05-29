@@ -3,6 +3,7 @@
 #include "HttpServer.hpp"
 
 #include <iostream>
+#include <cassert>
 
 HttpServer& HttpServer::getInstance() {
   static HttpServer server;
@@ -16,6 +17,11 @@ HttpServer::HttpServer() {
 
 HttpServer::~HttpServer() {
   //
+}
+
+int HttpServer::appendApp(HttpApp* application) {
+  assert(application);
+  this->apps.push_back(application);
 }
 
 void HttpServer::stopServer(int signal) {

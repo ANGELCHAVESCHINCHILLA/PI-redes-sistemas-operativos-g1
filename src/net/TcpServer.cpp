@@ -6,7 +6,7 @@
 #include "TcpServer.hpp"
 
 TcpServer::TcpServer() {
-  size_t count = std::thread::hardware_concurrency() / 2;
+  // size_t count = std::thread::hardware_concurrency() / 2;
 
   this->serverSocketSettings.ai_flags = AI_PASSIVE;  // Fill with my local IP
   this->serverSocketSettings.ai_family = AF_UNSPEC;
@@ -84,14 +84,15 @@ int TcpServer::acceptConnections () {
   std::cout << "Voy a aceptar conexiones";
   int error = SocketError::OK_SOCKET;
 
-  while (!error) {
+  while (true/*!error*/) {
+    error = SocketError::OK_SOCKET;
     Socket client_socket;
     // std::cout << "Logré crear un socket con el cliente conexiones\n";
 
-    if (!error) {
+    // if (!error) {
       //   std::cout << "Voy a intentar establecer conexi[on]";
         error = this->server_socket.accept(client_socket);
-    }
+    // }
 
     std::string request;
     std::string response;
@@ -101,8 +102,7 @@ int TcpServer::acceptConnections () {
         << client_socket.getFileDescriptor() << std::endl;
       error = client_socket.receive(request);
     } else {
-      std::cout << "No Logre establecer conexion";
-      
+    throw std::runtime_error("could not accept client connection");      
     }
 
     if (!error) {

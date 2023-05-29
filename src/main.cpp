@@ -31,28 +31,37 @@ int main1(int argc, char** argv) {
 #ifdef WEBSERVER
 
 #include "http/HttpServer.hpp"
+#include "webapp/GuachisWebApp.hpp"
 
 #include <csignal>
 #include <iostream>
 
 /// Start the web server
 int main(int argc, char* argv[]) {
-  // Register the ctrl + c and kill signals for program termination
-  std::signal(SIGTERM, HttpServer::stopServer);
-  std::signal(SIGINT, HttpServer::stopServer);
+  try {
+    // Register the ctrl + c and kill signals for program termination
+    std::signal(SIGTERM, HttpServer::stopServer);
+    std::signal(SIGINT, HttpServer::stopServer);
 
-  std::string address = "127.0.0.1";
+    std::string address = "127.0.0.1";
 
-  int port = 8000;
+    int port = 8000;
 
-  if (argc == 2) {
-    port = std::stoi(argv[1]);
+    if (argc == 2) {
+      port = std::stoi(argv[1]);
+    }
+
+    GuachisWebApp webapp;
+
+    HttpServer::getInstance().appendApp(&webapp);
+
+    // Start the web server
+    HttpServer::getInstance().start(address, port);
+
+    std::cout << "Servidor finalizado";
+  } catch (const std::runtime_error& error) {
+    std::cerr << "error: " << error.what() << std::endl;
   }
-
-  // Start the web server
-  return HttpServer::getInstance().start(address, port);
-
-  std::cout << "Servidor finalizado";
 }
 
 #endif  // WEBSERVER

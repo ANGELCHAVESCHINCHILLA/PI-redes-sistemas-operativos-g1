@@ -3,11 +3,11 @@
 # Compiler and tool flags
 CC=gcc
 XC=g++
-DEFS=
+DEFS=	# -DWEBSERVER -DFS_MENU
 FLAG=
 FLAGS=$(strip -Wall -Wextra $(FLAG) $(DEFS))
 FLAGC=$(FLAGS) -std=gnu11
-FLAGX=$(FLAGS) -std=gnu++11
+FLAGX=$(FLAGS) -std=gnu++17
 LIBS=-lcrypto
 LINTF=-build/header_guard,-build/include_subdir
 LINTC=$(LINTF),-readability/casting
