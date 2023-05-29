@@ -63,7 +63,7 @@ class HttpServer : public TcpServer {
    * @return true if an app could handle the request.
    * @return false another case.
    */
-  bool route(const HttpRequest& request, HttpResponse& response);
+  bool route(HttpRequest& request, HttpResponse& response);
 };
 
 #endif  // HTTP_SERVER_HPP_

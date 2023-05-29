@@ -1,4 +1,4 @@
-// Copyright © 2023 Camilo Suárez Sandí
+// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
 
 #ifndef HTTP_REQUEST_HPP_
 #define HTTP_REQUEST_HPP_
@@ -9,8 +9,10 @@
 #include "../url/URL.hpp"
 #include "../common/common.hpp"
 
+typedef std::map<std::string, std::string> Headers;
+
 class HttpRequest : public HttpMessage {
- private:
+ protected:
   std::string input;
 
   std::string method;
@@ -47,6 +49,16 @@ class HttpRequest : public HttpMessage {
   HttpRequest& operator=(HttpRequest&& other) = delete;
 
   std::string toString();
+
+ public:  // accessors
+
+  inline const std::string& getMethod() const { return this->method; }
+
+  inline const URL& getTarget() const { return this->target; }
+
+  inline const Headers& getHeaders() const { return this->headers; }
+
+  inline const std::string& getBody() const { return this->body; }
 
  private:
   void parse(std::string& input);

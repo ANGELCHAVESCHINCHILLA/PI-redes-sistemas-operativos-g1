@@ -2,6 +2,8 @@
 
 #include "HttpMessage.hpp"
 
+const char* const HttpMessage::lineSeparator = "\r\n";
+
 const std::string& HttpMessage::getHttpVersion() const {
   return this->httpVersion;
 }

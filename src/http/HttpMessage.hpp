@@ -5,6 +5,10 @@
 #include <string>
 
 class HttpMessage {
+ public:
+  /// Line separators for HTTP messages is "\r\n"
+  static const char* const lineSeparator;
+
  protected:
   std::string httpVersion = "HTTP/1.0";
 

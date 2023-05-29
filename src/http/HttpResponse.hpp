@@ -7,8 +7,24 @@
 #include "HttpMessage.hpp"
 
 class HttpResponse : public HttpMessage{
- private:
+ public:
+  /// Statard status codes and their reason phrases according to RFC 7231
+  typedef std::map<int, const char*> ReasonPhrases;
+  static const ReasonPhrases ReasonPhrases;
+ protected:
   std::string input;
+
+  std::string reasonPhrase;
+
+  /**
+   * @brief e.g: 200 OK, 500 Internal server error,..
+   * 
+   */
+  int statusCode;
+
+  std::map<std::string, std::string> headers;
+
+  std::string body;
 
  public:
   /**
@@ -34,6 +50,11 @@ class HttpResponse : public HttpMessage{
 
   // Move Assignment Operator
   HttpResponse& operator=(HttpResponse&& other) = delete;
+
+ public:
+  inline void setHeader(const std::string& key, const std::string& value) {
+    this->headers[key] = value;
+  }
 };
 
 #endif  // HTTP_RESPONSE_HPP_

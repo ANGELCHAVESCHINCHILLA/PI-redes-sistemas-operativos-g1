@@ -1,13 +1,13 @@
-// Copyright © 2023 Camilo Suárez Sandí
+// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
 
 #ifndef HTTP_APP_HPP_
 #define HTTP_APP_HPP_
 
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
+#include "../common/common.hpp"
 
 class HttpApp {
- private:
  public:
   /**
    * @brief Default constructor.
@@ -35,7 +35,7 @@ class HttpApp {
 
   virtual bool start() = 0;
 
-  virtual bool run(const HttpRequest& request, HttpResponse& response) = 0;
+  virtual bool run(HttpRequest& request, HttpResponse& response) = 0;
 };
 
 #endif  // HTTP_APP_HPP_

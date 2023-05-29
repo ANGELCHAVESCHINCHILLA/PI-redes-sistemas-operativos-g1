@@ -60,7 +60,7 @@ int HttpServer::start(const std::string& address, int port) {
 // TODO(everyone): Pensar en si es necesario agregar estos handlers.
 void HttpServer::handleClientConnection(const std::string& request, std::string& response
     , Socket& client) {
-  std::cout << "Solicitud realizada:\0" << request << std::endl;
+  std::cout << "Solicitud realizada:\n" << request << std::endl;
 // While the same client asks for HTTP requests in the same connection
   // while (true) {
     // Revisar si el parse falla, en teoría no debería cerrarse la conexión aún
@@ -80,7 +80,7 @@ void HttpServer::handleClientConnection(const std::string& request, std::string&
   // }
 }
 
-bool HttpServer::route(const HttpRequest& request, HttpResponse& response) {
+bool HttpServer::route(HttpRequest& request, HttpResponse& response) {
   for (HttpApp* app : this->apps) {
     if (app->run(request, response)) {
       return true;
