@@ -23,7 +23,7 @@ void HttpResponse::setBody(const std::string& body) {
 
   this->body = body;
 
-  this->addHeader("Content-Length", std::to_string(length));
+  this->setHeader("Content-Length", std::to_string(length));
 }
 
 std::string HttpResponse::toString() {
@@ -43,7 +43,7 @@ std::string HttpResponse::toString() {
   return ss.str();
 }
 
-void HttpResponse::addHeader(const std::string& key, const std::string& value) {
+void HttpResponse::setHeader(const std::string& key, const std::string& value) {
   this->headers.insert({key, value});
 }
 
@@ -52,5 +52,5 @@ void HttpResponse::addBody(const std::string body) {
 
   this->body += body;
 
-  this->addHeader("Content-Length", std::to_string(length));
+  this->setHeader("Content-Length", std::to_string(length));
 }

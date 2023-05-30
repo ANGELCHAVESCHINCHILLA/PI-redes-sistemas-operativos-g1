@@ -52,7 +52,7 @@ class HttpResponse : public HttpMessage {
 
   std::string toString() override;
 
-  void addHeader(const std::string& key, const std::string& value);
+  void setHeader(const std::string& key, const std::string& value);
 
   void addBody(const std::string body);
 };

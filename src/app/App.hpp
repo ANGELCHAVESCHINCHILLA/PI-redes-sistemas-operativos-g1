@@ -3,10 +3,14 @@
 #ifndef APP_HPP_
 #define APP_HPP_
 
+#include <map>
+
 #include "../http/HttpApp.hpp"
 
 class App : public HttpApp {
  private:
+  static std::map<std::string, std::string> CONTENT_TYPE_MAP;
+
  public:
   /**
    * @brief Default constructor.
@@ -45,7 +49,8 @@ class App : public HttpApp {
 
   bool serveStatic(const HttpRequest& request, HttpResponse& response) const;
 
-  std::string getContentType(const std::string& path) const;
+  std::string getContentType(
+      const HttpRequest& request, const std::string& path) const;
 };
 
 #endif  // APP_HPP_

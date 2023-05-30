@@ -42,6 +42,14 @@ std::string HttpRequest::toString() {
   return ss.str();
 }
 
+bool HttpRequest::hasHeader(const std::string& key) const {
+  return this->headers.count(key) > 0;
+}
+
+std::string HttpRequest::getHeader(const std::string& key) const {
+  return this->headers.at(key);
+}
+
 void HttpRequest::parse(std::string& input) {
   this->parseLine(input);
 

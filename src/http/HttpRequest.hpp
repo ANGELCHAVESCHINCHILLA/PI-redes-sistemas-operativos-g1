@@ -53,6 +53,10 @@ class HttpRequest : public HttpMessage {
 
   std::string toString() override;
 
+  bool hasHeader(const std::string& key) const;
+
+  std::string getHeader(const std::string& key) const;
+
  private:
   void parse(std::string& input);
 

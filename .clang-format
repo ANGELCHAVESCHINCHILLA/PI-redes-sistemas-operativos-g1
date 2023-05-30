@@ -1,6 +1,7 @@
 ---
 BasedOnStyle: Google
 AlignAfterOpenBracket: DontAlign
+AlignArrayOfStructures: Right
 AllowShortBlocksOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: None
 DerivePointerAlignment: false

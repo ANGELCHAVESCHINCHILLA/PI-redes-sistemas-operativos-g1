@@ -7,6 +7,18 @@
 #include <iostream>
 #include <string>
 
+#define DEFAULT_CONTENT_TYPE "application/octet-stream"
+
+std::map<std::string, std::string> App::CONTENT_TYPE_MAP = {
+    { ".txt",       "text/plain"},
+    {".html",        "text/html"},
+    { ".css",         "text/css"},
+    {  ".js",  "text/javascript"},
+    { ".xml",  "application/xml"},
+    {".json", "application/json"},
+    { ".png",        "image/png"},
+};
+
 App::App() {
 }
 
@@ -71,7 +83,7 @@ bool App::servePage(const HttpRequest& request, HttpResponse& response,
   response.setStatusCode(200);
   response.setStatusText("OK");
   response.setBody(body);
-  response.addHeader("Content-Type", "text/html; charset=utf8");
+  response.setHeader("Content-Type", "text/html; charset=utf8");
 
   return true;
 }
@@ -87,7 +99,7 @@ bool App::serveNotFoundPage(
   response.setStatusCode(404);
   response.setStatusText("Not Found");
   response.setBody(body);
-  response.addHeader("Content-Type", "text/html; charset=utf8");
+  response.setHeader("Content-Type", "text/html; charset=utf8");
 
   return true;
 }
@@ -105,30 +117,23 @@ bool App::serveStatic(
   response.setStatusCode(200);
   response.setStatusText("OK");
   response.setBody(body);
-  response.addHeader(
-      "Content-Type", App::getContentType(path) + "; charset=utf8");
+  response.setHeader(
+      "Content-Type", App::getContentType(request, path) + "; charset=utf8");
 
   return true;
 }
 
-std::string App::getContentType(const std::string& path) const {
-  std::string extension = std::filesystem::path(path).extension().string();
-
-  if (extension == ".txt") {
-    return "text/plain";
-  } else if (extension == ".html") {
-    return "text/html";
-  } else if (extension == ".css") {
-    return "text/css";
-  } else if (extension == ".js") {
-    return "text/javascript";
-  } else if (extension == ".xml") {
-    return "application/xml";
-  } else if (extension == ".json") {
-    return "application/json";
-  } else if (extension == ".png") {
-    return "image/png";
+std::string App::getContentType(
+    const HttpRequest& request, const std::string& path) const {
+  if (request.hasHeader("Content-Type")) {
+    return request.getHeader("Content-Type");
   }
 
-  return "text/plain";
+  std::string extension = std::filesystem::path(path).extension().string();
+
+  if (App::CONTENT_TYPE_MAP.count(extension) > 0) {
+    return App::CONTENT_TYPE_MAP[extension];
+  }
+
+  return DEFAULT_CONTENT_TYPE;
 }
