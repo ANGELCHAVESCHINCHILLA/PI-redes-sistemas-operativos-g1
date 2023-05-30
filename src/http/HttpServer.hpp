@@ -65,6 +65,9 @@ class HttpServer : public TcpServer {
    */
   bool route(HttpRequest& request, HttpResponse& response);
 
+  bool serveNotFound(HttpRequest& httpRequest,
+                                    HttpResponse& httpResponse);
+
   int appendApp(HttpApp* application);
 };
 

@@ -19,96 +19,34 @@ TcpServer::~TcpServer() {
   //
 }
 
-// int TcpServer::start(const std::string& address, int port) {
-//   int error = SocketError::OK_SOCKET;
-
-//   error = this->server_socket.create();
-
-//   if (!error) {
-//     error = this->server_socket.bind(address, port);
-//   }
-
-//   if (!error) {
-//     error = this->server_socket.listen();
-//   }
-
-    // if (!error) {
-    //   error = this->server_socket.accept(client_socket);
-    // }
-
-    // Serial
-
-    // std::string request;
-    // std::string response;
-
-    // if (!error) {
-    //   error = client_socket.receive(request);
-    // }
-
-    // if (!error) {
-    //   this->run(request, response, clien);
-
-    //   error = client_socket.send(response);
-    // }
-
-    // client_socket.close();
-
-    // Concurrent
-
-  // while (!error) {
-  //   Socket client_socket;
-    // if (!error) {
-    //   this->thread_pool.execute([&]() {
-    //     std::string request;
-    //     std::string response;
-
-    //     if (!error) {
-    //       error = client_socket.receive(request);
-    //     }
-
-    //     if (!error) {
-    //       this->run(request, response);
-
-    //       error = client_socket.send(response);
-    //     }
-
-    //     client_socket.close();
-    //   });
-    // }
-  // }
-
-//   return error;
-// }
-
 int TcpServer::acceptConnections () {
-  std::cout << "Voy a aceptar conexiones";
+  std::cout << "Voy a aceptar conexiones";   // para debug
   int error = SocketError::OK_SOCKET;
 
   while (true/*!error*/) {
     error = SocketError::OK_SOCKET;
     Socket client_socket;
-    // std::cout << "Logré crear un socket con el cliente conexiones\n";
 
-    // if (!error) {
-      //   std::cout << "Voy a intentar establecer conexi[on]";
-        error = this->server_socket.accept(client_socket);
-    // }
+    // Accept conection with client
+    error = this->server_socket.accept(client_socket);
 
     std::string request;
     std::string response;
 
     if (!error) {
-      std::cout << "Logre establecer conexion con "
+      // Impresión para debug
+      std::cout << "Logré establecer conexión con "
         << client_socket.getFileDescriptor() << std::endl;
+
+      // Receive data from client
       error = client_socket.receive(request);
     } else {
-    throw std::runtime_error("could not accept client connection");      
+      throw std::runtime_error("could not accept client connection");      
     }
 
     if (!error) {
+      // Handle the client connection
       this->handleClientConnection(request, response, client_socket);
-
-      error = client_socket.send(response);
     }
   }
 

@@ -22,6 +22,7 @@ HttpServer::~HttpServer() {
 int HttpServer::appendApp(HttpApp* application) {
   assert(application);
   this->apps.push_back(application);
+  return 0;
 }
 
 void HttpServer::stopServer(int signal) {
@@ -64,8 +65,9 @@ int HttpServer::start(const std::string& address, int port) {
 // En este momento es serial, por lo tanto el server procesará una solicitud a
 // la vez, se deben agregar HttpConnectionHandler si se quiere hacer concurrente
 // TODO(everyone): Pensar en si es necesario agregar estos handlers.
-void HttpServer::handleClientConnection(const std::string& request, std::string& response
-    , Socket& client) {
+void HttpServer::handleClientConnection(const std::string& request
+    , std::string& response, Socket& client) {
+  // Impresión para debug
   std::cout << "Solicitud realizada:\n" << request << std::endl;
 // While the same client asks for HTTP requests in the same connection
   // while (true) {
@@ -73,14 +75,22 @@ void HttpServer::handleClientConnection(const std::string& request, std::string&
     HttpRequest http_request(request);
     HttpResponse http_response(response);
 
-    // Dar la oportunidad a las apps que se encarguen del request
+    // Give the oportunity to apps to handle the client connection
     const bool handled = this->route(http_request, http_response);
+
 
     // If subclass did not handle the request or the client used HTTP/1.0
     if (!handled || http_request.getHttpVersion() == "HTTP/1.0") {
       // The socket will not be more used, close the connection
       client.close();
       // break;
+    } else {
+      // If the request was succesfull handled then send Httt Response to the
+      // client
+      if (client.send(http_response.getOutput()) != SocketError::OK_SOCKET) {
+        // If could not sent data then close the connection
+        client.close();
+      }
     }
   //   break;
   // }
@@ -88,9 +98,39 @@ void HttpServer::handleClientConnection(const std::string& request, std::string&
 
 bool HttpServer::route(HttpRequest& request, HttpResponse& response) {
   for (HttpApp* app : this->apps) {
+    // Ask to te app if it could handle the connection
     if (app->run(request, response)) {
+      // Impresión para debug
+      std::cout << "Logré maneja mi solicitud" << std::endl;
       return true;
     }
   }
-  return false;
+  // If no one handle the connection then build a Serve Not Found response
+  return serveNotFound(request, response);
+}
+
+bool HttpServer::serveNotFound(HttpRequest& httpRequest,
+                                    HttpResponse& httpResponse) {
+  (void) httpRequest;
+
+  // Set HTTP response metadata (headers)
+  httpResponse.setStatusCode(404);
+  httpResponse.setHeader("Server", "AttoServer v1.0");
+  httpResponse.setHeader("Content-type", "text/html; charset=ascii");
+
+  // Build the body of the response
+  std::string title = "Not found";
+  httpResponse.getBody()
+      << "<!DOCTYPE html>\n"
+      << "<html lang=\"en\">\n"
+      << "  <meta charset=\"ascii\"/>\n"
+      << "  <title>" << title << "</title>\n"
+      << "  <style>body {font-family: monospace} h1 {color: red}</style>\n"
+      << "  <h1>" << title << "</h1>\n"
+      << "  <p>The requested resouce was not found on this server.</p>\n"
+      << "  <hr><p><a href=\"/\">Homepage</a></p>\n"
+      << "</html>\n";
+
+  // Send the response to the client (user agent)
+  return httpResponse.buildResponse();
 }
