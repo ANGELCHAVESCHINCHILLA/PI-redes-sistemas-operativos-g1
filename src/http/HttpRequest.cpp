@@ -75,10 +75,12 @@ void HttpRequest::parseLine(std::string& input) {
 
   input = input.substr(pos + 1);
 
-  if (version != this->httpVersion) {
-    // throw an exception
-    return;
-  }
+  // if (version != this->httpVersion) {
+  //   throw std::runtime_error("Version no compatbile");
+  //   // throw an exception
+  //   return;
+  // }
+  this->httpVersion = version;
 }
 
 void HttpRequest::parseHeaders(std::string& input) {

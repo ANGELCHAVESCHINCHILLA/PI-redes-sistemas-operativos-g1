@@ -2,46 +2,89 @@
 
 #include "HttpResponse.hpp"
 
-HttpResponse::HttpResponse(const std::string& input) : input(input) {
+#include <iostream>
+
+HttpResponse::HttpResponse(const std::string& output)
+  : output(output)
+  , sharedBody{new std::stringstream()} {
   //
 }
 
 HttpResponse::~HttpResponse() {
 }
 
-std::string HttpResponse::buildResponse() {
-  this->input += this->buildStatusLine();
+bool HttpResponse::buildResponse() {
+  this->output += this->buildStatusLine() + HttpMessage::lineSeparator;
 
-   // Send message header
+   // put message header
   for (HttpResponse::Headers::const_iterator itr = this->headers.begin();
     itr != this->headers.end(); ++itr) {
-    // e.g: "Server: My Web Server"
-    this->input += itr->first;
-    this->input += ": ";
-    this->input += HttpMessage::lineSeparator;
+    // e.g: "Server: My Web Server\r\n"
+    this->output += itr->first;
+    this->output += ": ";
+    this->output += itr->second;
+    this->output += HttpMessage::lineSeparator;
   }
 
   const std::string& contentType = this->getHeader("Content-Type");
+  if (contentType.empty()) {
+    // No Content-type was set
+    std::cout << "Error en Content-type" << std::endl;
+    return false;
+  }
 
   // Check Content-length was provided
   const std::string& contentLength = this->getHeader("Content-Length");
   if (contentLength.empty()) {
-    // No Content-length was set, send the body length
-    if (!(this->socket << "Content-Length: " << this->getBodyLength() << sep)) {
-      // return false;
-    }
+    // No Content-length was set
+    this->output += "Content-Length: " + std::to_string(this->getBodyLength())
+                    + HttpMessage::lineSeparator;
+    std::cout << "Error en Content-length" << std::endl;
   }
+
+  this->output += HttpMessage::lineSeparator;
+
+  this->output += (*this->sharedBody).str();
+
+  std::cout << "respuesta generada:\n"<< this->output << std::endl << std::endl;
+
+  return true;
 }
 
 std::string HttpResponse::buildStatusLine() const {
   return this->httpVersion + ' ' + std::to_string(this->statusCode) + ' '
     + this->reasonPhrase;
-}
+} 
 
 std::string HttpResponse::getHeader(const std::string& key
   , const std::string& defaultvalue) {
   const Headers::const_iterator& itr = this->headers.find(key);
   return itr != this->headers.end() ? itr->second : defaultvalue;
+}
+
+bool HttpResponse::setStatusCode(int statusCode,
+  const std::string& reasonPhrase) {
+  // Accept all given reason phrases
+  if (reasonPhrase.length() > 0) {
+    this->statusCode = statusCode;
+    this->reasonPhrase = reasonPhrase;
+    return true;
+  }
+
+  // No reason phrase was given, use a standard one
+  const ReasonPhrases::const_iterator& itr
+    = HttpResponse::reasonPhrases.find(statusCode);
+
+  // If status code is standard
+  if (itr != HttpResponse::reasonPhrases.end()) {
+    // Use the standard reason phrase
+    this->statusCode = statusCode;
+    this->reasonPhrase = itr->second;
+    return true;
+  }
+
+  // Status code is not standard and no reason phrase was provided, reject it
+  return false;
 }
 
 // {Code, "Reason-Phrase"}
