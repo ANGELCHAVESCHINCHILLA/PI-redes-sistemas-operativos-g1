@@ -21,7 +21,7 @@ int main() {
     resultado = 1;
   } else {
     ipServidor.sin_family = AF_INET;
-    ipServidor.sin_port = htons(8000);
+    ipServidor.sin_port = htons(8080);
     ipServidor.sin_addr.s_addr = inet_addr("127.0.0.1");
     int error = 0;
     if ((error = connect(s, (struct sockaddr *)&ipServidor,

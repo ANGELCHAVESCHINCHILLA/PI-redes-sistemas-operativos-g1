@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
     std::string address = "127.0.0.1";
 
-    int port = 8000;
+    int port = 8080;
 
     if (argc == 2) {
       port = std::stoi(argv[1]);
