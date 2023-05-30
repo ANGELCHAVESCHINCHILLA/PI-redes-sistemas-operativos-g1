@@ -33,6 +33,25 @@ bool App::run(const HttpRequest& request, HttpResponse& response) {
       }
     }
 
+    if (request.getTarget().getPath().rfind("/login", 0) == 0) {
+      if (this->servePage(request, response, "login.html")) {
+        return true;
+      }
+    }
+
+    if (request.getTarget().getPath().rfind("/solicitudes", 0) == 0) {
+      if (this->servePage(request, response, "solicitudes.html")) {
+        return true;
+      }
+    }
+
+    if (request.getTarget().getPath().rfind("/solicitar_vacaciones", 0) == 0) {
+      if (this->servePage(
+              request, response, "form_solicitar_vacaciones.html")) {
+        return true;
+      }
+    }
+
     if (this->serveStatic(request, response)) {
       return true;
     }
@@ -48,7 +67,7 @@ bool App::run(const HttpRequest& request, HttpResponse& response) {
 std::string App::readFileToString(const std::string& relative_path) const {
   std::filesystem::path path = std::filesystem::current_path();
 
-  if (path.parent_path().stem() == "build") {
+  if (path.stem() == "build") {
     path = path.parent_path();
   }
 
@@ -136,4 +155,10 @@ std::string App::getContentType(
   }
 
   return DEFAULT_CONTENT_TYPE;
+}
+
+void App::redirect(HttpResponse& response, const std::string& target) const {
+  response.setStatusCode(302);
+  response.setStatusText("Found");
+  response.setHeader("Location", target);
 }

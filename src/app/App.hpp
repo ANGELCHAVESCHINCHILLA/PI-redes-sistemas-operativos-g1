@@ -51,6 +51,8 @@ class App : public HttpApp {
 
   std::string getContentType(
       const HttpRequest& request, const std::string& path) const;
+
+  void redirect(HttpResponse& response, const std::string& target) const;
 };
 
 #endif  // APP_HPP_
