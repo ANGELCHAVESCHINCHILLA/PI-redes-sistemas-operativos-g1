@@ -23,7 +23,12 @@ class GuachisWebApp : public HttpApp {
 
   bool run(HttpRequest& request, HttpResponse& response) override;
 
-  bool serveLogin(HttpRequest& httpRequest, HttpResponse& httpResponse);
+  // bool serveLogin(HttpRequest& httpRequest, HttpResponse& httpResponse);
+
+  // bool serveRequests(HttpRequest& httpRequest, HttpResponse& httpResponse);
+
+  // bool serveStyles(HttpRequest& httpRequest, HttpResponse& httpResponse);
+
 
   /**
    * @brief Reads a file with static text and sends the text.
@@ -34,9 +39,11 @@ class GuachisWebApp : public HttpApp {
    * @param contentType The content type of the file.
    * @return true If the request was successfully handled by this app.
    */
-  static bool serveStatic(HttpRequest& httpRequest, HttpResponse& httpResponse,
-                        const std::string& path,
-                        const std::string& contentType);
+  static bool serveStatic(HttpRequest& httpRequest,
+                          HttpResponse& httpResponse,
+                          const std::string& path,
+                          const std::string& contentType,
+                          const std::string& charset = "; charset=utf-8");
 
   static void readFile(std::ostream& output, const std::string& path);
 };

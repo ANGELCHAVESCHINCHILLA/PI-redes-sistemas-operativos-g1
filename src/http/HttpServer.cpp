@@ -101,11 +101,12 @@ bool HttpServer::route(HttpRequest& request, HttpResponse& response) {
     // Ask to te app if it could handle the connection
     if (app->run(request, response)) {
       // Impresión para debug
-      std::cout << "Logré maneja mi solicitud" << std::endl;
+      std::cout << "Logré manejar mi solicitud" << std::endl;
       return true;
     }
   }
   // If no one handle the connection then build a Serve Not Found response
+  std::cout << "Voy a servir un NOT FOUND" << std::endl;
   return serveNotFound(request, response);
 }
 
@@ -116,7 +117,7 @@ bool HttpServer::serveNotFound(HttpRequest& httpRequest,
   // Set HTTP response metadata (headers)
   httpResponse.setStatusCode(404);
   httpResponse.setHeader("Server", "AttoServer v1.0");
-  httpResponse.setHeader("Content-type", "text/html; charset=ascii");
+  httpResponse.setHeader("Content-Type", "text/html; charset=ascii");
 
   // Build the body of the response
   std::string title = "Not found";
@@ -128,7 +129,7 @@ bool HttpServer::serveNotFound(HttpRequest& httpRequest,
       << "  <style>body {font-family: monospace} h1 {color: red}</style>\n"
       << "  <h1>" << title << "</h1>\n"
       << "  <p>The requested resouce was not found on this server.</p>\n"
-      << "  <hr><p><a href=\"/\">Homepage</a></p>\n"
+      << "  <hr><p><a href=\"/\">Login</a></p>\n"
       << "</html>\n";
 
   // Send the response to the client (user agent)

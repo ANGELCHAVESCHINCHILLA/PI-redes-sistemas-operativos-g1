@@ -39,7 +39,6 @@ bool HttpResponse::buildResponse() {
     // No Content-length was set
     this->output += "Content-Length: " + std::to_string(this->getBodyLength())
                     + HttpMessage::lineSeparator;
-    std::cout << "Error en Content-length" << std::endl;
   }
 
   this->output += HttpMessage::lineSeparator;
