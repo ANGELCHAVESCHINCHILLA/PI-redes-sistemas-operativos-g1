@@ -1,22 +1,40 @@
-// Copyright © 2023 Ángel Chaves Chinchilla
+// Copyright © 2023 Camilo Suárez Sandí
+
 #ifndef HTTP_MESSAGE_HPP_
 #define HTTP_MESSAGE_HPP_
+
+#define HTTP_VERSION "HTTP/1.1"
 
 #include <string>
 
 class HttpMessage {
+ private:
  public:
-  /// Line separators for HTTP messages is "\r\n"
-  static const char* const lineSeparator;
+  /**
+   * @brief Default constructor.
+   *
+   */
+  HttpMessage();
 
- protected:
-  std::string httpVersion = "HTTP/1.0";
+  /**
+   * @brief Destructor.
+   *
+   */
+  ~HttpMessage();
 
- public:
-  HttpMessage() = default;
+  // Copy Constructor
+  HttpMessage(const HttpMessage& other) = delete;
 
- public:
-  const std::string& getHttpVersion() const;
+  // Copy Assignment Operator
+  HttpMessage& operator=(const HttpMessage& other) = delete;
+
+  // Move Constructor
+  HttpMessage(HttpMessage&& other) = delete;
+
+  // Move Assignment Operator
+  HttpMessage& operator=(HttpMessage&& other) = delete;
+
+  virtual std::string toString() = 0;
 };
 
 #endif  // HTTP_MESSAGE_HPP_

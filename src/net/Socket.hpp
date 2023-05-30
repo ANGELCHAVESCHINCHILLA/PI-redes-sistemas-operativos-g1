@@ -1,46 +1,20 @@
-// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
+// Copyright © 2023 Camilo Suárez Sandí
 
 #ifndef SOCKET_HPP_
 #define SOCKET_HPP_
 
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <stdlib.h>
-#include <sys/socket.h>
 #include <memory>
 #include <string>
 
-#include "../common/common.hpp"
+#include "SharedSocket.hpp"
 
-enum SocketError {
-  OK_SOCKET = EXIT_SUCCESS,
-  NOT_OK_SOCKET = EXIT_FAILURE,
-  //
-  CANT_CREATE_SOCKET,
-  CANT_BIND_SOCKET,
-  CANT_LISTEN_SOCKET,
-  CANT_ACCEPT_SOCKET,
-  CANT_CONNECT_SOCKET,
-  //
-  CANT_SEND_DATA,
-  CANT_RECEIVE_DATA,
-  
-  CANT_FETCH_ADDRESSES,
-};
-
-struct SharedSocket;
 /**
  * @brief A wrapper class for a socket.
  *
  */
 class Socket {
-  /// Objects of this class can be copied, but avoid innecesary copies
-  DECLARE_RULE4(Socket, default);
-
- protected:
-  /// Copies of this object share the same socket file descriptor and buffers
-  /// The sharedSocket contents all the info of this Socket
-  std::shared_ptr<SharedSocket> sharedSocket;
+ private:
+  std::shared_ptr<SharedSocket> shared_socket;
 
  public:
   /**
@@ -50,17 +24,22 @@ class Socket {
   Socket();
 
   /**
-   * @brief Destructor. Closes the socket file descriptor JUST if this is the
-   * last object using a shared socket
+   * @brief Destructor.
    *
    */
-  ~Socket() = default;
+  ~Socket();
 
- public:  // Access
-  int getFileDescriptor() const;
+  // Copy Constructor
+  Socket(const Socket& other);
 
- public:  // Setters
-  void setFileDescriptor(int fd);
+  // Copy Assignment Operator
+  Socket& operator=(const Socket& other) = delete;
+
+  // Move Constructor
+  Socket(Socket&& other) = delete;
+
+  // Move Assignment Operator
+  Socket& operator=(Socket&& other) = delete;
 
   /**
    * @brief Creates a new socket.
@@ -68,8 +47,6 @@ class Socket {
    * @return int A SocketError code.
    */
   int create();
-
-  int create(const struct addrinfo* address);
 
   /**
    * @brief Binds a socket to an address specified by the host and the port.
@@ -80,14 +57,12 @@ class Socket {
    */
   int bind(const std::string& address, int port);
 
-  int bind(const struct addrinfo* address);
-
   /**
    * @brief The socket will be used to accept connections for other sockets.
    *
    * @return int A SocketError code.
    */
-  int listen();
+  int listen() const;
 
   /**
    * @brief The socket accepts an incoming connection on the listening stream
@@ -97,7 +72,7 @@ class Socket {
    * connection.
    * @return int A SocketError code.
    */
-  int accept(Socket& socket);
+  int accept(Socket& socket) const;
 
   /**
    * @brief Connects the socket to a listening socket whose address is specified
@@ -115,7 +90,7 @@ class Socket {
    * @param data The sent data.
    * @return int A SocketError code.
    */
-  int send(const std::string& data);
+  int send(const std::string& data) const;
 
   /**
    * @brief Receive data from the socket.
@@ -123,15 +98,13 @@ class Socket {
    * @param data The received data.
    * @return int A SocketError code.
    */
-  int receive(std::string& data);
-
-  int allowReuse();
+  int receive(std::string& data) const;
 
   /**
    * @brief Closes the socket.
    *
    */
-  void close();
+  void close() const;
 };
 
 #endif  // SOCKET_HPP_

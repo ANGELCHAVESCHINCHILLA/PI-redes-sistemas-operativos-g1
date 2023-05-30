@@ -1,9 +1,9 @@
-// Copyright © 2023 Ángel Chaves Chinchilla
+// Copyright © 2023 Camilo Suárez Sandí
 
 #include "HttpMessage.hpp"
 
-const char* const HttpMessage::lineSeparator = "\r\n";
+HttpMessage::HttpMessage() {
+}
 
-const std::string& HttpMessage::getHttpVersion() const {
-  return this->httpVersion;
+HttpMessage::~HttpMessage() {
 }

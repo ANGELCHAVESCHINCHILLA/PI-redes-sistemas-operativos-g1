@@ -1,67 +1,30 @@
-// Copyright © 2023 Universidad de Costa Rica
-// Ángel Chaves Chinchilla (c12113) angel.chaveschichilla@ucr.ac.cr
-// Camilo Suárez Sandí (C17811) camilo.suarez@ucr.ac.cr
-// David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
-// Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
+//
 
-/*
-Si quiere usar el menú, defina la macro FS_MENU
-Si quiere usar el server, defina la macron FS_WEBSERVER*/
+#include <signal.h>
 
-// #define FS_MENU
-#define WEBSERVER
-
-#ifdef FS_MENU
-
+#include "app/App.hpp"
 #include "error.hpp"
-#include "menu/FSMenu.hpp"
+#include "http/HttpServer.hpp"
 
-int main1(int argc, char** argv) {
-  int error = EXIT_SUCCESS;
+int main(int argc, char** argv) {
+  int error = Error::OK;
 
-  FSMenu* menu = FSMenu::getInstance();
+  ::signal(SIGINT, HttpServer::onSignal);
 
-  menu->start();
+  HttpServer* server = HttpServer::getInstance();
+
+  App* app = new App();
+
+  server->addApp(app);
+
+  std::string address = "127.0.0.1";
+  int port = 8000;
+
+  error = server->start(address, port);
+
+  if (!error) {
+    error = server->run();
+  }
 
   return error;
 }
-
-#endif
-
-#ifdef WEBSERVER
-
-#include "http/HttpServer.hpp"
-#include "webapp/GuachisWebApp.hpp"
-
-#include <csignal>
-#include <iostream>
-
-/// Start the web server
-int main(int argc, char* argv[]) {
-  try {
-    // Register the ctrl + c and kill signals for program termination
-    std::signal(SIGTERM, HttpServer::stopServer);
-    std::signal(SIGINT, HttpServer::stopServer);
-
-    std::string address = "127.0.0.1";
-
-    int port = 8000;
-
-    if (argc == 2) {
-      port = std::stoi(argv[1]);
-    }
-
-    GuachisWebApp webapp;
-
-    HttpServer::getInstance().appendApp(&webapp);
-
-    // Start the web server
-    HttpServer::getInstance().start(address, port);
-
-    std::cout << "Servidor finalizado";
-  } catch (const std::runtime_error& error) {
-    std::cerr << "error: " << error.what() << std::endl;
-  }
-}
-
-#endif  // WEBSERVER

@@ -11,14 +11,25 @@ HttpRequest::HttpRequest(const std::string& input) : input(input) {
 }
 
 HttpRequest::~HttpRequest() {
-  //
+}
+
+const std::string& HttpRequest::getMethod() const {
+  return this->method;
+}
+
+const URL& HttpRequest::getTarget() const {
+  return this->target;
+}
+
+const std::string& HttpRequest::getBody() const {
+  return this->body;
 }
 
 std::string HttpRequest::toString() {
   std::stringstream ss;
 
-  ss << this->method << " " << this->target.getInput() << " " <<
-    this->httpVersion << "\n";
+  ss << this->method << " " << this->target.getInput() << " " << HTTP_VERSION
+     << "\n";
 
   for (auto& [key, value] : this->headers) {
     ss << key << ": " << value << "\n";
@@ -75,7 +86,7 @@ void HttpRequest::parseLine(std::string& input) {
 
   input = input.substr(pos + 1);
 
-  if (version != this->httpVersion) {
+  if (version != HTTP_VERSION) {
     // throw an exception
     return;
   }

@@ -3,9 +3,7 @@
 #include "HttpApp.hpp"
 
 HttpApp::HttpApp() {
-  //
 }
 
 HttpApp::~HttpApp() {
-  //
 }

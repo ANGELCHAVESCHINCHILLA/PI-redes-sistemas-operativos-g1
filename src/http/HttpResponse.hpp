@@ -1,33 +1,23 @@
-// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
+// Copyright © 2023 Camilo Suárez Sandí
 
 #ifndef HTTP_RESPONSE_HPP_
 #define HTTP_RESPONSE_HPP_
 
 #include <map>
-#include <string>
-#include <sstream>
+
 #include "HttpMessage.hpp"
 
-class HttpResponse : public HttpMessage{
- public:
-  /// Statard status codes and their reason phrases according to RFC 7231
-  typedef std::map<int, const char*> ReasonPhrases;
-  static const ReasonPhrases reasonPhrases;
- protected:
+class HttpResponse : public HttpMessage {
+ private:
   std::string input;
 
-  typedef std::map<std::string, std::string> Headers;
-  Headers headers;
+  size_t status_code = 200;
 
-  std::string reasonPhrase;
+  std::string status_text = std::string("OK");
 
-  std::stringstream body;
+  std::map<std::string, std::string> headers;
 
-  /**
-   * @brief e.g: 200 OK, 500 Internal server error,..
-   * 
-   */
-  int statusCode;
+  std::string body;
 
  public:
   /**
@@ -54,23 +44,17 @@ class HttpResponse : public HttpMessage{
   // Move Assignment Operator
   HttpResponse& operator=(HttpResponse&& other) = delete;
 
- public:  // accesors
-  inline const std::stringstream& getBody() const { return this->body; }
+  void setStatusCode(size_t status_code);
 
-  inline std::stringstream& getBody() { return this->body; }
+  void setStatusText(const std::string& status_text);
 
-  std::string getHeader(const std::string& key
-    , const std::string& defaultvalue = "");
+  void setBody(const std::string& body);
 
-  /// e.g: "HTTP/1.1 200 OK" or "HTTP/1.0 404 Not found"
-  std::string buildStatusLine() const;
+  std::string toString() override;
 
-  std::string buildResponse();
+  void addHeader(const std::string& key, const std::string& value);
 
- public:
-  inline void setHeader(const std::string& key, const std::string& value) {
-    this->headers[key] = value;
-  }
+  void addBody(const std::string body);
 };
 
 #endif  // HTTP_RESPONSE_HPP_

@@ -1,19 +1,15 @@
-// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
+// Copyright © 2023 Camilo Suárez Sandí
 
 #ifndef HTTP_REQUEST_HPP_
 #define HTTP_REQUEST_HPP_
 
 #include <map>
-// #include <sstream>
 
-#include "HttpMessage.hpp"
 #include "../url/URL.hpp"
-#include "../common/common.hpp"
-
-typedef std::map<std::string, std::string> Headers;
+#include "HttpMessage.hpp"
 
 class HttpRequest : public HttpMessage {
- protected:
+ private:
   std::string input;
 
   std::string method;
@@ -49,15 +45,13 @@ class HttpRequest : public HttpMessage {
   // Move Assignment Operator
   HttpRequest& operator=(HttpRequest&& other) = delete;
 
-  std::string toString();
+  const std::string& getMethod() const;
 
- public:  // accessors
+  const URL& getTarget() const;
 
-  inline const std::string& getMethod() const { return this->method; }
+  const std::string& getBody() const;
 
-  inline const URL& getTarget() const { return this->target; }
-
-  inline const std::string& getBody() const { return this->body; }
+  std::string toString() override;
 
  private:
   void parse(std::string& input);

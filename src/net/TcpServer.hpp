@@ -1,11 +1,7 @@
-// Copyright © 2023 Camilo Suárez Sandí, Ángel Chaves Chinchilla
+// Copyright © 2023 Camilo Suárez Sandí
 
 #ifndef TCP_SERVER_HPP_
 #define TCP_SERVER_HPP_
-
-// #include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
 
 #include "../concurrent/ThreadPool.hpp"
 #include "Socket.hpp"
@@ -14,12 +10,8 @@ class TcpServer {
  protected:
   Socket server_socket;
 
+ private:
   ThreadPool thread_pool;
-
-  struct addrinfo serverSocketSettings;
-
-  struct addrinfo* possibleAddresses = nullptr;
-
 
  public:
   // Default Constructor
@@ -40,18 +32,13 @@ class TcpServer {
   // Move Assignment Operator
   TcpServer& operator=(TcpServer&& other) = delete;
 
-  void stopListening();
+  int start(const std::string& address, int port);
 
-  virtual int start(const std::string& address, int port) = 0;
+  int run();
 
-  virtual void handleClientConnection(const std::string& request, std::string& response
-    , Socket& client) = 0;
-  
-  int fetchPossibleAddresses(const char* port);
+  virtual void stop() = 0;
 
-  int openServerSocket();
-
-  int acceptConnections();
+  virtual void route(const std::string& request, std::string& response) = 0;
 };
 
 #endif  // TCP_SERVER_HPP_
