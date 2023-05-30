@@ -21,7 +21,7 @@ bool GuachisWebApp::start() {
 bool GuachisWebApp::run(HttpRequest& request, HttpResponse& response) {
   // Serve the home page of this app
   if (request.getMethod() == "GET" && request.getTarget().getPath() == "/") {
-    return this->serveStatic(request, response, "/web/pages/login.html",
+    return this->serveStatic(request, response, "/web/pages/index.html",
                              "text/html");
   }
 
@@ -35,12 +35,14 @@ bool GuachisWebApp::serveStatic(HttpRequest& httpRequest,
   (void)httpRequest;
 
   // Set the content type and the character encoding
-  httpResponse.setHeader("Content-Type", contentType + "; charset=utf8");
+  httpResponse.setStatusCode(200);
+  httpResponse.setHeader("Content-Type", contentType + "; charset=ascii");
+  httpResponse.setHeader("Server", "AttoServer v1.0");
 
   // Read the file and write the text in the HTTP response
   GuachisWebApp::readFile(httpResponse.getBody(), path);
 
-  return true;
+  return httpResponse.buildResponse();
 }
 
 void GuachisWebApp::readFile(std::ostream& output,
