@@ -4,64 +4,20 @@
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
 
-/*
-Si quiere usar el menú, defina la macro FS_MENU
-Si quiere usar el server, defina la macron FS_WEBSERVER*/
+#include "app/Database.hpp"
 
-// #define FS_MENU
-#define WEBSERVER
+int main(int argc, char* argv[]) {
+  int error = SQLITE_OK;
 
-#ifdef FS_MENU
+  char* path = "/home/usr/PI-redes-sistemas-operativos-g1/database.db";
 
-#include "error.hpp"
-#include "menu/FSMenu.hpp"
+  Database& database = Database::getInstance(path);
 
-int main1(int argc, char** argv) {
-  int error = EXIT_SUCCESS;
+  error = database.addPersonalData("1", "2", "3", "4", "5", 6);
 
-  FSMenu* menu = FSMenu::getInstance();
-
-  menu->start();
+  if (!error) {
+    error = database.printAllPersonalData();
+  }
 
   return error;
 }
-
-#endif
-
-#ifdef WEBSERVER
-
-#include "http/HttpServer.hpp"
-#include "webapp/GuachisWebApp.hpp"
-
-#include <csignal>
-#include <iostream>
-
-/// Start the web server
-int main(int argc, char* argv[]) {
-  try {
-    // Register the ctrl + c and kill signals for program termination
-    std::signal(SIGTERM, HttpServer::stopServer);
-    std::signal(SIGINT, HttpServer::stopServer);
-
-    std::string address = "127.0.0.1";
-
-    int port = 8080;
-
-    if (argc == 2) {
-      port = std::stoi(argv[1]);
-    }
-
-    GuachisWebApp webapp;
-
-    HttpServer::getInstance().appendApp(&webapp);
-
-    // Start the web server
-    HttpServer::getInstance().start(address, port);
-
-    std::cout << "Servidor finalizado";
-  } catch (const std::runtime_error& error) {
-    std::cerr << "error: " << error.what() << std::endl;
-  }
-}
-
-#endif  // WEBSERVER
