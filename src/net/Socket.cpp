@@ -170,13 +170,22 @@ struct SharedSocket {
 
   int send(const std::string& data) {
     int error = SocketError::OK_SOCKET;
+    const char* buffer = data.c_str();
+    const size_t length = data.length();
+    ssize_t sent = 0;
 
-    size_t bytes = ::send(this->fileDescriptor, data.c_str(), data.size(), 0);
+    // Try and retry to send the data until all data is sent to peer
+    while (!error && size_t(sent) < length) {
+      size_t bytes = ::send(this->fileDescriptor, buffer + sent, length - sent, 0);
 
-    if (bytes == (size_t) -1) {
-      std::cerr << "Can't send the data.\n";
+      if (bytes == (size_t) -1) {
+        std::cerr << "Can't send the data.\n";
 
-      error = SocketError::CANT_SEND_DATA;
+        error = SocketError::CANT_SEND_DATA;
+      } else {
+        sent += bytes;
+      }
+
     }
 
     return error;
