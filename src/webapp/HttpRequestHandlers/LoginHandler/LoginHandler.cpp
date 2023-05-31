@@ -4,31 +4,6 @@
 
 
 bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
-  if (request.getMethod() == "GET" && request.getTarget().getPath() == "/") {
-    return this->serveStatic(request, response, "/web/pages/login.html",
-                             "text/html");
-  }
-
-  // Serve Javascript for Login from a request like : GET /scripts/login.js
-  if (request.getMethod() == "GET" && request.getTarget().getPath()
-      == "/scripts/login.js") {
-    return this->serveStatic(request, response, "/web/scripts/login.js",
-                             "application/javascript");
-  }
-
-  // Serve person.png
-  // GET /assets/images/person.png
-  if (request.getMethod() == "GET" && request.getTarget().getPath()
-      == "/assets/images/person.png") {
-    return this->serveStatic(request, response, "/web/assets/images/person.png",
-                             "image/png");
-  }
-  // Serve eye.png
-  if (request.getMethod() == "GET" && request.getTarget().getPath()
-      == "/assets/images/eye.png") {
-    return this->serveStatic(request, response, "/web/assets/images/eye.png",
-                             "image/png");
-  }
 
   return false;
 }

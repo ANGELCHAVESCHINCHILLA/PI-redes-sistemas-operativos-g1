@@ -45,7 +45,7 @@ bool HttpResponse::buildResponse() {
 
   this->output += (*this->sharedBody).str();
 
-  std::cout << "respuesta generada:\n"<< this->output << std::endl << std::endl;
+  // std::cout << "respuesta generada:\n"<< this->output << std::endl << std::endl;
 
   return true;
 }

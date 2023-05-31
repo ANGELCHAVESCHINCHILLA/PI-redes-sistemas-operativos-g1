@@ -8,6 +8,7 @@
 #include <regex>
 
 GuachisWebApp::GuachisWebApp() {
+  this->requestHandlers.push_back(new StaticHandler());
   this->requestHandlers.push_back(new LoginHandler());
 }
 
@@ -46,20 +47,6 @@ bool GuachisWebApp::run(HttpRequest& request, HttpResponse& response) {
     if (this->requestHandlers[index]->canHandle(request, response)) {
       return true;
     }
-  }
-
-  // Serve styles
-  if (request.getMethod() == "GET" && request.getTarget().getPath()
-      == "/styles/styles.css") {
-    return HttpRequestHandler::serveStatic(request, response, "/web/styles/styles.css",
-                             "text/css");
-  }
-
-  // GET /index.html HTTP/1.1
-  if (request.getMethod() == "GET" && request.getTarget().getPath()
-      == "/index.html") {
-    return HttpRequestHandler::serveStatic(request, response, "/web/pages/index.html",
-                             "text/html");
   }
 
   return false;
