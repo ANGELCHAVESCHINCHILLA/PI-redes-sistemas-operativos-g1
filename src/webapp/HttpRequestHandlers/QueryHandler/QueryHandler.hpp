@@ -1,5 +1,8 @@
 // Copyright © 2023 Ángel Chaves Chinchilla
 
+#ifndef QUERY_HANDLER
+#define QUERY_HANDLER
+
 #include "../HttpRequestHandler.hpp"
 #include "authenticator.hpp"
 
@@ -25,3 +28,5 @@ class QueryHandler : public HttpRequestHandler {
    */
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 };
+
+#endif  // QUERY_HANDLER
