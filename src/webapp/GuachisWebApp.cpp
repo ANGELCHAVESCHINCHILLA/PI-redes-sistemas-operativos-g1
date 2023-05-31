@@ -7,9 +7,16 @@
 #include <iostream>
 #include <regex>
 
-GuachisWebApp::GuachisWebApp() {}
+GuachisWebApp::GuachisWebApp() {
+  this->requestHandlers.push_back(new LoginHandler);
+}
 
-GuachisWebApp::~GuachisWebApp() {}
+GuachisWebApp::~GuachisWebApp() {
+  const size_t count = this->requestHandlers.size();
+  for (size_t index = 0; index < count; ++index) {
+    delete this->requestHandlers[index];
+  }
+}
 
 
 bool GuachisWebApp::start() {
@@ -35,81 +42,19 @@ Entonces un HttpRequest irá por cada uno de estos hasta que alguno se haga carg
 */
 // TODO(Any): Servir el resto de páginas
 bool GuachisWebApp::run(HttpRequest& request, HttpResponse& response) {
-  if (request.getMethod() == "GET" && request.getTarget().getPath() == "/") {
-    return this->serveStatic(request, response, "/web/pages/login.html",
-                             "text/html");
+  for (size_t index = 0; index < this->requestHandlers.size(); ++index) {
+    if (this->requestHandlers[index]->canHandle(request, response)) {
+      return true;
+    }
   }
 
   // Serve styles
   if (request.getMethod() == "GET" && request.getTarget().getPath()
       == "/styles/styles.css") {
-    return this->serveStatic(request, response, "/web/styles/styles.css",
+    return HttpRequestHandler::serveStatic(request, response, "/web/styles/styles.css",
                              "text/css");
-  }
-
-  // Serve Javascript for Login from a request like : GET /scripts/login.js
-  if (request.getMethod() == "GET" && request.getTarget().getPath()
-      == "/scripts/login.js") {
-    return this->serveStatic(request, response, "/web/scripts/login.js",
-                             "application/javascript");
-  }
-
-  // Serve person.png
-  // GET /assets/images/person.png
-  if (request.getMethod() == "GET" && request.getTarget().getPath()
-      == "/assets/images/person.png") {
-    return this->serveStatic(request, response, "/web/assets/images/person.png",
-                             "image/png");
-  }
-  // Serve eye.png
-  if (request.getMethod() == "GET" && request.getTarget().getPath()
-      == "/assets/images/eye.png") {
-    return this->serveStatic(request, response, "/web/assets/images/eye.png",
-                             "image/png");
   }
 
   return false;
 }
 
-bool GuachisWebApp::serveStatic(HttpRequest& httpRequest,
-                                HttpResponse& httpResponse,
-                                const std::string& path,
-                                const std::string& contentType,
-                                const std::string& charset) {
-  (void)httpRequest;
-
-  // Set the content type and the character encoding
-  httpResponse.setStatusCode(200);
-  httpResponse.setHeader("Content-Type", contentType + "; charset=" + charset);
-  httpResponse.setHeader("Server", "AttoServer v1.0");
-
-  // Read the file and write the text in the HTTP response
-  GuachisWebApp::readFile(httpResponse.getBody(), path);
-
-  return httpResponse.buildResponse();
-}
-
-void GuachisWebApp::readFile(std::ostream& output,
-                                 const std::string& path) {
-  // Get the path of the project directory
-  std::filesystem::path current_path = std::filesystem::current_path();
-
-  // Add the file path to the path of the project directory
-  current_path += path;
-
-  // Read the file in the path
-  std::ifstream file;
-
-  file.open(current_path);
-
-  if (file.is_open()) {
-    // Read every character and write it to the output stream.
-    char c = '\0';
-
-    while (file.get(c)) {
-      output << c;
-    }
-  }
-
-  file.close();
-}

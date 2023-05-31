@@ -3,16 +3,21 @@
 #ifndef GUACHIS_WEB_APP
 #define GUACHIS_WEB_APP
 
+#include <vector>
+
 #include "../http/HttpApp.hpp"
 #include "../url/URL.hpp"
-// #include "../fs.hpp"
+#include "LoginHandler.hpp"
 #include "../http/HttpResponse.hpp"
 #include "../http/HttpRequest.hpp"
+
+#define HANDLERS_COUNT 4
 
 class GuachisWebApp : public HttpApp {
   DISABLE_COPY(GuachisWebApp);
 
  protected:
+  std::vector<HttpRequestHandler*> requestHandlers;
 
  public:
   GuachisWebApp();
@@ -23,29 +28,6 @@ class GuachisWebApp : public HttpApp {
 
   bool run(HttpRequest& request, HttpResponse& response) override;
 
-  // bool serveLogin(HttpRequest& httpRequest, HttpResponse& httpResponse);
-
-  // bool serveRequests(HttpRequest& httpRequest, HttpResponse& httpResponse);
-
-  // bool serveStyles(HttpRequest& httpRequest, HttpResponse& httpResponse);
-
-
-  /**
-   * @brief Reads a file with static text and sends the text.
-   *
-   * @param httpRequest An HTTP request.
-   * @param httpResponse An HTTP response.
-   * @param path The path of the file, relative to the project directory.
-   * @param contentType The content type of the file.
-   * @return true If the request was successfully handled by this app.
-   */
-  static bool serveStatic(HttpRequest& httpRequest,
-                          HttpResponse& httpResponse,
-                          const std::string& path,
-                          const std::string& contentType,
-                          const std::string& charset = "; charset=utf-8");
-
-  static void readFile(std::ostream& output, const std::string& path);
 };
 
 #endif  // GUACHIS_WEB_APP
