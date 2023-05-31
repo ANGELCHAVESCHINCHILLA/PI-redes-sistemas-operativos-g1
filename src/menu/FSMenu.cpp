@@ -124,11 +124,8 @@ void FSMenu::authenticateUser() {
   std::string password = FSMenu::readString("Escribe su contraseña: ", "",
       [](std::string& string) { return string.length() > 0; });
 
-  std::cout << "holi" << std::endl;
   std::string salt = this->authenticator.getSalt(users_file, username, password);
-  std::cout << "holi2" << std::endl;
   std::string hash = Hash::getHash(password, 15, salt, Authenticator::PEPPER);
-  std::cout << "holi3" << std::endl;
   switch (this->authenticator.authPass(users_file, username, hash)) {
     case Error::OK: {
       std::cout << "Contraseña correcta.\n";
