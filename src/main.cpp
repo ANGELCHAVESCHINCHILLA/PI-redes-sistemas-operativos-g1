@@ -4,64 +4,75 @@
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
 
-/*
-Si quiere usar el menú, defina la macro FS_MENU
-Si quiere usar el server, defina la macron FS_WEBSERVER*/
+#include <signal.h>
 
-// #define FS_MENU
-#define WEBSERVER
+#include <iostream>
 
-#ifdef FS_MENU
-
+#include "configuration.hpp"
 #include "error.hpp"
+#include "http/HttpServer.hpp"
 #include "menu/FSMenu.hpp"
+#include "webapp/GuachisWebApp.hpp"
 
-int main1(int argc, char** argv) {
+void runMenu();
+
+void runServer();
+
+int main(int argc, char** argv) {
   int error = EXIT_SUCCESS;
 
-  FSMenu* menu = FSMenu::getInstance();
+  if (argc != 2) {
+    error = EXIT_FAILURE;
 
-  menu->start();
+    std::cerr << "You have to set a configuration file.\n";
+  }
+
+  Configuration& configuration = Configuration::getInstance();
+
+  if (!error) {
+    std::string configuration_path = argv[1];
+
+    error = configuration.configure(configuration_path);
+  }
+
+  if (!error) {
+    if (configuration.app == "menu") {
+      runMenu();
+    }
+
+    if (configuration.app == "server") {
+      runServer();
+    }
+  }
 
   return error;
 }
 
-#endif
+void runMenu() {
+  FSMenu* menu = FSMenu::getInstance();
 
-#ifdef WEBSERVER
+  menu->start();
+}
 
-#include "http/HttpServer.hpp"
-#include "webapp/GuachisWebApp.hpp"
+void runServer() {
+  Configuration& configuration = Configuration::getInstance();
 
-#include <csignal>
-#include <iostream>
-
-/// Start the web server
-int main(int argc, char* argv[]) {
   try {
     // Register the ctrl + c and kill signals for program termination
-    std::signal(SIGTERM, HttpServer::stopServer);
-    std::signal(SIGINT, HttpServer::stopServer);
+    ::signal(SIGTERM, HttpServer::stopServer);
+    ::signal(SIGINT, HttpServer::stopServer);
 
     std::string address = "127.0.0.1";
-
-    int port = 8080;
-
-    if (argc == 2) {
-      port = std::stoi(argv[1]);
-    }
 
     GuachisWebApp webapp;
 
     HttpServer::getInstance().appendApp(&webapp);
 
     // Start the web server
-    HttpServer::getInstance().start(address, port);
+    HttpServer::getInstance().start(address, configuration.port);
 
     std::cout << "Servidor finalizado";
   } catch (const std::runtime_error& error) {
     std::cerr << "error: " << error.what() << std::endl;
   }
 }
-
-#endif  // WEBSERVER

@@ -16,7 +16,19 @@ Para compilar el programa es necesario tener las siguientes librerías:
 
 * JsonCpp
     * Instalar en Ubuntu: `sudo apt install libjsoncpp-dev`
-    * Incluir el header: `<json/json.hpp>`
+    * Incluir el header: `<jsoncpp/json/json.hpp>`
     * Flag para el linker: `-ljsoncpp`
 
 Ejecutar `make install` para installar todas las dependencias.
+
+Ejecutar con `make run ARGS="configuration.json"`
+
+# Configuración
+
+Editar el archivo `configuration.json`.
+
+Editar el atributo `app` para ejecutar diferentes aplicaciones.
+* `menu`: Menú de file system.
+* `server`: Servidor.
+
+Editar el atributo `port` para usar otro puerto en el servidor.
