@@ -8,7 +8,7 @@ FLAG=
 FLAGS=$(strip -Wall -Wextra $(FLAG) $(DEFS))
 FLAGC=$(FLAGS) -std=gnu11
 FLAGX=$(FLAGS) -std=gnu++17
-LIBS=-lcrypto
+LIBS=-lcrypto -lsqlite3 -ljsoncpp
 LINTF=-build/header_guard,-build/include_subdir
 LINTC=$(LINTF),-readability/casting
 LINTX=$(LINTF),-build/c++11,-runtime/references
@@ -126,8 +126,12 @@ clean:
 
 # Install dependencies (Debian)
 install:
-	sudo apt install build-essential clang valgrind icdiff doxygen graphviz \
-	python3-pip python3-gpg libssl-dev && sudo pip3 install cpplint
+	sudo apt install build-essential clang valgrind icdiff doxygen \
+	python3-pip \
+	openssl libssl-dev \
+	sqlite3 libsqlite3-dev \
+	libjsoncpp-dev \
+	&& sudo pip3 install cpplint
 
 help:
 	@echo "Usage make [-jN] [VAR=value] [target]"
