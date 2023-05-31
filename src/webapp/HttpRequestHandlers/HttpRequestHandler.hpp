@@ -19,7 +19,7 @@ class HttpRequestHandler {
   /// Constructor
   HttpRequestHandler() = default;
   /// Destructor
-  ~HttpRequestHandler() = default;
+  virtual ~HttpRequestHandler() = default;
 
   public:
   /**

@@ -16,6 +16,9 @@ class LoginHandler : public HttpRequestHandler {
   Authenticator* authenticator;
 
  public:
+  DISABLE_COPY(LoginHandler);
+
+  LoginHandler() = default;
   /**
    * @brief 
    * 
