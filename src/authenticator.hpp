@@ -24,15 +24,23 @@ class Authenticator {
   /// @param fs predefined fs
   Authenticator(FS* fs);
 
-  /// @brief Authenticates a user by their username and password.
+  /// @brief Gets the salt of a user's hashed password
   /// @param userName user's username to be identificate
   /// @param password user's password
+  /// @param usersFile the filename of the users file
+  /// @return the user's salt
+  std::string getSalt(const std::string& usersFile,
+    const std::string& username, const std::string& password);
+
+  /// @brief Authenticates a user by their username and password.
+  /// @param userName user's username to be identificate
+  /// @param hash user's hash
   /// @param usersFile the filename of the users file
   /// @return error code:
   /// OK if auth
   /// INVALID_PASSWORD if the password is invalid
   /// USER_NOT_FOUND -2 if the users was not found.
   int authPass(const std::string& usersFile, const std::string& userName,
-    const std::string& password);
+    const std::string& hash);
 };  // end class Authenticator
 
