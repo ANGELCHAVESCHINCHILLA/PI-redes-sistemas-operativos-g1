@@ -7,6 +7,11 @@
 
 #include <string>
 
+#include "Annotation.hpp"
+#include "HRRequest.hpp"
+#include "JobData.hpp"
+#include "PersonalData.hpp"
+
 class Database {
  private:
   sqlite3* reference;
@@ -38,25 +43,14 @@ class Database {
  public:
   static Database& getInstance(const char* absolute_path);
 
-  // TODO: Create a class that stores this data then pass an instance of that
-  // class as a parameter.
-  int addPersonalData(const std::string usuario,
-      const std::string nombre_empleado, const std::string nombre_puesto,
-      const std::string nombre_empresa, const std::string correo,
-      unsigned int telefono);
+  int query(const char* query);
+
+  int addPersonalData(const PersonalData& personal_data);
 
   int printAllPersonalData();
 
  private:
   int createTables();
-
-  int createPersonalDataTable();
-
-  int createAnnotationTable();
-
-  int createRequestTable();
-
-  int createWorkDataTable();
 };
 
 #endif  // DATABASE_HPP_

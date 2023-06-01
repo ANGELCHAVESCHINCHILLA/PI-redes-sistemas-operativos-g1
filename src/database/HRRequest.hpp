@@ -8,11 +8,12 @@
 typedef unsigned char byte;
 
 class HRRequest {
- private:
+ public:
   static const std::string CREATE_TABLE_QUERY;
 
   static const std::string INSERT_INTO_QUERY;
 
+ private:
   std::string user;
   int id;
   byte state;
@@ -22,9 +23,11 @@ class HRRequest {
   // Constructor
   HRRequest() = default;
 
+ public:
   // Destructor
   ~HRRequest() = default;
 
+ private:
   // Copy Constructor
   HRRequest(const HRRequest& other) = delete;
 

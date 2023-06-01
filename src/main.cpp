@@ -4,7 +4,7 @@
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
 
-#include "app/Database.hpp"
+#include "database/Database.hpp"
 
 int main(int argc, char* argv[]) {
   int error = SQLITE_OK;
@@ -13,10 +13,21 @@ int main(int argc, char* argv[]) {
 
   Database& database = Database::getInstance(path);
 
-  error = database.addPersonalData("1", "2", "3", "4", "5", 6);
+  PersonalData::Builder builder = PersonalData::Builder();
+
+  builder.setUser("1");
+  builder.setEmployeeName("2");
+  builder.setJobName("3");
+  builder.setCompanyName("4");
+  builder.setEmail("5");
+  builder.setPhoneNumber(6);
+
+  PersonalData personal_data = builder.build();
+
+  error = database.addPersonalData(personal_data);
 
   if (!error) {
-    error = database.printAllPersonalData();
+    // error = database.printAllPersonalData();
   }
 
   return error;

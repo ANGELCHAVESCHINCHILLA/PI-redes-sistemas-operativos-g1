@@ -1,18 +1,19 @@
 // Copyright © 2023 Camilo Suárez Sandí
 
-#ifndef PERSONAL_DATA_HPP_
-#define PERSONAL_DATA_HPP_
+#ifndef JOB_DATA_HPP_
+#define JOB_DATA_HPP_
 
 #include <string>
 
 typedef unsigned char byte;
 
 class JobData {
- private:
+ public:
   static const std::string CREATE_TABLE_QUERY;
 
   static const std::string INSERT_INTO_QUERY;
 
+ private:
   std::string user;
   byte vacation_days;
   int gross_salary;
@@ -23,9 +24,11 @@ class JobData {
   // Constructor
   JobData() = default;
 
+ public:
   // Destructor
   ~JobData() = default;
 
+ private:
   // Copy Constructor
   JobData(const JobData& other) = delete;
 
@@ -67,4 +70,4 @@ class JobData::Builder {
   JobData build();
 };
 
-#endif  // PERSONAL_DATA_HPP_
+#endif  // JOB_DATA_HPP_

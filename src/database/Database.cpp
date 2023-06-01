@@ -36,57 +36,8 @@ Database& Database::getInstance(const char* absolute_path) {
   return instance;
 }
 
-int Database::createTables() {
+int Database::query(const char* query) {
   int error = SQLITE_OK;
-
-  error = this->createPersonalDataTable();
-
-  if (!error) {
-    error = this->createAnnotationTable();
-  }
-
-  if (!error) {
-    error = this->createRequestTable();
-  }
-
-  if (!error) {
-    error = this->createWorkDataTable();
-  }
-
-  return error;
-}
-
-int Database::addPersonalData(const std::string usuario,
-    const std::string nombre_empleado, const std::string nombre_puesto,
-    const std::string nombre_empresa, const std::string correo,
-    unsigned int telefono) {
-  int error = SQLITE_OK;
-
-  std::stringstream ss;
-
-  ss << "INSERT INTO DatosPersonales (";
-  ss << "Usuario, NombreEmpleado, NombrePuesto, NombreEmpresa, Correo, "
-        "Telefono";
-  ss << ") ";
-
-  // TODO: Make the instance that stores this data to have a method that returns
-  // this string.
-  ss << "VALUES (";
-  ss << "'" << usuario << "', ";
-  ss << "'" << nombre_empleado << "', ";
-  ss << "'" << nombre_puesto << "', ";
-  ss << "'" << nombre_empresa << "', ";
-  ss << "'" << correo << "', ";
-  ss << telefono;
-  ss << ");";
-
-  std::string string = ss.str();
-
-  const char* query = string.c_str();
-
-  #ifdef DEBUG
-  std::cout << query << "\n";
-  #endif  // DEBUG
 
   char* error_message;
 
@@ -102,10 +53,41 @@ int Database::addPersonalData(const std::string usuario,
   return error;
 }
 
+int Database::createTables() {
+  int error = SQLITE_OK;
+
+  error = this->query(PersonalData::CREATE_TABLE_QUERY.c_str());
+
+  if (!error) {
+    error = this->query(Annotation::CREATE_TABLE_QUERY.c_str());
+  }
+
+  if (!error) {
+    error = this->query(HRRequest::CREATE_TABLE_QUERY.c_str());
+  }
+
+  if (!error) {
+    error = this->query(JobData::CREATE_TABLE_QUERY.c_str());
+  }
+
+  return error;
+}
+
+int Database::addPersonalData(const PersonalData& personal_data) {
+  int error = SQLITE_OK;
+
+  error = this->query(personal_data.getInsertIntoQuery().c_str());
+
+  return error;
+}
+
+// Don't use
+// Add a method to every table that searches in the database
+// The method should use the builder and return the instance with the data
 int Database::printAllPersonalData() {
   int error = SQLITE_OK;
 
-  const char* query = "SELECT * FROM DatosPersonales;";
+  const char* query = "SELECT * FROM ???;";
 
   sqlite3_stmt* statement;
 
@@ -117,156 +99,11 @@ int Database::printAllPersonalData() {
   }
 
   while (sqlite3_step(statement) == SQLITE_ROW) {
-    const char* usuario =
-        reinterpret_cast<const char*>(sqlite3_column_text(statement, 0));
-    const char* nombre_empleado =
-        reinterpret_cast<const char*>(sqlite3_column_text(statement, 1));
-    const char* nombre_puesto =
-        reinterpret_cast<const char*>(sqlite3_column_text(statement, 2));
-    const char* nombre_empresa =
-        reinterpret_cast<const char*>(sqlite3_column_text(statement, 3));
-    const char* correo =
-        reinterpret_cast<const char*>(sqlite3_column_text(statement, 4));
-    int telefono = sqlite3_column_int(statement, 5);
-
-    std::cout << "Usuario: " << usuario << "\n";
-    std::cout << "NombreEmpleado: " << nombre_empleado << "\n";
-    std::cout << "NombrePuesto: " << nombre_puesto << "\n";
-    std::cout << "NombreEmpresa: " << nombre_empresa << "\n";
-    std::cout << "Correo: " << correo << "\n";
-    std::cout << "Telefono: " << telefono << "\n";
-    std::cout << "\n";
+    // Remove when fixed
+    break;
   }
 
   sqlite3_finalize(statement);
-
-  return error;
-}
-
-int Database::createPersonalDataTable() {
-  int error = SQLITE_OK;
-
-  const char* query =
-      "CREATE TABLE IF NOT EXISTS "
-      "DatosPersonales "
-      "("
-      "Usuario CHAR(16), "
-      "NombreEmpleado CHAR(32), "
-      "NombrePuesto CHAR(32), "
-      "NombreEmpresa CHAR(32), "
-      "Correo CHAR(32), "
-      "Telefono INT"
-      ");";
-
-  #ifdef DEBUG
-  std::cout << query << "\n";
-  #endif  // DEBUG
-
-  char* error_message;
-
-  error =
-      sqlite3_exec(this->reference, query, nullptr, nullptr, &error_message);
-
-  if (error != SQLITE_OK) {
-    std::cerr << error_message << "\n";
-
-    sqlite3_free(error_message);
-  }
-
-  return error;
-}
-
-int Database::createAnnotationTable() {
-  int error = SQLITE_OK;
-
-  const char* query =
-      "CREATE TABLE IF NOT EXISTS "
-      "Anotacion "
-      "("
-      "Usuario CHAR(16), "
-      "ID INT, "
-      "Informacion CHAR(256)"
-      ");";
-
-  #ifdef DEBUG
-  std::cout << query << "\n";
-  #endif  // DEBUG
-
-  char* error_message;
-
-  error =
-      sqlite3_exec(this->reference, query, nullptr, nullptr, &error_message);
-
-  if (error != SQLITE_OK) {
-    std::cerr << error_message << "\n";
-
-    sqlite3_free(error_message);
-  }
-
-  return error;
-}
-
-int Database::createRequestTable() {
-  int error = SQLITE_OK;
-
-  const char* query =
-      "CREATE TABLE IF NOT EXISTS "
-      "Solicitud "
-      "("
-      "Usuario CHAR(16), "
-      "ID INT, "
-      "Estado TINYINT, "
-      "Relleno BLOB(391), "
-      "Informacion BLOB(412)"
-      ");";
-
-  #ifdef DEBUG
-  std::cout << query << "\n";
-  #endif  // DEBUG
-
-  char* error_message;
-
-  error =
-      sqlite3_exec(this->reference, query, nullptr, nullptr, &error_message);
-
-  if (error != SQLITE_OK) {
-    std::cerr << error_message << "\n";
-
-    sqlite3_free(error_message);
-  }
-
-  return error;
-}
-
-int Database::createWorkDataTable() {
-  int error = SQLITE_OK;
-
-  const char* query =
-      "CREATE TABLE IF NOT EXISTS "
-      "DatosLaborales "
-      "("
-      "Usuario CHAR(16), "
-      "SaldoVacaciones TINYINT, "
-      "SalarioBruto INT, "
-      "SalarioNeto INT, "
-      "FechaInicioSalario INT, "
-      "FechaFinSalario INT"
-      ");";
-
-  #ifdef DEBUG
-  std::cout << query << "\n";
-  #endif  // DEBUG
-
-  char* error_message;
-
-  error =
-      sqlite3_exec(this->reference, query, nullptr, nullptr, &error_message);
-
-  if (error != SQLITE_OK) {
-    std::cerr << error_message << "\n";
-
-    sqlite3_free(error_message);
-  }
 
   return error;
 }

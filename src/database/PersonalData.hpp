@@ -6,11 +6,12 @@
 #include <string>
 
 class PersonalData {
- private:
+ public:
   static const std::string CREATE_TABLE_QUERY;
 
   static const std::string INSERT_INTO_QUERY;
 
+ private:
   std::string user;
   std::string employee_name;
   std::string job_name;
@@ -21,9 +22,11 @@ class PersonalData {
   // Constructor
   PersonalData() = default;
 
+ public:
   // Destructor
   ~PersonalData() = default;
 
+ private:
   // Copy Constructor
   PersonalData(const PersonalData& other) = delete;
 

@@ -6,11 +6,12 @@
 #include <string>
 
 class Annotation {
- private:
+ public:
   static const std::string CREATE_TABLE_QUERY;
 
   static const std::string INSERT_INTO_QUERY;
 
+ private:
   std::string user;
   int id;
   std::string information;
@@ -18,9 +19,11 @@ class Annotation {
   // Constructor
   Annotation() = default;
 
+ public:
   // Destructor
   ~Annotation() = default;
 
+ private:
   // Copy Constructor
   Annotation(const Annotation& other) = delete;
 
