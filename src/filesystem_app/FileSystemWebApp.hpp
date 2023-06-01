@@ -9,15 +9,14 @@
 #include "../http/HttpResponse.hpp"
 #include "../url/URL.hpp"
 #include "FileSystemAPI.hpp"
-
-// #define HANDLERS_COUNT 4
+#include "./HttpRequestHandlers/FileSystemequestHandler.hpp"
 
 class FileSystemWebApp : public HttpApp {
   DISABLE_COPY(FileSystemWebApp);
 
 
  protected:
-  // std::vector<HttpRequestHandler*> requestHandlers;
+  std::vector<FileSystemRequestHandler*> requestHandlers;
   FileSystemAPI* fileSystemApi;
 
  public:
@@ -28,4 +27,6 @@ class FileSystemWebApp : public HttpApp {
   bool start() override;
 
   bool run(HttpRequest& request, HttpResponse& response) override;
+ private:
+  void initHandlers();
 };
