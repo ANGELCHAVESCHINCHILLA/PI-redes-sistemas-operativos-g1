@@ -1,5 +1,5 @@
 //
-// Created by daviddev on 31/05/23.
+// Created by David Cerdas Alvarado on 31/05/23.
 //
 
 #include "FileSystemAPI.hpp"
@@ -10,6 +10,7 @@
 #include "../common/Util.hpp"
 #include "../hash.hpp"
 
+#define USERNAME_LENGTH 10
 
 FileSystemAPI::FileSystemAPI() : authenticator(&this->fs) {
   //
@@ -31,6 +32,7 @@ bool FileSystemAPI::addUser(std::string username, std::string hashed_password, i
 
   this->writeToFile("usuarios.dat");
 
+  return true;
 }
 
 bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {

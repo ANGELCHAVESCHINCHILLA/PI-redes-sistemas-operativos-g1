@@ -5,10 +5,11 @@
 
 #include "../../././src/authenticator.hpp"
 
-#define USERNAME_LENGTH 10
+
 
 class FileSystemAPI {
  public:
+  /// Default constructor
   FileSystemAPI();
 
  private:
