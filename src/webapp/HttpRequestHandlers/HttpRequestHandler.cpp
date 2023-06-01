@@ -1,16 +1,23 @@
-// Copyright © 2023 Ángel Chaves Chinchilla
+// Copyright © 2023 Ángel Chaves Chinchilla, Camilo Suárez Sandí
 
 #include "./HttpRequestHandler.hpp"
-
-/**
- * @brief The interface for each handler of the chain
- * 
- */
 
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <regex>
+
+#define DEFAULT_CONTENT_TYPE "application/octet-stream"
+
+std::map<std::string, std::string> HttpRequestHandler::CONTENT_TYPE_MAP = {
+    { ".txt",       "text/plain"},
+    {".html",        "text/html"},
+    { ".css",         "text/css"},
+    {  ".js",  "text/javascript"},
+    { ".xml",  "application/xml"},
+    {".json", "application/json"},
+    { ".png",        "image/png"},
+};
 
 bool HttpRequestHandler::serveStatic(HttpRequest& httpRequest,
                                 HttpResponse& httpResponse,
@@ -30,27 +37,70 @@ bool HttpRequestHandler::serveStatic(HttpRequest& httpRequest,
   return httpResponse.buildResponse();
 }
 
-void HttpRequestHandler::readFile(std::ostream& output,
-                                 const std::string& path) {
-  // Get the path of the project directory
-  std::filesystem::path current_path = std::filesystem::current_path();
+bool HttpRequestHandler::serveStatic(const HttpRequest& request
+    , HttpResponse& response) {
+  std::string path = request.getTarget().getPath();
 
-  // Add the file path to the path of the project directory
-  current_path += path;
+  HttpRequestHandler::readFile(response.getBody(), "public/" + path);
 
-  // Read the file in the path
-  std::ifstream file;
+  response.setStatusCode(200);
+  response.setHeader(
+      "Content-Type", HttpRequestHandler::getContentType(request, path)
+      + "; charset=utf8");
+  response.setHeader("Server", "AttoServer v1.0");
 
-  file.open(current_path);
+  return response.buildResponse();
+}
 
-  if (file.is_open()) {
-    // Read every character and write it to the output stream.
-    char c = '\0';
+bool HttpRequestHandler::servePage(const HttpRequest& request, HttpResponse& response,
+    const std::string& path) {
+  HttpRequestHandler::readFile(response.getBody(), "pages/" + path);
 
-    while (file.get(c)) {
-      output << c;
-    }
+  response.setStatusCode(200);
+  response.setHeader("Content-Type", "text/html; charset=utf8");
+  response.setHeader("Server", "AttoServer v1.0");
+
+  return response.buildResponse();
+}
+
+void HttpRequestHandler::readFile(std::ostream& output
+    , const std::string& relative_path) {
+  std::filesystem::path path = std::filesystem::current_path();
+
+  if (path.stem() == "build") {
+    path = path.parent_path();
+  }
+
+  path /= relative_path;
+
+  std::ifstream file(path);
+
+  if (!file) {
+    std::string errorMessage = "Error reading a file: " + path.string() + "\n";
+    throw std::runtime_error(errorMessage);
+  }
+
+  // Read every character and write it to the output stream.
+  char c = '\0';
+
+  while (file.get(c)) {
+    output << c;
   }
 
   file.close();
+}
+
+std::string HttpRequestHandler::getContentType(
+    const HttpRequest& request, const std::string& path) {
+  if (request.hasHeader("Content-Type")) {
+    return request.getHeader("Content-Type");
+  }
+
+  std::string extension = std::filesystem::path(path).extension().string();
+
+  if (HttpRequestHandler::CONTENT_TYPE_MAP.count(extension) > 0) {
+    return HttpRequestHandler::CONTENT_TYPE_MAP[extension];
+  }
+
+  return DEFAULT_CONTENT_TYPE;
 }

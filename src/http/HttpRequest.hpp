@@ -59,6 +59,12 @@ class HttpRequest : public HttpMessage {
 
   inline const std::string& getBody() const { return this->body; }
 
+  inline bool hasHeader(const std::string& key) const {
+    return this->headers.count(key) > 0; }
+
+  inline std::string getHeader(const std::string& key) const {
+    return this->headers.at(key); }
+
  private:
   void parse(std::string& input);
 

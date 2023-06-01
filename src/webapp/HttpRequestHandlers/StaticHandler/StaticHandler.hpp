@@ -1,4 +1,4 @@
-// Copyright © 2023 Ángel Chaves Chinchilla
+// Copyright © 2023 Ángel Chaves Chinchilla, Camilo Suárez Sandí
 
 #ifndef STATIC_HANDLER
 #define STATIC_HANDLER
@@ -22,13 +22,8 @@ class StaticHandler : public HttpRequestHandler {
    */
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 
-  bool serveHtml(HttpRequest& request, HttpResponse& response);
-
-  bool serveAssets(HttpRequest& request, HttpResponse& response);
-
-  bool serveScripts(HttpRequest& request, HttpResponse& response);
-
-  bool serveStyles(HttpRequest& request, HttpResponse& response);
+  void redirect(HttpResponse& response, const std::string& target) const;
 };
 
-#endif  // STATIC_HANDLER
+
+#endif  // APP_HPP_
