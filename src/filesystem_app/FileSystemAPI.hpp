@@ -37,6 +37,8 @@ class FileSystemAPI {
 
   bool authenticateUser(std::string username, std::string hashkey);
 
+  int getUserType(std::string username);
+
   std::string viewFS();
 };
 

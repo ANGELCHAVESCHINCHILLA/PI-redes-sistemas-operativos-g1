@@ -6,6 +6,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
 #include "../common/Util.hpp"
 #include "../hash.hpp"
@@ -141,4 +142,32 @@ std::string FileSystemAPI::readString(const std::string& message,
 }
 std::string FileSystemAPI::viewFS() {
   return this->fs.toString();
+}
+int FileSystemAPI::getUserType(std::string username) {
+  int type = -1;
+  bool found_user = false;
+
+  size_t user_offset = 0;
+
+  const size_t user_bytes = 41;
+
+  while (!found_user &&
+         user_offset < static_cast<size_t>(this->fs.getFileSize(this->users_file))) {
+
+    char* address = this->fs.readAddress(this->users_file, user_offset);
+    std::string info(address, address + user_bytes);
+    // info username is the username stored in FileSystem
+    std::string info_username = info.substr(0, 10);
+    Util::trimLeft(info_username);
+
+    // If the username was found in FS then
+    if (username == info_username) {
+      char charType = info[info.length() - 1];
+      type = charType - 48;
+      found_user = true;
+    }
+    user_offset += user_bytes;
+  }
+  return type;
+
 }
