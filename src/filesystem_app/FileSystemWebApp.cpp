@@ -2,10 +2,8 @@
 
 #include "FileSystemWebApp.hpp"
 
-#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <regex>
 
 #include <jsoncpp/json/json.h>
 
@@ -38,7 +36,7 @@ bool FileSystemWebApp::run(HttpRequest& request, HttpResponse& response) {
     Json::Value requestBody;
     Json::Reader reader;
     // May I handle errors checking this? Is it necessary? Is it even possible?
-    bool parsing = reader.parse(body, requestBody);
+    reader.parse(body, requestBody);
 
     // Get values
     std::string username = requestBody["username"].asString();
@@ -72,7 +70,7 @@ bool FileSystemWebApp::run(HttpRequest& request, HttpResponse& response) {
     // Parse body to JSON
     Json::Value requestBody;
     Json::Reader reader;
-    bool parsing = reader.parse(body, requestBody);
+    reader.parse(body, requestBody);
 
     // Get values
     std::string username = requestBody["username"].asString();
