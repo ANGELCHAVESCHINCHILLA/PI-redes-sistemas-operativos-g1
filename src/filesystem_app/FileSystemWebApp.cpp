@@ -6,6 +6,7 @@
 
 #include "./HttpRequestHandlers/AddUserHandler.hpp"
 #include "./HttpRequestHandlers/Authhandler.hpp"
+#include "./HttpRequestHandlers/PermissionsHandler.hpp"
 
 FileSystemWebApp::FileSystemWebApp() {
   this->fileSystemApi = new FileSystemAPI();
@@ -19,6 +20,7 @@ FileSystemWebApp::~FileSystemWebApp() {
 void FileSystemWebApp::initHandlers() {
   this->requestHandlers.push_back(new AuthHandler(fileSystemApi));
   this->requestHandlers.push_back(new AddUserHandler(fileSystemApi));
+  this->requestHandlers.push_back(new PermissionsHandler(fileSystemApi));
 }
 
 bool FileSystemWebApp::start() {
