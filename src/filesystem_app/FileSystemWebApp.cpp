@@ -2,104 +2,40 @@
 
 #include "FileSystemWebApp.hpp"
 
-#include <fstream>
 #include <iostream>
 
-#include <jsoncpp/json/json.h>
+#include "./HttpRequestHandlers/AddUserHandler.hpp"
+#include "./HttpRequestHandlers/Authhandler.hpp"
 
 FileSystemWebApp::FileSystemWebApp() {
-  // this->requestHandlers.push_back(new LoginHandler());
-    this->fileSystemApi = new FileSystemAPI();
+  this->fileSystemApi = new FileSystemAPI();
+  this->initHandlers();
 }
 
 FileSystemWebApp::~FileSystemWebApp() {
-    delete this->fileSystemApi;
+  delete this->fileSystemApi;
 }
 
-
+void FileSystemWebApp::initHandlers() {
+  this->requestHandlers.push_back(new AuthHandler(fileSystemApi));
+  this->requestHandlers.push_back(new AddUserHandler(fileSystemApi));
+}
 
 bool FileSystemWebApp::start() {
-  //
-
   return true;
 }
 
-// TODO(david): module method
-
 bool FileSystemWebApp::run(HttpRequest& request, HttpResponse& response) {
-  // Login
-  if (request.getMethod() == "POST" && request.getTarget().getPath() == "/login") {
 
-    std::string body = request.getBody();
-
-    // Parse body to JSON
-    Json::Value requestBody;
-    Json::Reader reader;
-    // May I handle errors checking this? Is it necessary? Is it even possible?
-    reader.parse(body, requestBody);
-
-    // Get values
-    std::string username = requestBody["username"].asString();
-    std::string password = requestBody["password"].asString();
-
-    // Auth by API
-    bool isAuthenticated =  this->fileSystemApi->authenticateUser(username, password);
-
-    int statusCode;
-    std::string responseBody;
-    if (isAuthenticated) {
-      statusCode = 200;
-      responseBody = "Successfully";
-    } else {
-      statusCode = 400;
-      responseBody = "Failed";
+  for (auto& handler : this->requestHandlers) {
+    if (handler->canHandle(request, response)) {
+      return true;
     }
-    response.setHeader("Content-Type", "text/plain");
-    response.setStatusCode(statusCode);
-    response.getBody() << responseBody;
-
-    response.buildResponse();
-    // Send
-    return true;
   }
-  // Add User
-  if (request.getMethod() == "POST" && request.getTarget().getPath() == "/adduser") {
 
-    std::string body = request.getBody();
-
-    // Parse body to JSON
-    Json::Value requestBody;
-    Json::Reader reader;
-    reader.parse(body, requestBody);
-
-    // Get values
-    std::string username = requestBody["username"].asString();
-    std::string password = requestBody["password"].asString();
-    int type = requestBody["type"].asInt();
-
-    // Auth by API
-    bool isAdded =  this->fileSystemApi->addUser(username, password, type);
-
-    int statusCode;
-    std::string responseBody;
-    if (isAdded) {
-      statusCode = 200;
-      responseBody = "Successfully";
-    } else {
-      statusCode = 400;
-      responseBody = "Failed";
-    }
-    response.setHeader("Content-Type", "text/plain");
-    response.setStatusCode(statusCode);
-    response.getBody() << responseBody;
-
-    response.buildResponse();
-    // Send
-    return true;
-  }
   // TODO: remove this get after debugging stage
-  if (request.getMethod() == "GET" && request.getTarget().getPath() == "/viewfs") {
-
+  if (request.getMethod() == "GET" &&
+      request.getTarget().getPath() == "/viewfs") {
 
     response.setHeader("Content-Type", "text/plain");
     response.setStatusCode(200);
@@ -112,4 +48,3 @@ bool FileSystemWebApp::run(HttpRequest& request, HttpResponse& response) {
 
   return false;
 }
-

@@ -1,0 +1,55 @@
+//
+// Created by daviddev on 01/06/23.
+//
+
+#ifndef PI_REDES_SISTEMAS_OPERATIVOS_G1_AUTHHANDLER_H
+#define PI_REDES_SISTEMAS_OPERATIVOS_G1_AUTHHANDLER_H
+
+#include <jsoncpp/json/json.h>
+
+#include "FileSystemequestHandler.hpp"
+
+class AuthHandler : public FileSystemRequestHandler {
+ public:
+  AuthHandler(FileSystemAPI* fileSystemApi) :
+        FileSystemRequestHandler(fileSystemApi) {};
+
+  bool canHandle(HttpRequest& request, HttpResponse& response) override {
+    if (request.getMethod() == "POST" && request.getTarget().getPath() == "/login") {
+      std::string body = request.getBody();
+      Json::Value requestBody;
+      Json::Reader reader;
+      // Parse to JSON to easy manipulation
+      bool parsed = reader.parse(body, requestBody);
+
+      int statusCode;
+      std::string responseBody;
+
+      if (parsed) {
+        std::string username = requestBody["username"].asString();
+        std::string password = requestBody["password"].asString();
+        // Auth via API
+        bool isAuthenticated = this->fileSystemApi->authenticateUser(username, password);
+
+        statusCode = isAuthenticated ? 200 : 400;
+        responseBody = isAuthenticated ? "Successfully" : "Failed";
+      } else {
+        statusCode = 400;
+        responseBody = "JSON ERROR";
+      }
+
+      response.setHeader("Content-Type", "text/plain");
+      response.setStatusCode(statusCode);
+      response.getBody() << responseBody;
+
+      response.buildResponse();
+      // Send response
+      return true;
+    }
+    return false;
+  }
+
+};
+
+
+#endif  // PI_REDES_SISTEMAS_OPERATIVOS_G1_AUTHHANDLER_H
