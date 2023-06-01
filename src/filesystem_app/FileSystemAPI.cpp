@@ -28,6 +28,9 @@ bool FileSystemAPI::addUser(std::string username, std::string hashed_password, i
   this->writeString(users_file, username);
   this->writeString(users_file, hashed_password);
   this->writeString(users_file, std::to_string(role));
+
+  this->writeToFile("usuarios.dat");
+
 }
 
 bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {
@@ -36,7 +39,8 @@ bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {
     return false;
   }
   // debug lines TODO(ANY): remove this after debugging
-  switch (this->authenticator.authPass(users_file, username, hash)) {
+  int error =  this->authenticator.authPass(users_file, username, hash);
+  switch (error) {
     case Error::OK: {
       std::cout << "Contraseña correcta.\n";
       break;
@@ -56,7 +60,7 @@ bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {
       break;
     }
   }
-  if (Error::OK) {
+  if (error == Error::OK) {
     return true;
   } else {
     return false;
@@ -132,4 +136,7 @@ std::string FileSystemAPI::readString(const std::string& message,
   }
 
   return result;
+}
+std::string FileSystemAPI::viewFS() {
+  return this->fs.toString();
 }
