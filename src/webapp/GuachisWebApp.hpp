@@ -19,6 +19,7 @@ class GuachisWebApp : public HttpApp {
 
  protected:
   std::vector<HttpRequestHandler*> requestHandlers;
+  
 
  public:
   GuachisWebApp();

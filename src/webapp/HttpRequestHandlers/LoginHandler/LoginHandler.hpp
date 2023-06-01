@@ -3,9 +3,10 @@
 #ifndef LOGIN_HANDLER
 #define LOGIN_HANDLER
 
+#include <jsoncpp/json/json.h>
 #include "../HttpRequestHandler.hpp"
 #include "authenticator.hpp"
-
+#include "jwt.hpp"
 
 class LoginHandler : public HttpRequestHandler {
  protected:
@@ -13,7 +14,6 @@ class LoginHandler : public HttpRequestHandler {
   * @brief 
   * 
   */
-  Authenticator* authenticator;
 
  public:
   DISABLE_COPY(LoginHandler);
@@ -33,6 +33,9 @@ class LoginHandler : public HttpRequestHandler {
 
   bool serveAuthFailed(HttpRequest& httpRequest,
                                     HttpResponse& httpResponse);
+
+  bool serveJWT(const HttpRequest& request, HttpResponse& response
+    , Json::Value& jsonResponse);
 };
 
 #endif  // LOGIN_HANDLER

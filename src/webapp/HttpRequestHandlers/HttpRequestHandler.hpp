@@ -54,7 +54,7 @@ class HttpRequestHandler {
     const std::string& path);
 
   // Read the file and write the text in the HTTP response
-  static void readFile(std::ostream& output, const std::string& relative_path);
+  static bool readFile(std::ostream& output, const std::string& relative_path);
 
   // static std::string readFileToString(const std::string& relative_path);
 

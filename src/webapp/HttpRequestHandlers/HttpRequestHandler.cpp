@@ -39,22 +39,33 @@ bool HttpRequestHandler::serveStatic(HttpRequest& httpRequest,
 
 bool HttpRequestHandler::serveStatic(const HttpRequest& request
     , HttpResponse& response) {
+
+  bool couldServe = false;
+    
   std::string path = request.getTarget().getPath();
 
-  HttpRequestHandler::readFile(response.getBody(), "public/" + path);
+  bool fileOpen = HttpRequestHandler::readFile(response.getBody()
+                  , "public/" + path);
 
-  response.setStatusCode(200);
-  response.setHeader(
-      "Content-Type", HttpRequestHandler::getContentType(request, path)
-      + "; charset=utf8");
-  response.setHeader("Server", "AttoServer v1.0");
+  if (fileOpen) {
 
-  return response.buildResponse();
+    response.setStatusCode(200);
+    response.setHeader(
+        "Content-Type", HttpRequestHandler::getContentType(request, path)
+        + "; charset=utf8");
+    response.setHeader("Server", "AttoServer v1.0");
+    couldServe = response.buildResponse();
+  } else {
+    couldServe = false;
+  }
+
+  return couldServe;
 }
 
 bool HttpRequestHandler::servePage(const HttpRequest& request, HttpResponse& response,
     const std::string& path) {
-  HttpRequestHandler::readFile(response.getBody(), "pages/" + path);
+  bool fileOpen = HttpRequestHandler::readFile(response.getBody()
+                  , "pages/" + path);
 
   response.setStatusCode(200);
   response.setHeader("Content-Type", "text/html; charset=utf8");
@@ -63,7 +74,8 @@ bool HttpRequestHandler::servePage(const HttpRequest& request, HttpResponse& res
   return response.buildResponse();
 }
 
-void HttpRequestHandler::readFile(std::ostream& output
+
+bool HttpRequestHandler::readFile(std::ostream& output
     , const std::string& relative_path) {
   std::filesystem::path path = std::filesystem::current_path();
 
@@ -76,8 +88,7 @@ void HttpRequestHandler::readFile(std::ostream& output
   std::ifstream file(path);
 
   if (!file) {
-    std::string errorMessage = "Error reading a file: " + path.string() + "\n";
-    throw std::runtime_error(errorMessage);
+    return false;
   }
 
   // Read every character and write it to the output stream.
@@ -88,6 +99,8 @@ void HttpRequestHandler::readFile(std::ostream& output
   }
 
   file.close();
+
+  return true;
 }
 
 std::string HttpRequestHandler::getContentType(
