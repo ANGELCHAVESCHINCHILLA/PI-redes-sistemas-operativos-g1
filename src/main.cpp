@@ -9,7 +9,9 @@
 int main(int argc, char* argv[]) {
   int error = SQLITE_OK;
 
-  char* path = "/home/usr/PI-redes-sistemas-operativos-g1/database.db";
+  // this path didn't work, changed to database.bd
+  // char* path = "/home/usr/PI-redes-sistemas-operativos-g1/database.db";
+  char* path = "database.db";
 
   Database& database = Database::getInstance(path);
 
