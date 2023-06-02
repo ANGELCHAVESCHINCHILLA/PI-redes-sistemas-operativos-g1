@@ -4,24 +4,21 @@
 
 #include <iostream>
 
-JWT::JWT(const std::string& secretKey, const std::string& claims
-    , const std::string& header)
-      : header(header)
-      , payload(claims)
-      , secretKey(secretKey) {
+JWT::JWT(const std::string& secretKey)
+  : secretKey(secretKey) {
   this->generateJWT();
 }
 
 void JWT::generateJWT() {
   // Header
-  this->header = JWT::base64Encode(this->header);
+  this->encodeHeader = JWT::base64Encode(this->stringHeader());
 
   // Payload (claims)
   // std::string payload = "{\"sub\":\"\' + subject + \'\"}" + subject + "\"}";
-  this->payload = base64Encode(this->payload);
+  this->encodeClaims = base64Encode(this->stringClaims());
 
   // Signature
-  this->dataToSign = this->header + '.' + this->payload;
+  this->dataToSign = this->encodeHeader + '.' + this->encodeClaims;
 
   unsigned int digestLength;
   unsigned char* hmacDigest = HMAC(EVP_sha256(), this->secretKey.c_str()
@@ -32,13 +29,44 @@ void JWT::generateJWT() {
   std::string uncodeSignature(hmacDigest, hmacDigest + digestLength);
 
   this->signature = base64Encode(uncodeSignature);
+}
 
-  // std::cout << "dataToSign> " << this->dataToSign << std::endl;
-  // std::cout << "siganure> " << this->signature << std::endl;
+// "{\"alg\":\"HS256\",\"typ\":\"JWT\"}"
+std::string JWT::stringHeader() const {
+  std::string stringHeaders;
+  this->stringMaps(this->headers, stringHeaders);
+  return stringHeaders;
+}
 
+// "{\"sub\":\"\' + subject + \'\"}" + username + "\"}";
+std::string JWT::stringClaims() const {
+  std::string stringClaims;
+  this->stringMaps(this->claims, stringClaims);
+  return stringClaims;
+}
 
-  // JWT
-  // std::string jwt = this->dataToSign + '.' + signature;
+void JWT::stringMaps(const std::map<std::string, std::string>& maps
+    , std::string& result) {
+  result = "{";
+  std::map<std::string, std::string>::const_iterator it;
+  for (it = maps.cbegin(); it != maps.cend(); ++it) {
+    if (it != maps.cbegin()) {
+      result += ",";
+    }
+    const std::string& key = it->first;
+    result += "\"" + key + "\": "; 
+    const std::string& value = it->second;
+    result += "\'" + value + "\""; 
+  }
+  result += "}";
+}
+
+void JWT::addHeader(const std::string& key, const std::string& value) {
+  this->headers.insert({key, value});
+}
+
+void JWT::addClaim(const std::string& key, const std::string& value) {
+  this->claims.insert({key, value});
 }
 
 std::string JWT::base64Encode(const std::string& data) {
