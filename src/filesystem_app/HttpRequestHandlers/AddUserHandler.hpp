@@ -8,6 +8,7 @@
 #include <jsoncpp/json/json.h>
 
 #include "FileSystemequestHandler.hpp"
+#include "Log.hpp"
 
 class AddUserHandler : public FileSystemRequestHandler {
  public:
@@ -18,6 +19,7 @@ class AddUserHandler : public FileSystemRequestHandler {
     if (request.getMethod() == "POST" &&
         request.getTarget().getPath() == "/adduser") {
 
+      Log::getInstance().write(Log::INFO, "AddUserRequestHandled", request.getTarget().getPath());
       std::string body = request.getBody();
       Json::Value requestBody;
       Json::Reader reader;

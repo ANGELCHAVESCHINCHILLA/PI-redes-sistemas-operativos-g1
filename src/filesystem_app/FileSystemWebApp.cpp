@@ -7,6 +7,7 @@
 #include "./HttpRequestHandlers/AddUserHandler.hpp"
 #include "./HttpRequestHandlers/Authhandler.hpp"
 #include "./HttpRequestHandlers/PermissionsHandler.hpp"
+#include "Log.hpp"
 
 FileSystemWebApp::FileSystemWebApp() {
   this->fileSystemApi = new FileSystemAPI();
@@ -28,7 +29,7 @@ bool FileSystemWebApp::start() {
 }
 
 bool FileSystemWebApp::run(HttpRequest& request, HttpResponse& response) {
-
+  Log::getInstance().write(Log::INFO, "RequestReceived", request.getTarget().getPath());
   for (auto& handler : this->requestHandlers) {
     if (handler->canHandle(request, response)) {
       return true;
