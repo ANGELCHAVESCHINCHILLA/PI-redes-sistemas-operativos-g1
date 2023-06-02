@@ -43,6 +43,7 @@ bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {
   }
   // debug lines TODO(ANY): remove this after debugging
   int error =  this->authenticator.authPass(users_file, username, hash);
+  /*
   switch (error) {
     case Error::OK: {
       std::cout << "Contraseña correcta.\n";
@@ -69,7 +70,7 @@ bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {
     return false;
   }
 }
-
+*/
 void FileSystemAPI::readFromFile(const std::string& source_file_name) {
   int error = Error::OK;
 

@@ -84,8 +84,8 @@ int Authenticator::authPass(const std::string& usersFile,
       } else {
         error = Error::INVALID_PASSWORD;
       }
-      std::cout << "Hash: " + hash << std::endl;
-      std::cout << "Hash: " + info_hashed_password << std::endl;
+      // std::cout << "Hash: " + hash << std::endl;
+      // std::cout << "Hash: " + info_hashed_password << std::endl;
       found_user = true;
     }
 
