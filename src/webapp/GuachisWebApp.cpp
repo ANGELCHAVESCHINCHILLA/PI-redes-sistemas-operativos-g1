@@ -9,7 +9,7 @@
 
 GuachisWebApp::GuachisWebApp() {
   this->requestHandlers.push_back(new StaticHandler());
-  this->requestHandlers.push_back(new LoginHandler());
+  this->requestHandlers.push_back(new LoginHandler("127.0.0.1", "8000"));
 }
 
 GuachisWebApp::~GuachisWebApp() {
