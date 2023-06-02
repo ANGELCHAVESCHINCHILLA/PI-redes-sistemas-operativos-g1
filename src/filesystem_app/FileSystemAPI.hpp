@@ -26,18 +26,18 @@ class FileSystemAPI {
   void writeString(const std::string& file, const std::string& string);
 
   static int readInteger(const std::string& message,
-      const std::string& error_message, std::function<bool(int)> predicate);
+      const std::string& error_message, const std::function<bool(int)>& predicate);
 
   static std::string readString(const std::string& message,
       const std::string& error_message,
-      std::function<bool(std::string&)> predicate);
+      const std::function<bool(std::string&)>& predicate);
 
  public:
-  bool addUser(std::string username, std::string hashkey, int role);
+  bool addUser(std::string username, const std::string& hashkey, int role);
 
-  bool authenticateUser(std::string username, std::string hashkey);
+  bool authenticateUser(const std::string& username, const std::string& hashkey);
 
-  int getUserType(std::string username);
+  int getUserType(const std::string& username);
 
   std::string viewFS();
 };

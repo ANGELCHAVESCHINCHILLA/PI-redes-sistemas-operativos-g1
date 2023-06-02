@@ -9,7 +9,6 @@
 #include <string>
 
 #include "../common/Util.hpp"
-#include "../hash.hpp"
 #include "Log.hpp"
 
 #define USERNAME_LENGTH 10
@@ -20,7 +19,7 @@ FileSystemAPI::FileSystemAPI() : authenticator(&this->fs) {
 }
 
 
-bool FileSystemAPI::addUser(std::string username, std::string hashed_password, int role) {
+bool FileSystemAPI::addUser(std::string username, const std::string& hashed_password, int role) {
 
   if (username.length() > USERNAME_LENGTH) {
     return false;
@@ -37,7 +36,7 @@ bool FileSystemAPI::addUser(std::string username, std::string hashed_password, i
   return true;
 }
 
-bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {
+bool FileSystemAPI::authenticateUser(const std::string& username, const std::string& hash) {
 
   if (username.length() > USERNAME_LENGTH) {
     Log::getInstance().write(Log::ERROR, "ErrorUsername", "On auth user, username.length > 10");
@@ -104,13 +103,13 @@ void FileSystemAPI::writeToFile(const std::string& source_file_name) {
 }
 
 void FileSystemAPI::writeString(const std::string& file, const std::string& string) {
-  for (size_t index = 0; index < string.length(); index++) {
-    this->fs.append(file, string.at(index));
+  for (char index : string) {
+    this->fs.append(file, index);
   }
 }
 
 int FileSystemAPI::readInteger(const std::string& message,
-    const std::string& error_message, std::function<bool(int)> predicate) {
+    const std::string& error_message, const std::function<bool(int)>& predicate) {
   int result;
 
   std::cout << message << std::endl;
@@ -128,7 +127,7 @@ int FileSystemAPI::readInteger(const std::string& message,
 
 std::string FileSystemAPI::readString(const std::string& message,
     const std::string& error_message,
-    std::function<bool(std::string&)> predicate) {
+    const std::function<bool(std::string&)>& predicate) {
   std::string result;
 
   std::cout << message << std::endl;
@@ -146,7 +145,7 @@ std::string FileSystemAPI::readString(const std::string& message,
 std::string FileSystemAPI::viewFS() {
   return this->fs.toString();
 }
-int FileSystemAPI::getUserType(std::string username) {
+int FileSystemAPI::getUserType(const std::string& username) {
   int type = -1;
   bool found_user = false;
 

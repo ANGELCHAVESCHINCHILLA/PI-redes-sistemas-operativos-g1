@@ -12,7 +12,7 @@
 
 class AddUserHandler : public FileSystemRequestHandler {
  public:
-  AddUserHandler(FileSystemAPI* fileSystemApi) :
+  explicit AddUserHandler(FileSystemAPI* fileSystemApi) :
         FileSystemRequestHandler(fileSystemApi){}
 
   bool canHandle(HttpRequest& request, HttpResponse& response) override {
@@ -20,7 +20,7 @@ class AddUserHandler : public FileSystemRequestHandler {
         request.getTarget().getPath() == "/adduser") {
 
       Log::getInstance().write(Log::INFO, "AddUserRequestHandled", request.getTarget().getPath());
-      std::string body = request.getBody();
+      const std::string& body = request.getBody();
       Json::Value requestBody;
       Json::Reader reader;
       // Parse to JSON to easy manipulation

@@ -11,13 +11,13 @@
 
 class AuthHandler : public FileSystemRequestHandler {
  public:
-  AuthHandler(FileSystemAPI* fileSystemApi) :
+  explicit AuthHandler(FileSystemAPI* fileSystemApi) :
         FileSystemRequestHandler(fileSystemApi) {};
 
   bool canHandle(HttpRequest& request, HttpResponse& response) override {
     if (request.getMethod() == "POST" && request.getTarget().getPath() == "/login") {
       Log::getInstance().write(Log::INFO, "AuthUserRequestHandled", request.getTarget().getPath());
-      std::string body = request.getBody();
+      const std::string& body = request.getBody();
       Json::Value requestBody;
       Json::Reader reader;
       // Parse to JSON to easy manipulation
