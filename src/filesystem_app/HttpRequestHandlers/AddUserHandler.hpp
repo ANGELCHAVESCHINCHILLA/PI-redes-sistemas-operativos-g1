@@ -45,6 +45,7 @@ class AddUserHandler : public FileSystemRequestHandler {
       } else {
         statusCode = 400;
         responseBody = "JSON ERROR";
+        Log::getInstance().write(Log::ERROR, "AddUserRequest", "JSON Parsing Error");
       }
       response.setHeader("Content-Type", "text/plain");
       response.setStatusCode(statusCode);
@@ -52,6 +53,7 @@ class AddUserHandler : public FileSystemRequestHandler {
 
       response.buildResponse();
       // Send
+      Log::getInstance().write(Log::INFO, "ResponseSend", "Response sent");
       return true;
     }
     return false;
