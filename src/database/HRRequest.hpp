@@ -19,6 +19,12 @@ class HRRequest {
   byte state;
   std::string padding;
   std::string information;
+  std::string feedback;
+  std::string requestType;
+  int vacationDays;
+  int vacationStartDate;
+  int vacationEndDate;
+  std::string area;
 
   // Constructor
   HRRequest() = default;
@@ -46,6 +52,12 @@ class HRRequest {
   byte getState() const;
   const std::string& getPadding() const;
   const std::string& getInformation() const;
+  const std::string& getFeedback() const;
+  const std::string& getRequestType() const;
+  int getVacationDays() const;
+  int getVacationStartDate() const;
+  int getVacationEndDate() const;
+  const std::string& getArea() const;
 
   std::string getInsertIntoQuery() const;
 
@@ -63,6 +75,12 @@ class HRRequest::Builder {
   Builder& setState(byte value);
   Builder& setPadding(const std::string& value);
   Builder& setInformation(const std::string& value);
+  Builder& setFeedback(const std::string& value);
+  Builder& setRequestType(const std::string& value);
+  Builder& setVacationDays(int value);
+  Builder& setVacationStartDate(int value);
+  Builder& setVacationEndDate(int value);
+  Builder& setArea(const std::string& value);
 
   HRRequest build();
 };

@@ -10,12 +10,18 @@ const std::string HRRequest::CREATE_TABLE_QUERY =
     ID INT,
     State TINYINT,
     Padding BLOB(391),
-    Information BLOB(412)
+    Information BLOB(412),
+    Feedback BLOB(412),
+    RequestType CHAR(20),
+    VacationDays INT,
+    VacationStartDate INT,
+    VacationEndDate INT,
+    Area CHAR(20)
 );
 )";
 
 const std::string HRRequest::INSERT_INTO_QUERY =
-    R"(INSERT INTO HRRequest (User, ID, State, Padding, Information) )";
+    R"(INSERT INTO HRRequest (User, ID, State, Padding, Information, Feedback, RequestType, VacationDays, VacationStartDate, VacationEndDate, Area) )";
 
 const std::string& HRRequest::getUser() const {
   return this->user;
@@ -37,6 +43,30 @@ const std::string& HRRequest::getInformation() const {
   return this->information;
 }
 
+const std::string& HRRequest::getFeedback() const {
+  return this->feedback;
+}
+
+const std::string& HRRequest::getRequestType() const {
+  return this->requestType;
+}
+
+int HRRequest::getVacationDays() const {
+  return this->vacationDays;
+}
+
+int HRRequest::getVacationStartDate() const {
+  return this->vacationStartDate;
+}
+
+int HRRequest::getVacationEndDate() const {
+  return this->vacationEndDate;
+}
+
+const std::string& HRRequest::getArea() const {
+  return this->area;
+}
+
 std::string HRRequest::getInsertIntoQuery() const {
   std::stringstream ss;
 
@@ -51,6 +81,18 @@ std::string HRRequest::getInsertIntoQuery() const {
   ss << this->padding;
   ss << "', '";
   ss << this->information;
+  ss << "', '";
+  ss << this->feedback;
+  ss << "', '";
+  ss << this->requestType;
+  ss << "', '";
+  ss << this->vacationDays;
+  ss << "', '";
+  ss << this->vacationStartDate;
+  ss << "', '";
+  ss << this->vacationEndDate;
+  ss << "', '";
+  ss << this->area;
   ss << ");";
 
   return std::move(ss.str());
@@ -79,6 +121,39 @@ HRRequest::Builder& HRRequest::Builder::setPadding(const std::string& value) {
 HRRequest::Builder& HRRequest::Builder::setInformation(
     const std::string& value) {
   this->object.information = value;
+  return *this;
+}
+
+HRRequest::Builder& HRRequest::Builder::setFeedback(
+    const std::string& value) {
+  this->object.feedback = value;
+  return *this;
+}
+
+HRRequest::Builder& HRRequest::Builder::setRequestType(
+    const std::string& value) {
+  this->object.requestType = value;
+  return *this;
+}
+
+HRRequest::Builder& HRRequest::Builder::setVacationDays(int value) {
+  this->object.vacationDays = value;
+  return *this;
+}
+
+HRRequest::Builder& HRRequest::Builder::setVacationStartDate(int value) {
+  this->object.vacationStartDate = value;
+  return *this;
+}
+
+HRRequest::Builder& HRRequest::Builder::setVacationEndDate(int value) {
+  this->object.vacationEndDate = value;
+  return *this;
+}
+
+HRRequest::Builder& HRRequest::Builder::setArea(
+    const std::string& value) {
+  this->object.area = value;
   return *this;
 }
 
