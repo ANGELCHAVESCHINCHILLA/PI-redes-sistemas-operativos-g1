@@ -46,7 +46,8 @@ class AuthHandler : public FileSystemRequestHandler {
 
       response.buildResponse();
       // Send response
-      Log::getInstance().write(Log::INFO, "ResponseSend", "Response sent");
+      Log::getInstance().write(
+          Log::INFO, "ResponseSend", "Response Sent with body:" + responseBody);
       return true;
     }
     return false;
