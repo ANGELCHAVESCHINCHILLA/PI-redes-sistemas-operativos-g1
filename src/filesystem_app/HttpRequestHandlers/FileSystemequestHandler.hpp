@@ -19,7 +19,7 @@ class FileSystemRequestHandler {
  public:
   FileSystemAPI* fileSystemApi;
   /// Constructor
-  FileSystemRequestHandler(FileSystemAPI* api) : fileSystemApi(api){};
+  explicit FileSystemRequestHandler(FileSystemAPI* api) : fileSystemApi(api){};
   /// Destructor
   virtual ~FileSystemRequestHandler() = default;
 
