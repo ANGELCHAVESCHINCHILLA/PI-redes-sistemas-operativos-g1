@@ -4,6 +4,8 @@
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
 
+#include <iostream>
+
 #include "database/Database.hpp"
 
 int main(int argc, char* argv[]) {
@@ -29,7 +31,11 @@ int main(int argc, char* argv[]) {
   error = database.addPersonalData(personal_data);
 
   if (!error) {
-    // error = database.printAllPersonalData();
+    std::vector<PersonalData> users = database.searchPersonalDataByUser("1");
+
+    for (auto& personal_data : users) {
+      std::cout << personal_data.getEmail() << "\n";
+    }
   }
 
   return error;

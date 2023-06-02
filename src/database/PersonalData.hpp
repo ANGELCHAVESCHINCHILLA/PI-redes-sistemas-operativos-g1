@@ -11,6 +11,8 @@ class PersonalData {
 
   static const std::string INSERT_INTO_QUERY;
 
+  static const std::string SELECT_FROM_QUERY;
+
  private:
   std::string user;
   std::string employee_name;
@@ -33,13 +35,13 @@ class PersonalData {
   // Copy Assignment Operator
   PersonalData& operator=(const PersonalData& other) = delete;
 
+ public:
   // Move Constructor
   PersonalData(PersonalData&& other) = default;
 
   // Move Assignment Operator
   PersonalData& operator=(PersonalData&& other) = default;
 
- public:
   const std::string& getUser() const;
   const std::string& getEmployeeName() const;
   const std::string& getJobName() const;
@@ -48,6 +50,8 @@ class PersonalData {
   int getPhoneNumber() const;
 
   std::string getInsertIntoQuery() const;
+
+  static std::string getSelectFromWhereQuery(const std::string& user);
 
   // Inner Class
   class Builder;

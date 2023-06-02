@@ -5,7 +5,7 @@
 #include <sstream>
 
 const std::string HRRequest::CREATE_TABLE_QUERY =
-    R"(CREATE TABLE HRRequest (
+    R"(CREATE TABLE IF NOT EXISTS HRRequest (
     User CHAR(16),
     ID INT,
     State TINYINT,

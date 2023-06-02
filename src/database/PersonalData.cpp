@@ -4,8 +4,10 @@
 
 #include <sstream>
 
+#include "Database.hpp"
+
 const std::string PersonalData::CREATE_TABLE_QUERY =
-    R"(CREATE TABLE PersonalData (
+    R"(CREATE TABLE IF NOT EXISTS PersonalData (
     User CHAR(16),
     EmployeeName CHAR(32),
     JobName CHAR(32),
@@ -17,6 +19,9 @@ const std::string PersonalData::CREATE_TABLE_QUERY =
 
 const std::string PersonalData::INSERT_INTO_QUERY =
     R"(INSERT INTO PersonalData (User, EmployeeName, JobName, CompanyName, Email, PhoneNumber) )";
+
+const std::string PersonalData::SELECT_FROM_QUERY =
+    R"(SELECT * FROM PersonalData )";
 
 const std::string& PersonalData::getUser() const {
   return this->user;
@@ -59,6 +64,17 @@ std::string PersonalData::getInsertIntoQuery() const {
   ss << "', ";
   ss << this->phone_number;
   ss << ");";
+
+  return std::move(ss.str());
+}
+
+std::string PersonalData::getSelectFromWhereQuery(const std::string& user) {
+  std::stringstream ss;
+
+  ss << PersonalData::SELECT_FROM_QUERY;
+  ss << "WHERE ";
+  ss << "user = '" << user << "'";
+  ss << ";";
 
   return std::move(ss.str());
 }
