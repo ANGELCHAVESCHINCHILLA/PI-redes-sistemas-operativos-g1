@@ -31,6 +31,8 @@ class HttpRequest : public HttpMessage {
    */
   explicit HttpRequest(const std::string& input);
 
+  HttpRequest();
+
   /**
    * @brief Destructor.
    *
@@ -50,6 +52,9 @@ class HttpRequest : public HttpMessage {
   HttpRequest& operator=(HttpRequest&& other) = delete;
 
   std::string toString();
+
+  // used for send a http request
+  std::string buildString();
 
  public:  // accessors
 

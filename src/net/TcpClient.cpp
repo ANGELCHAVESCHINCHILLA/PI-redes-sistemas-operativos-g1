@@ -13,7 +13,6 @@
 #include <utility>
 
 #include "TcpClient.hpp"
-#include "Socket.hpp"
 
 TcpClient::TcpClient() {
   // Set initial values for searching for a suitable network address
@@ -41,7 +40,7 @@ void TcpClient::close() {
 Socket& TcpClient::connect(const char* server, const char* port) {
   int error = SocketError::OK_SOCKET;
   // If there is an active connection, close it
-  this->close();
+  // this->close();
   // Fetch all available network addresses where we can listen with this port
   error = this->fetchPossibleAddresses(server, port);
 
