@@ -33,7 +33,7 @@ void Log::start(const std::string& logFilename) {
           "could not open log file for appending: " + logFilename);
     }
     this->filename = logFilename;
-    this->output.rdbuf(this->file.rdbuf());
+    this->output.rdbuf(std::cout.rdbuf());
   }
 }
 
@@ -44,10 +44,11 @@ void Log::stop() {
 void Log::write(Log::MessageType type, const std::string& category,
     const std::string& text) {
   this->mutex.lock();
-
-  this->output <<  getActualTime() << " " << MESSAGE_TYPE_TEXT[type] << '\t' << category << '\t' << text
-               << std::endl;
-
+  std::string log = getActualTime() + " " + MESSAGE_TYPE_TEXT[type] + '\t' + category + '\t' + text;
+  this->output << log << std::endl;
+  if(this->file.is_open()) {
+    this->file << log << std::endl;
+  }
   bool error = !this->output;
   this->mutex.unlock();
 
@@ -65,6 +66,6 @@ std::string Log::getActualTime() {
   int mins = localTime->tm_min;
   int secs = localTime->tm_sec;
   std::string formatHour =  "[" + std::to_string(hour) + ":" + std::to_string(mins)
-                           + ":" + std::to_string(secs) + "]";
+                           + ":" + std::to_string(secs);
   return formatHour;
 }
