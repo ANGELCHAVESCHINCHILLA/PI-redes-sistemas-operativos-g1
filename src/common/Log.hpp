@@ -5,6 +5,7 @@
 #include <fstream>
 #include <mutex>  // NOLINT
 #include <string>
+#include <ctime>
 
 #include "common.hpp"
 
@@ -66,6 +67,7 @@ class Log {
   Log();
   /// Singleton. Implement code in stop() method instead
   ~Log() = default;
+  std::string getActualTime();
 };
 
 #endif  // LOG_HPP
