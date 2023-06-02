@@ -37,6 +37,7 @@ class AuthHandler : public FileSystemRequestHandler {
       } else {
         statusCode = 400;
         responseBody = "JSON ERROR";
+        Log::getInstance().write(Log::ERROR, "AuthUserRequest", "JSON Parsing Error");
       }
 
       response.setHeader("Content-Type", "text/plain");
@@ -45,6 +46,7 @@ class AuthHandler : public FileSystemRequestHandler {
 
       response.buildResponse();
       // Send response
+      Log::getInstance().write(Log::INFO, "ResponseSend", "Response sent");
       return true;
     }
     return false;
