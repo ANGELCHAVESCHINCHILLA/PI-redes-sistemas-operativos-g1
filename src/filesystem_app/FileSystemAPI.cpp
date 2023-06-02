@@ -10,6 +10,7 @@
 
 #include "../common/Util.hpp"
 #include "../hash.hpp"
+#include "Log.hpp"
 
 #define USERNAME_LENGTH 10
 
@@ -39,9 +40,9 @@ bool FileSystemAPI::addUser(std::string username, std::string hashed_password, i
 bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {
 
   if (username.length() > USERNAME_LENGTH) {
+    Log::getInstance().write(Log::ERROR, "ErrorUsername", "On auth user, username.length > 10");
     return false;
   }
-  // debug lines TODO(ANY): remove this after debugging
   int error =  this->authenticator.authPass(users_file, username, hash);
   /*
   switch (error) {
@@ -64,13 +65,14 @@ bool FileSystemAPI::authenticateUser(std::string username, std::string hash) {
       break;
     }
   }
+   */
   if (error == Error::OK) {
     return true;
   } else {
     return false;
   }
 }
-*/
+
 void FileSystemAPI::readFromFile(const std::string& source_file_name) {
   int error = Error::OK;
 
