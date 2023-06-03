@@ -11,7 +11,7 @@ const std::string HRRequest::CREATE_TABLE_QUERY =
     State TINYINT,
     Padding BLOB(391),
     Information BLOB(412),
-    Feedback BLOB(412),
+    Feedback BLOB(256),
     RequestType CHAR(20),
     VacationDays INT,
     VacationStartDate INT,
