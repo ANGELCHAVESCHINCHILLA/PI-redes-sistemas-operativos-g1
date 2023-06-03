@@ -35,11 +35,11 @@ std::string Annotation::getInsertIntoQuery() const {
   ss << Annotation::INSERT_INTO_QUERY;
   ss << "VALUES ('";
   ss << this->user;
-  ss << "', '";
+  ss << "', ";
   ss << this->id;
-  ss << "', '";
+  ss << ", '";
   ss << this->information;
-  ss << ");";
+  ss << "');";
 
   return std::move(ss.str());
 }

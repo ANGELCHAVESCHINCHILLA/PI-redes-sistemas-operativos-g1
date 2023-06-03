@@ -93,7 +93,7 @@ std::string HRRequest::getInsertIntoQuery() const {
   ss << this->vacationEndDate;
   ss << "', '";
   ss << this->area;
-  ss << ");";
+  ss << "');";
 
   return std::move(ss.str());
 }
