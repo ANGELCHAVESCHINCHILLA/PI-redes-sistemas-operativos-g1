@@ -16,29 +16,59 @@ int main(int argc, char* argv[]) {
   // Database& database = Database::getInstance(path);
   DatabaseApp databaseApp;
 
-  JobData::Builder builder = JobData::Builder();
+  HRRequest::Builder builder = HRRequest::Builder();
 
-  builder.setUser("1");
-  builder.setVacationDays(2);
-  builder.setGrossSalary(3);
-  builder.setNetSalary(4);
-  builder.setSalaryStartDate(5);
-  builder.setSalaryEndDate(6);
+  builder.setUser("Miguel");
+  builder.setID(23);
+  builder.setState(2);
+  builder.setPadding("      ");
+  builder.setInformation("Buenas tardes, quiero pedir la renuncia");
+  builder.setFeedback("buenas tardes, no le podemos permitir renunciar");
+  builder.setRequestType("Vacaciones");
+  builder.setVacationDays(30);
+  builder.setVacationStartDate(12345678);
+  builder.setVacationEndDate(12345678);
+  builder.setArea("San Jose");
 
-  JobData job_data = builder.build();
+  HRRequest hr_request = builder.build();
 
-  error = databaseApp.database.addJobData(job_data);
+  error = databaseApp.database.addHRRequest(hr_request);
+
+  if (error) {
+    std::cout << "error at adding job data 1" << std::endl;
+    return 0;
+  }
+
+  builder.setUser("Miguel");
+  builder.setID(24);
+  builder.setState(1);
+  builder.setPadding("      ");
+  builder.setInformation("Buenas tardes, quiero pedir mas vacaciones");
+  builder.setFeedback("buenas tardes, esta bien, puede retirarse");
+  builder.setRequestType("Vacaciones");
+  builder.setVacationDays(30);
+  builder.setVacationStartDate(12345678);
+  builder.setVacationEndDate(12345678);
+  builder.setArea("Cartago");
+
+  HRRequest hr_request2 = builder.build();
+
+  error = databaseApp.database.addHRRequest(hr_request2);
 
   if (!error) {
-    // error = database.printAllPersonalData();
     try {
-      std::string vacationBalance = databaseApp.consultVacationBalanceByUser("1");
-      std::cout << "we got " << vacationBalance << std::endl;
+      std::vector<std::vector<std::string>> requests = databaseApp.consultRequestsMadeByUser("Miguel");
+      for (int i = 0; i < requests.size(); i++) {
+        for (int j = 0; j < requests[i].size(); ++j) {
+          std::cout << requests[i][j] << " "; 
+        }
+        std::cout << std::endl;
+      }
     } catch (std::runtime_error e) {
       std::cout << "exception " << e.what() << std::endl;
     }
   } else {
-    std::cout << "error at adding job data" << std::endl;
+    std::cout << "error at adding job data 2" << std::endl;
   }
 
   return error;
