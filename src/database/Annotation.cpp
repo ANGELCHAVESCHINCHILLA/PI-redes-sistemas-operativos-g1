@@ -5,7 +5,7 @@
 #include <sstream>
 
 const std::string Annotation::CREATE_TABLE_QUERY =
-    R"(CREATE TABLE Annotation (
+    R"(CREATE TABLE IF NOT EXISTS Annotation (
     User CHAR(16),
     ID INT,
     Information CHAR(256)
@@ -14,6 +14,8 @@ const std::string Annotation::CREATE_TABLE_QUERY =
 
 const std::string Annotation::INSERT_INTO_QUERY =
     R"(INSERT INTO Annotation (User, ID, Information) )";
+
+const std::string Annotation::SELECT_FROM_QUERY = R"(SELECT * FROM Annotation )";
 
 const std::string& Annotation::getUser() const {
   return this->user;
@@ -38,6 +40,17 @@ std::string Annotation::getInsertIntoQuery() const {
   ss << "', '";
   ss << this->information;
   ss << ");";
+
+  return std::move(ss.str());
+}
+
+std::string Annotation::getSelectFromWhereQuery(const std::string& user) {
+  std::stringstream ss;
+
+  ss << Annotation::SELECT_FROM_QUERY;
+  ss << "WHERE ";
+  ss << "user = " << user;
+  ss << ";";
 
   return std::move(ss.str());
 }

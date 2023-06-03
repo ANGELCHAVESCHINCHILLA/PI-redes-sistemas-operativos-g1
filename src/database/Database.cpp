@@ -81,29 +81,42 @@ int Database::addJobData(const JobData& job_data) {
   return error;
 }
 
-// Don't use
-// Add a method to every table that searches in the database
-// The method should use the builder and return the instance with the data
-int Database::printAllPersonalData() {
+std::vector<PersonalData> Database::searchPersonalDataByUser(
+    const std::string& user) {
   int error = SQLITE_OK;
 
-  const char* query = "SELECT * FROM ???;";
+  std::vector<PersonalData> users;
+
+  std::string query = PersonalData::getSelectFromWhereQuery(user);
 
   sqlite3_stmt* statement;
 
-  error = sqlite3_prepare_v2(this->reference, query, -1, &statement, nullptr);
+  error =
+      sqlite3_prepare(this->reference, query.c_str(), -1, &statement, nullptr);
 
   if (error != SQLITE_OK) {
     // TODO: Replace with an exception
-    std::cerr << "Can't read the database.\n";
+    std::cerr << "Can't search PersonalData.\n";
   }
 
-  while (sqlite3_step(statement) == SQLITE_ROW) {
-    // Remove when fixed
-    break;
+  if (!error) {
+    while (sqlite3_step(statement) == SQLITE_ROW) {
+      PersonalData::Builder builder = PersonalData::Builder();
+
+      builder.setUser(reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
+      builder.setEmployeeName(reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
+      builder.setJobName(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
+      builder.setCompanyName(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+      builder.setEmail(reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));
+      builder.setPhoneNumber(sqlite3_column_int(statement, 5));
+
+      PersonalData personal_data = builder.build();
+
+      users.push_back(std::move(personal_data));
+    }
   }
 
   sqlite3_finalize(statement);
 
-  return error;
+  return users;
 }

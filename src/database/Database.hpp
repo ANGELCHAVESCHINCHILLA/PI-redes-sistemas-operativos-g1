@@ -6,6 +6,7 @@
 #include <sqlite3.h>
 
 #include <string>
+#include <vector>
 
 #include "Annotation.hpp"
 #include "HRRequest.hpp"
@@ -49,7 +50,7 @@ class Database {
 
   int addJobData(const JobData& job_data);
 
-  int printAllPersonalData();
+  std::vector<PersonalData> searchPersonalDataByUser(const std::string& user);
 
  private:
   int createTables();

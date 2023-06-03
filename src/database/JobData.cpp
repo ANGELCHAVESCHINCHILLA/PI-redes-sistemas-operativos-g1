@@ -5,7 +5,7 @@
 #include <sstream>
 
 const std::string JobData::CREATE_TABLE_QUERY =
-    R"(CREATE TABLE JobData (
+    R"(CREATE TABLE IF NOT EXISTS JobData (
     User CHAR(16),
     VacationDays TINYINT,
     GrossSalary INT,
