@@ -73,6 +73,30 @@ int Database::createTables() {
   return error;
 }
 
+int Database::addPersonalData(const PersonalData& personal_data) {
+  int error = SQLITE_OK;
+
+  error = this->query(personal_data.getInsertIntoQuery().c_str());
+
+  return error;
+}
+
+int Database::addAnnotation(const Annotation& annotation) {
+  int error = SQLITE_OK;
+
+  error = this->query(annotation.getInsertIntoQuery().c_str());
+
+  return error;
+}
+
+int Database::addHRRequest(const HRRequest& hr_request) {
+  int error = SQLITE_OK;
+
+  error = this->query(hr_request.getInsertIntoQuery().c_str());
+
+  return error;
+}
+
 int Database::addJobData(const JobData& job_data) {
   int error = SQLITE_OK;
 

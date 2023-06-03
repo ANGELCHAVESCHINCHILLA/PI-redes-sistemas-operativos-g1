@@ -48,6 +48,12 @@ class Database {
 
   int query(const char* query);
 
+  int addPersonalData(const PersonalData& personal_data);
+
+  int addAnnotation(const Annotation& annotation);
+
+  int addHRRequest(const HRRequest& hr_request);
+
   int addJobData(const JobData& job_data);
 
   std::vector<PersonalData> searchPersonalDataByUser(const std::string& user);
