@@ -5,6 +5,5 @@ AllowShortBlocksOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: None
 DerivePointerAlignment: false
 PointerAlignment: Left
-ReferenceAlignent: Left
 SpaceAfterCStyleCast: true
 ...
