@@ -26,8 +26,8 @@ bool GuachisWebApp::start() {
 
 // Aks each handler if can handle the request
 bool GuachisWebApp::run(HttpRequest& request, HttpResponse& response) {
-  for (size_t index = 0; index < this->requestHandlers.size(); ++index) {
-    if (this->requestHandlers[index]->canHandle(request, response)) {
+  for (auto & requestHandler : this->requestHandlers) {
+    if (requestHandler->canHandle(request, response)) {
       return true;
     }
   }
