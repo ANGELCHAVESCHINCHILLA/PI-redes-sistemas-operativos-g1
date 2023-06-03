@@ -46,9 +46,9 @@ class DatabaseApp : public HttpApp {
    * @brief consults the salary information of a certain user
    * 
    * @param user the user whose salaty info will be returned
-   * @return std::vector<std::string> a vector whose elements are each salary data
+   * @return std::vector<std::vector<std::string>> a list of all salaries a given user has had
    */
-  std::vector<std::string> consultSalaryByUser(const std::string user) const;
+  std::vector<std::vector<std::string>> consultSalaryByUser(const std::string user) const;
 
   /**
    * @brief consults all annotations to the record of a user
@@ -110,6 +110,13 @@ class DatabaseApp : public HttpApp {
    */
   bool checkRequest(const int requestID, const std::string state, const std::string feedback) const;
 
+  /**
+   * @brief Get the Request By ID
+   * 
+   * @param requestID the id of the request to be obtained
+   * @return std::vector<std::string> the request of id requestID
+   */
+  std::vector<std::string> getRequestByID(const int requestID) const;
 
  private:
 
