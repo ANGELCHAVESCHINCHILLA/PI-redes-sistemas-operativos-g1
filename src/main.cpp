@@ -4,7 +4,7 @@
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
 
-#include "database/Database.hpp"
+#include "database/DatabaseApp.hpp"
 
 int main(int argc, char* argv[]) {
   int error = SQLITE_OK;
@@ -13,23 +13,32 @@ int main(int argc, char* argv[]) {
   // char* path = "/home/usr/PI-redes-sistemas-operativos-g1/database.db";
   char* path = "database.db";
 
-  Database& database = Database::getInstance(path);
+  // Database& database = Database::getInstance(path);
+  DatabaseApp databaseApp;
 
-  PersonalData::Builder builder = PersonalData::Builder();
+  JobData::Builder builder = JobData::Builder();
 
   builder.setUser("1");
-  builder.setEmployeeName("2");
-  builder.setJobName("3");
-  builder.setCompanyName("4");
-  builder.setEmail("5");
-  builder.setPhoneNumber(6);
+  builder.setVacationDays(2);
+  builder.setGrossSalary(3);
+  builder.setNetSalary(4);
+  builder.setSalaryStartDate(5);
+  builder.setSalaryEndDate(6);
 
-  PersonalData personal_data = builder.build();
+  JobData job_data = builder.build();
 
-  error = database.addPersonalData(personal_data);
+  error = databaseApp.database.addJobData(job_data);
 
   if (!error) {
     // error = database.printAllPersonalData();
+    try {
+      std::string vacationBalance = databaseApp.consultVacationBalanceByUser("1");
+      std::cout << "we got " << vacationBalance << std::endl;
+    } catch (std::runtime_error e) {
+      std::cout << "exception " << e.what() << std::endl;
+    }
+  } else {
+    std::cout << "error at adding job data" << std::endl;
   }
 
   return error;
