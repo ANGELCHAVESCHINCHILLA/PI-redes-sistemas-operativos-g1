@@ -23,4 +23,5 @@ bool ValidateHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       }
     }
   }
+  return false;
 }

@@ -26,4 +26,4 @@ class StaticHandler : public HttpRequestHandler {
 };
 
 
-#endif  // APP_HPP_
+#endif  // STATIC_HANDLER
