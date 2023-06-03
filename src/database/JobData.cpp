@@ -22,7 +22,7 @@ const std::string& JobData::getUser() const {
   return this->user;
 }
 
-byte JobData::getVacationDays() const {
+int JobData::getVacationDays() const {
   return this->vacation_days;
 }
 
@@ -68,7 +68,7 @@ JobData::Builder& JobData::Builder::setUser(const std::string& value) {
   return *this;
 }
 
-JobData::Builder& JobData::Builder::setVacationDays(byte value) {
+JobData::Builder& JobData::Builder::setVacationDays(int value) {
   this->object.vacation_days = value;
   return *this;
 }

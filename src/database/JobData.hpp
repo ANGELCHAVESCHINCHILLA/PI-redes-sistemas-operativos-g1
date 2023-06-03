@@ -15,7 +15,7 @@ class JobData {
 
  private:
   std::string user;
-  byte vacation_days;
+  int vacation_days;
   int gross_salary;
   int net_salary;
   int salary_start_date;
@@ -43,7 +43,7 @@ class JobData {
 
  public:
   const std::string& getUser() const;
-  byte getVacationDays() const;
+  int getVacationDays() const;
   int getGrossSalary() const;
   int getNetSalary() const;
   int getSalaryStartDate() const;
@@ -61,7 +61,7 @@ class JobData::Builder {
 
  public:
   Builder& setUser(const std::string& value);
-  Builder& setVacationDays(byte value);
+  Builder& setVacationDays(int value);
   Builder& setGrossSalary(int value);
   Builder& setNetSalary(int value);
   Builder& setSalaryStartDate(int value);
