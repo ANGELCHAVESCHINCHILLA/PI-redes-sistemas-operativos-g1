@@ -104,6 +104,8 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 }
 
 bool LoginHandler::isValidUser(HttpRequest& request, UserSession& user) {
+  // TODO: remove this return true. Now works as bypass just to testing
+  return true;
   // Connect with fylesystem server
   Socket& loginSocket = user.connect(this->server.data(), this->port.data());
 
@@ -127,7 +129,7 @@ bool LoginHandler::isValidUser(HttpRequest& request, UserSession& user) {
     validationResponse.parseHttpResponse(result);
 
     // If is the received response has a succesfull status code then return true
-    return 200 <= validationResponse.getStatusCode() 
+    return 200 <= validationResponse.getStatusCode()
           && validationResponse.getStatusCode() < 300;
   }
   throw std::runtime_error("Could not receive from File System Server");

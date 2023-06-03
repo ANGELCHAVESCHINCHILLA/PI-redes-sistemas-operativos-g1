@@ -1,15 +1,14 @@
 // Copyright © 2023 Ángel Chaves Chinchilla, Camilo Suarez Sandí
 
 #include "GuachisWebApp.hpp"
-
-#include <filesystem>
-#include <fstream>
 #include <iostream>
-#include <regex>
+
+#include "ValidateHandler/ValidateHandler.hpp"
 
 GuachisWebApp::GuachisWebApp() {
   this->requestHandlers.push_back(new StaticHandler());
   this->requestHandlers.push_back(new LoginHandler("127.0.0.1", "8000"));
+  this->requestHandlers.push_back(new ValidateHandler());
 }
 
 GuachisWebApp::~GuachisWebApp() {
@@ -18,7 +17,6 @@ GuachisWebApp::~GuachisWebApp() {
     delete this->requestHandlers[index];
   }
 }
-
 
 bool GuachisWebApp::start() {
   //
@@ -33,6 +31,5 @@ bool GuachisWebApp::run(HttpRequest& request, HttpResponse& response) {
       return true;
     }
   }
-
   return false;
 }

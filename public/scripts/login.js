@@ -1,9 +1,9 @@
 const login = document.getElementById("login"); // get by id
-
+localStorage.setItem('logged', "false");
 if (login) {
     login.addEventListener('submit', function (event) {
       event.preventDefault(); // Avoid default shipment
-  
+
       const username = login.elements['username'].value;
       const password = login.elements['password'].value;
   
@@ -32,20 +32,14 @@ if (login) {
               alert("El usuario y/o la contraseña son incorrectos");
             }
           })
-          // Si viene con un token entonces redirigimos, si no lanzamos un error
-          // en consola.
-          .then(data => {
-            const token = data.token;
-            localStorage.setItem('token', token);
-            window.location.href = 'index.html';
-          })
           .catch(error => {
             // Manejar errores de autenticación
             console.log(error.message);
           });
 
-        // window.location.href = 'index.html'; // redirection
-        //window.location.href = 'form_solicitar_vacaciones.html'; // Redirige a otra página
+
+        localStorage.setItem('logged', "true");
+        window.location.href = 'index.html';
       } else {
         alert('Por favor complete todos los campos'); // 
       }
