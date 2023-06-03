@@ -14,13 +14,15 @@
 
 class Database {
  private:
-  sqlite3* reference;
 
   /**
    * @brief Default constructor.
    *
    */
   explicit Database(const char* absolute_path);
+
+ public:
+  sqlite3* reference;
 
   /**
    * @brief Destructor.
@@ -40,12 +42,12 @@ class Database {
   // Move Assignment Operator
   Database& operator=(Database&& other) = delete;
 
- public:
+
   static Database& getInstance(const char* absolute_path);
 
   int query(const char* query);
 
-  int addPersonalData(const PersonalData& personal_data);
+  int addJobData(const JobData& job_data);
 
   int printAllPersonalData();
 

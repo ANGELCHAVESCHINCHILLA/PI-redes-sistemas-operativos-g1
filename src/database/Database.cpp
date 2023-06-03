@@ -73,10 +73,10 @@ int Database::createTables() {
   return error;
 }
 
-int Database::addPersonalData(const PersonalData& personal_data) {
+int Database::addJobData(const JobData& job_data) {
   int error = SQLITE_OK;
 
-  error = this->query(personal_data.getInsertIntoQuery().c_str());
+  error = this->query(job_data.getInsertIntoQuery().c_str());
 
   return error;
 }
