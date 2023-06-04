@@ -226,3 +226,40 @@ bool DatabaseApp::makeRequest(const std::string user, const std::string requestT
   
   return result;
 }
+
+static int getRequestsMadeByAreaCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  std::vector<std::vector<std::string>>* matrix = reinterpret_cast<std::vector<std::vector<std::string>>*>(NotUsed);
+  std::vector<std::string> row;
+  for (int i = 0; i < argc; i++) {
+    std::cout << argv[i] << " "; 
+    std::string value = argv[i];
+    row.push_back(value);
+  }
+  matrix->push_back(row);
+  std::cout << std::endl;
+  return 0;
+}
+
+std::vector<std::vector<std::string>> DatabaseApp::getRequestsMadeByArea(const std::string area) const {
+  int error = SQLITE_OK;
+
+  std::vector<std::vector<std::string>> result;
+  std::vector<std::vector<std::string>>* pointer = &result;
+
+  char* error_message;
+
+  std::string query = "SELECT * from HRRequest where Area = '";
+  query.append(area);
+  query.append("'");
+
+  error =
+    sqlite3_exec(this->database.reference, query.c_str(), getRequestsMadeByAreaCallback, pointer, &error_message);
+
+  if (error != SQLITE_OK) {
+    std::cerr << error_message << "\n";
+    sqlite3_free(error_message);
+    throw std::runtime_error("failed at exec from get requests by area" );
+  }
+  
+  return result;
+}
