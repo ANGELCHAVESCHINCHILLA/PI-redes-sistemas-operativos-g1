@@ -19,6 +19,24 @@ class URL {
   std::string input;
 
   /**
+   * @brief The scheme of the url. Like http or ftp.
+   *
+   */
+  std::string scheme;
+
+  /**
+   * @brief The host of the url. Like 127.0.0.1 or www.google.com.
+   *
+   */
+  std::string host;
+
+  /**
+   * @brief The port of the url. -1 if the port is null.
+   *
+   */
+  int port;
+
+  /**
    * @brief The path of the url.
    *
    */
@@ -73,6 +91,27 @@ class URL {
    * @return const std::string& All of the url.
    */
   const std::string& getInput() const;
+
+  /**
+   * @brief Returns the scheme of the url.
+   *
+   * @return const std::string& The scheme of the url.
+   */
+  const std::string& getScheme() const;
+
+  /**
+   * @brief Returns the host of the url.
+   *
+   * @return const std::string& The host of the url.
+   */
+  const std::string& getHost() const;
+
+  /**
+   * @brief Returns the port of the url.
+   *
+   * @return int The port of the url. -1 if the port is null.
+   */
+  int getPort() const;
 
   /**
    * @brief Returns the path of the url.
@@ -132,7 +171,35 @@ class URL {
    *
    * @param input Input for one query parameter.
    */
-  void parseQueryParameter(std::string& input);
+  void parseQueryParameter(const std::string& input);
+
+  /**
+   * @brief Parses the path of the url.
+   *
+   * @param input Input for the path of the url.
+   */
+  void parsePath(std::string& input);
+
+  /**
+   * @brief Parses the scheme of the url.
+   *
+   * @param input Input for the scheme of the url.
+   */
+  void parseScheme(std::string& input);
+
+  /**
+   * @brief Parses the port of the url.
+   *
+   * @param input Input for the port of the url.
+   */
+  void parsePort(std::string& input);
+
+  /**
+   * @brief Parses the host of the url.
+   *
+   * @param input Input for the host of the url.
+   */
+  void parseHost(std::string& input);
 };
 
 #endif  // URL_HPP_

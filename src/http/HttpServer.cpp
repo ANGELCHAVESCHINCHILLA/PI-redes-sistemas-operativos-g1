@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <cassert>
+#include "../common/Log.hpp"
 
 HttpServer& HttpServer::getInstance() {
   static HttpServer server;
@@ -27,6 +28,8 @@ int HttpServer::appendApp(HttpApp* application) {
 
 void HttpServer::stopServer(int signal) {
   std::cerr << "Signal " << signal << " received" << std::endl;
+  Log::getInstance().write(Log::INFO, "finish","Server closed");
+  Log::getInstance().stop();
   HttpServer::getInstance().stop();
 }
 
@@ -37,7 +40,8 @@ void HttpServer::stop() {
 
 int HttpServer::start(const std::string& address, int port) {
   int error = SocketError::OK_SOCKET;
-
+  Log::getInstance().start("Logs");
+  Log::getInstance().write(Log::INFO, "start","Server started");
   const std::string sport = std::to_string(port);
 
   error = this->fetchPossibleAddresses(sport.data());
@@ -57,7 +61,6 @@ int HttpServer::start(const std::string& address, int port) {
 
   error = this->acceptConnections();
   std::cout << "Terminé de aceptar conexiones\n";
-
 
   return error;
 }
