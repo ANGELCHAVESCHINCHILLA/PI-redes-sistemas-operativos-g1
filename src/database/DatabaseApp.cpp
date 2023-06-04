@@ -263,3 +263,30 @@ std::vector<std::vector<std::string>> DatabaseApp::getRequestsMadeByArea(const s
   
   return result;
 }
+
+bool DatabaseApp::checkRequest(const int requestID, const int state, const std::string feedback) const {
+  int error = SQLITE_OK;
+
+  bool result = false;
+
+  char* error_message;
+
+  std::string query = "UPDATE HRRequest SET State =";
+  query.append(std::to_string(state));
+  query.append(", Feedback = '");
+  query.append(feedback);
+  query.append("' where ID = ");
+  query.append(std::to_string(requestID));
+  query.append(";");
+
+  error =
+    sqlite3_exec(this->database.reference, query.c_str(), nullptr, nullptr, &error_message);
+
+  if (error != SQLITE_OK) {
+    std::cerr << error_message << "\n";
+    sqlite3_free(error_message);
+    throw std::runtime_error("failed at exec from check requests" );
+  }
+  
+  return result;
+}
