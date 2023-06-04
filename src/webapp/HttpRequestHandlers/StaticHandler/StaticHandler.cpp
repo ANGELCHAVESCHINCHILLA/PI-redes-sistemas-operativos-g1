@@ -28,6 +28,12 @@ bool StaticHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         return true;
       }
     }
+    if (request.getTarget().getPath().rfind("/verificar_constancia", 0) == 0) {
+      if (this->servePage(
+              request, response, "verificar_constancia.html")) {
+        return true;
+      }
+    }
 
     if (this->serveStatic(request, response)) {
       return true;
