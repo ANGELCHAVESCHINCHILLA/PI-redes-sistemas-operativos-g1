@@ -290,3 +290,34 @@ bool DatabaseApp::checkRequest(const int requestID, const int state, const std::
   
   return result;
 }
+
+static int getRequestByIDCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  std::vector<std::string>* vector = reinterpret_cast<std::vector<std::string>*>(NotUsed);
+  for (int i = 0; i < argc; ++i) {
+    vector->push_back(argv[i]);
+  }
+  return 0;
+}
+
+std::vector<std::string> DatabaseApp::getRequestByID(const int requestID) const {
+  int error = SQLITE_OK;
+
+  std::vector<std::string> result;
+  std::vector<std::string>* pointer = &result;
+
+  char* error_message;
+
+  std::string query = "SELECT * from HRRequest where ID = ";
+  query.append(std::to_string(requestID));
+
+  error =
+    sqlite3_exec(this->database.reference, query.c_str(), getRequestByIDCallback, pointer, &error_message);
+
+  if (error != SQLITE_OK) {
+    std::cerr << error_message << "\n";
+    sqlite3_free(error_message);
+    throw std::runtime_error("failed at exec from get request by id" );
+  }
+  
+  return result;
+}
