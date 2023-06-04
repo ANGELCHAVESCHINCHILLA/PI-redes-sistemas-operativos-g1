@@ -1,7 +1,7 @@
 // Copyright © Ignacio Robles Mayorga
 
-#ifndef DATABASE_APP_HPP_
-#define DATABASE_APP_HPP_
+#ifndef DATABASE_API_HPP_
+#define DATABASE_API_HPP_
 
 #include <cstring>
 #include <stdexcept>
@@ -9,30 +9,19 @@
 #include <vector>
 
 #include "./Database.hpp"
-#include "../http/HttpApp.hpp"
-#include "../http/HttpRequest.hpp"
-#include "../http/HttpResponse.hpp"
-#include "../url/URL.hpp"
-// TODO: include the requestHandler interface
+#include "../../common/common.hpp"
 
-class DatabaseApp : public HttpApp {
-  DISABLE_COPY(DatabaseApp);
-
- protected: 
-  // vector de requestHandlers
+class DatabaseAPI {
+  DISABLE_COPY(DatabaseAPI);
 
  public:
   // Default constructor
-  DatabaseApp();
+  DatabaseAPI();
 
   // Default destructor
-  ~DatabaseApp();
+  ~DatabaseAPI();
 
   Database& database = Database::getInstance("database.bd");
-
-  bool start() override;
-
-  bool run(HttpRequest& request, HttpResponse& response) override;
 
   /**
    * @brief consults the vacation balance a user has
@@ -118,11 +107,7 @@ class DatabaseApp : public HttpApp {
    * @return std::vector<std::string> the request of id requestID
    */
   std::vector<std::string> getRequestByID(const int requestID) const;
-
- private:
-
-  void initHandlers();
   
 };
 
-#endif  // DATABASE_APP_HPP_
+#endif  // DATABASE_API_HPP_

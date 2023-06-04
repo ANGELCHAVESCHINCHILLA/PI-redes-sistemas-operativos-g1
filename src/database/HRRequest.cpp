@@ -3,7 +3,6 @@
 #include "HRRequest.hpp"
 
 #include <sstream>
-#include <iostream> // remove later
 
 const std::string HRRequest::CREATE_TABLE_QUERY =
     R"(CREATE TABLE IF NOT EXISTS HRRequest (

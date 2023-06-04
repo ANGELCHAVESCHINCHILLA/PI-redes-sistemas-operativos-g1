@@ -1,30 +1,13 @@
 // Copyright © Ignacio Robles Mayorga
 
-#include "./DatabaseApp.hpp"
-// TODO: include all requestHandlers
+#include "./DatabaseAPI.hpp"
 
-DatabaseApp::DatabaseApp() {
-  // this->initHandlers();
-  // this->database = Database::getInstance(path);
+DatabaseAPI::DatabaseAPI() {
+  
 }
 
-DatabaseApp::~DatabaseApp() {
+DatabaseAPI::~DatabaseAPI() {
 
-}
-
-bool DatabaseApp::start() {
-  return true;
-}
-
-bool DatabaseApp::run(HttpRequest& request, HttpResponse& response) {
-  /*
-  for (auto& handler : this->requestHandlers) {
-    if (handler->canHandle(request, response)) {
-      return true;
-    }
-  }
-  */
-  return false;
 }
 
 static int consultVacationBalanceByUserCallback(void* NotUsed, int argc, char** argv, char** szColName) {
@@ -33,7 +16,7 @@ static int consultVacationBalanceByUserCallback(void* NotUsed, int argc, char** 
   return 0;
 }
 
-std::string DatabaseApp::consultVacationBalanceByUser(const std::string user) const {
+std::string DatabaseAPI::consultVacationBalanceByUser(const std::string user) const {
   int error = SQLITE_OK;
 
   std::string result = "          ";
@@ -69,7 +52,7 @@ static int consultSalaryByUserCallback(void* NotUsed, int argc, char** argv, cha
   return 0;
 }
 
-std::vector<std::vector<std::string>> DatabaseApp::consultSalaryByUser(const std::string user) const {
+std::vector<std::vector<std::string>> DatabaseAPI::consultSalaryByUser(const std::string user) const {
   int error = SQLITE_OK;
 
   std::vector<std::vector<std::string>> result;
@@ -100,7 +83,7 @@ static int consultRecordAnnotationsByUserCallback(void* NotUsed, int argc, char*
   return 0;
 }
 
-std::vector<std::string> DatabaseApp::consultRecordAnnotationsByUser(const std::string user) const {
+std::vector<std::string> DatabaseAPI::consultRecordAnnotationsByUser(const std::string user) const {
   int error = SQLITE_OK;
 
   std::vector<std::string> result;
@@ -132,7 +115,7 @@ static int consultNameAndEnterpriseByUserCallback(void* NotUsed, int argc, char*
   return 0;
 }
 
-std::vector<std::string> DatabaseApp::consultNameAndEnterpriseByUser(const std::string user) const {
+std::vector<std::string> DatabaseAPI::consultNameAndEnterpriseByUser(const std::string user) const {
   int error = SQLITE_OK;
 
   std::vector<std::string> result;
@@ -169,7 +152,7 @@ static int consultRequestsMadeByUserCallback(void* NotUsed, int argc, char** arg
   return 0;
 }
 
-std::vector<std::vector<std::string>> DatabaseApp::consultRequestsMadeByUser(const std::string user) const {
+std::vector<std::vector<std::string>> DatabaseAPI::consultRequestsMadeByUser(const std::string user) const {
   int error = SQLITE_OK;
 
   std::vector<std::vector<std::string>> result;
@@ -193,7 +176,7 @@ std::vector<std::vector<std::string>> DatabaseApp::consultRequestsMadeByUser(con
   return result;
 }
 
-bool DatabaseApp::makeRequest(const std::string user, const std::string requestType,
+bool DatabaseAPI::makeRequest(const std::string user, const std::string requestType,
  const std::string information, const std::string area, const int vacationDays,
  const int vacationStartDate, const int vacationEndDate) const {
   int error = SQLITE_OK;
@@ -240,7 +223,7 @@ static int getRequestsMadeByAreaCallback(void* NotUsed, int argc, char** argv, c
   return 0;
 }
 
-std::vector<std::vector<std::string>> DatabaseApp::getRequestsMadeByArea(const std::string area) const {
+std::vector<std::vector<std::string>> DatabaseAPI::getRequestsMadeByArea(const std::string area) const {
   int error = SQLITE_OK;
 
   std::vector<std::vector<std::string>> result;
@@ -264,7 +247,7 @@ std::vector<std::vector<std::string>> DatabaseApp::getRequestsMadeByArea(const s
   return result;
 }
 
-bool DatabaseApp::checkRequest(const int requestID, const int state, const std::string feedback) const {
+bool DatabaseAPI::checkRequest(const int requestID, const int state, const std::string feedback) const {
   int error = SQLITE_OK;
 
   bool result = false;
@@ -299,7 +282,7 @@ static int getRequestByIDCallback(void* NotUsed, int argc, char** argv, char** s
   return 0;
 }
 
-std::vector<std::string> DatabaseApp::getRequestByID(const int requestID) const {
+std::vector<std::string> DatabaseAPI::getRequestByID(const int requestID) const {
   int error = SQLITE_OK;
 
   std::vector<std::string> result;
