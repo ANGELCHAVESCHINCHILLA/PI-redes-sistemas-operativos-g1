@@ -7,13 +7,13 @@
 const std::string Annotation::CREATE_TABLE_QUERY =
     R"(CREATE TABLE IF NOT EXISTS Annotation (
     User CHAR(16),
-    ID INT,
+    ID INTEGER PRIMARY KEY,
     Information CHAR(256)
 );
 )";
 
 const std::string Annotation::INSERT_INTO_QUERY =
-    R"(INSERT INTO Annotation (User, ID, Information) )";
+    R"(INSERT INTO Annotation (User, Information) )";
 
 const std::string Annotation::SELECT_FROM_QUERY = R"(SELECT * FROM Annotation )";
 
@@ -35,9 +35,7 @@ std::string Annotation::getInsertIntoQuery() const {
   ss << Annotation::INSERT_INTO_QUERY;
   ss << "VALUES ('";
   ss << this->user;
-  ss << "', ";
-  ss << this->id;
-  ss << ", '";
+  ss << "', '";
   ss << this->information;
   ss << "');";
 

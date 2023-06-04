@@ -16,7 +16,7 @@ class HRRequest {
  private:
   std::string user;
   int id;
-  byte state;
+  int state;
   std::string padding;
   std::string information;
   std::string feedback;
@@ -49,7 +49,7 @@ class HRRequest {
  public:
   const std::string& getUser() const;
   int getID() const;
-  byte getState() const;
+  int getState() const;
   const std::string& getPadding() const;
   const std::string& getInformation() const;
   const std::string& getFeedback() const;
@@ -72,7 +72,7 @@ class HRRequest::Builder {
  public:
   Builder& setUser(const std::string& value);
   Builder& setID(int value);
-  Builder& setState(byte value);
+  Builder& setState(int value);
   Builder& setPadding(const std::string& value);
   Builder& setInformation(const std::string& value);
   Builder& setFeedback(const std::string& value);

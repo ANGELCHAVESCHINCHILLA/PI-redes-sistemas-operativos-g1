@@ -3,11 +3,12 @@
 #include "HRRequest.hpp"
 
 #include <sstream>
+#include <iostream> // remove later
 
 const std::string HRRequest::CREATE_TABLE_QUERY =
     R"(CREATE TABLE IF NOT EXISTS HRRequest (
     User CHAR(16),
-    ID INT,
+    ID INTEGER PRIMARY KEY,
     State TINYINT,
     Padding BLOB(391),
     Information BLOB(412),
@@ -21,7 +22,7 @@ const std::string HRRequest::CREATE_TABLE_QUERY =
 )";
 
 const std::string HRRequest::INSERT_INTO_QUERY =
-    R"(INSERT INTO HRRequest (User, ID, State, Padding, Information, Feedback, RequestType, VacationDays, VacationStartDate, VacationEndDate, Area) )";
+    R"(INSERT INTO HRRequest (User, State, Padding, Information, Feedback, RequestType, VacationDays, VacationStartDate, VacationEndDate, Area) )";
 
 const std::string& HRRequest::getUser() const {
   return this->user;
@@ -31,7 +32,7 @@ int HRRequest::getID() const {
   return this->id;
 }
 
-byte HRRequest::getState() const {
+int HRRequest::getState() const {
   return this->state;
 }
 
@@ -74,8 +75,6 @@ std::string HRRequest::getInsertIntoQuery() const {
   ss << "VALUES ('";
   ss << this->user;
   ss << "', '";
-  ss << this->id;
-  ss << "', '";
   ss << this->state;
   ss << "', '";
   ss << this->padding;
@@ -108,7 +107,7 @@ HRRequest::Builder& HRRequest::Builder::setID(int value) {
   return *this;
 }
 
-HRRequest::Builder& HRRequest::Builder::setState(byte value) {
+HRRequest::Builder& HRRequest::Builder::setState(int value) {
   this->object.state = value;
   return *this;
 }
