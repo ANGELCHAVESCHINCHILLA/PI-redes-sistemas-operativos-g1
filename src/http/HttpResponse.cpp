@@ -3,7 +3,7 @@
 #include "HttpResponse.hpp"
 
 #include <iostream>
-
+#include <string_view>
 HttpResponse::HttpResponse(const std::string& output)
   : output(output)
   , sharedBody{new std::stringstream()} {
@@ -45,7 +45,7 @@ bool HttpResponse::buildResponse() {
 
   this->output += (*this->sharedBody).str();
 
-  std::cout << "respuesta generada:\n"<< this->output << std::endl << std::endl;
+  // std::cout << "respuesta generada:\n"<< this->output << std::endl << std::endl;
 
   return true;
 }
@@ -84,6 +84,36 @@ bool HttpResponse::setStatusCode(int statusCode,
 
   // Status code is not standard and no reason phrase was provided, reject it
   return false;
+}
+
+void HttpResponse::parseHttpResponse(const std::string& response) {
+    std::istringstream responseStream(response);
+
+    std::string statusLine;
+
+    // Leer la línea de estado
+    std::getline(responseStream, statusLine);
+
+    // Extraer el código de estado
+    std::istringstream statusLineStream(statusLine);
+    statusLineStream >> this->httpVersion;
+    statusLineStream >> this->statusCode;
+    statusLineStream >> this->reasonPhrase;
+
+    // Leer los encabezados
+    std::string line;
+    while (std::getline(responseStream, line) && line != "\r") {
+      size_t colonPos = line.find(':');
+      if (colonPos != std::string::npos) {
+        std::string_view keyView(line.data(), colonPos);
+        std::string_view valueView(line.data() + colonPos + 1
+          , line.size() - colonPos - 1);
+        this->headers.emplace(std::string(keyView), std::string(valueView));
+      }
+    }
+
+    // Leer el cuerpo de la respuesta
+    *this->sharedBody << responseStream.str();
 }
 
 // {Code, "Reason-Phrase"}

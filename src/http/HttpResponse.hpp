@@ -66,6 +66,8 @@ class HttpResponse : public HttpMessage {
 
   inline const std::string& getOutput() const { return this->output; }
 
+  inline int getStatusCode() const { return this->statusCode; }
+
   std::string getHeader(const std::string& key
     , const std::string& defaultvalue = "");
 
@@ -78,6 +80,8 @@ class HttpResponse : public HttpMessage {
 
 
  public:
+  void parseHttpResponse(const std::string& response);
+
   inline void setHeader(const std::string& key, const std::string& value) {
     this->headers[key] = value;
   }

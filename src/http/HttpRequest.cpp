@@ -18,13 +18,33 @@ std::string HttpRequest::toString() {
   std::stringstream ss;
 
   ss << this->method << " " << this->target.getInput() << " " <<
-    this->httpVersion << "\n";
+    this->httpVersion;
 
   for (auto& [key, value] : this->headers) {
     ss << key << ": " << value << "\n";
   }
 
   ss << "\n";
+
+  ss << this->body;
+
+  return ss.str();
+}
+
+std::string HttpRequest::buildString() {
+  std::stringstream ss;
+
+  ss << this->method << " " << this->target.getPath() << " " <<
+    this->httpVersion;
+
+  ss << HttpMessage::lineSeparator;
+
+  for (auto& [key, value] : this->headers) {
+    ss << key << ": " << value;
+    ss << HttpMessage::lineSeparator;
+  }
+
+  ss << HttpMessage::lineSeparator;
 
   ss << this->body;
 

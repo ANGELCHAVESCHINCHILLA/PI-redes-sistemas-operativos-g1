@@ -8,6 +8,7 @@
 #include "../http/HttpApp.hpp"
 #include "../url/URL.hpp"
 #include "LoginHandler.hpp"
+#include "StaticHandler.hpp"
 #include "../http/HttpResponse.hpp"
 #include "../http/HttpRequest.hpp"
 
@@ -18,6 +19,7 @@ class GuachisWebApp : public HttpApp {
 
  protected:
   std::vector<HttpRequestHandler*> requestHandlers;
+  
 
  public:
   GuachisWebApp();

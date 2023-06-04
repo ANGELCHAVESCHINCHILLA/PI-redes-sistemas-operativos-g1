@@ -3,6 +3,7 @@
 #include "Socket.hpp"
 
 #include <sys/socket.h>
+#include <cassert>
 #include <netdb.h>
 #include <string.h>
 #include <unistd.h>
@@ -168,6 +169,17 @@ struct SharedSocket {
     return error;
   }
 
+  int connect(const struct addrinfo* address) {
+    assert(address);
+    int error = ::connect(this->fileDescriptor, address->ai_addr
+                    , address->ai_addrlen);
+    if (error == -1) {
+      return SocketError::CANT_CONNECT_SOCKET;
+    } else {
+      return SocketError::OK_SOCKET;
+    }
+  }
+
   int send(const std::string& data) {
     int error = SocketError::OK_SOCKET;
     const char* buffer = data.c_str();
@@ -263,6 +275,10 @@ int Socket::accept(Socket& socket) {
 
 int Socket::connect(const std::string& address, int port) {
   return this->sharedSocket->connect(address, port);
+}
+
+int Socket::connect(const struct addrinfo* address) {
+  return this->sharedSocket->connect(address);
 }
 
 int Socket::send(const std::string& data) {

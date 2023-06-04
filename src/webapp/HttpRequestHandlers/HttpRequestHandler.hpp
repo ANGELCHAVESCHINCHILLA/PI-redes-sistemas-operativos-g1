@@ -1,4 +1,4 @@
-// Copyright © 2023 Ángel Chaves Chinchilla
+// Copyright © 2023 Ángel Chaves Chinchilla, Camilo Suárez Sandí
 
 #ifndef HTTP_REQUEST_HANDLER
 #define HTTP_REQUEST_HANDLER
@@ -20,6 +20,8 @@ class HttpRequestHandler {
   HttpRequestHandler() = default;
   /// Destructor
   virtual ~HttpRequestHandler() = default;
+
+  static std::map<std::string, std::string> CONTENT_TYPE_MAP;
 
   public:
   /**
@@ -46,8 +48,19 @@ class HttpRequestHandler {
                           const std::string& contentType,
                           const std::string& charset = "; charset=utf-8");
 
+  static bool serveStatic(const HttpRequest& request, HttpResponse& response);
+
+  static bool servePage(const HttpRequest& request, HttpResponse& response,
+    const std::string& path);
+
   // Read the file and write the text in the HTTP response
-  static void readFile(std::ostream& output, const std::string& path);
+  static bool readFile(std::ostream& output, const std::string& relative_path);
+
+  // static std::string readFileToString(const std::string& relative_path);
+
+  static std::string getContentType(const HttpRequest& request
+    , const std::string& path);
+
 };
 
 #endif  // HTTP_REQUEST_HANDLER

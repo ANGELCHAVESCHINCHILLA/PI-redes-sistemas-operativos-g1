@@ -12,7 +12,7 @@ LIBS=-lcrypto -lsqlite3 -ljsoncpp
 LINTF=-build/header_guard,-build/include_subdir
 LINTC=$(LINTF),-readability/casting
 LINTX=$(LINTF),-build/c++11,-runtime/references
-ARGS= configuration.json
+ARGS=configuration.json
 
 # Directories
 BIN_DIR=bin

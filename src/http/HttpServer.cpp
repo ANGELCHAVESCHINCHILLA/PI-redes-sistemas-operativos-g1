@@ -92,7 +92,11 @@ void HttpServer::handleClientConnection(const std::string& request
       // client
       if (client.send(http_response.getOutput()) != SocketError::OK_SOCKET) {
         // If could not sent data then close the connection
+        std::cout << "No se logró enviar la respuesta \n" << std::endl;
         client.close();
+      } else {
+        std::cout << "Respuesta enviada: \n" << std::endl;
+        std::cout << http_response.getOutput() << std::endl;
       }
     }
   //   break;

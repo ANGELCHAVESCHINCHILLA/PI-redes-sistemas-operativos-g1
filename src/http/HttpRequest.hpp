@@ -31,6 +31,8 @@ class HttpRequest : public HttpMessage {
    */
   explicit HttpRequest(const std::string& input);
 
+  HttpRequest();
+
   /**
    * @brief Destructor.
    *
@@ -51,6 +53,9 @@ class HttpRequest : public HttpMessage {
 
   std::string toString();
 
+  // used for send a http request
+  std::string buildString();
+
  public:  // accessors
 
   inline const std::string& getMethod() const { return this->method; }
@@ -58,6 +63,12 @@ class HttpRequest : public HttpMessage {
   inline const URL& getTarget() const { return this->target; }
 
   inline const std::string& getBody() const { return this->body; }
+
+  inline bool hasHeader(const std::string& key) const {
+    return this->headers.count(key) > 0; }
+
+  inline std::string getHeader(const std::string& key) const {
+    return this->headers.at(key); }
 
  private:
   void parse(std::string& input);

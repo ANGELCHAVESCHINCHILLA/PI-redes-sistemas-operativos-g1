@@ -109,6 +109,8 @@ class Socket {
    */
   int connect(const std::string& address, int port);
 
+  int connect(const struct addrinfo* address);
+
   /**
    * @brief Send data to the socket.
    *
