@@ -192,3 +192,37 @@ std::vector<std::vector<std::string>> DatabaseApp::consultRequestsMadeByUser(con
   
   return result;
 }
+
+bool DatabaseApp::makeRequest(const std::string user, const std::string requestType,
+ const std::string information, const std::string area, const int vacationDays,
+ const int vacationStartDate, const int vacationEndDate) const {
+  int error = SQLITE_OK;
+
+  bool result = false;
+
+  HRRequest::Builder builder = HRRequest::Builder();
+
+  builder.setUser(user);
+  // builder.setID(23); // generate it
+  builder.setState(0);
+  builder.setPadding("      "); // ??
+  builder.setInformation(information);
+  builder.setFeedback(" "); // empty for now
+  builder.setRequestType(requestType);
+  builder.setVacationDays(vacationDays);
+  builder.setVacationStartDate(vacationStartDate);
+  builder.setVacationEndDate(vacationEndDate);
+  builder.setArea(area);
+
+  HRRequest hr_request = builder.build();
+
+  error = this->database.addHRRequest(hr_request);
+
+  if (!error) {
+    result = true;
+  } else {
+    std::cerr << "could not add row to HRRequest database" << std::endl;
+  }
+  
+  return result;
+}

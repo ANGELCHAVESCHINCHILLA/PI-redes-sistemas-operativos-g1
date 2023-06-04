@@ -83,13 +83,14 @@ class DatabaseApp : public HttpApp {
    * @param user the user who makes the request
    * @param requestType the request's type
    * @param information the information associated to that request
+   * @param area the area where the request is coming from
    * @param vacationDays the amount of vacation days asked (in case its a vacation request)
    * @param vacationStartDate the date where the vacations start (in case its a vacation request)
    * @param vacationEndDate the date where the vacations end (in case its a vacation request)
    * @return true if the inserting of the row was successfull
    * @return false if it wasn't possible to insert the row
    */
-  bool makeRequest(const std::string user, const std::string requestType, const std::string information, const int vacationDays = 0, const int vacationStartDate = 0, const int vacationEndDate = 0) const;
+  bool makeRequest(const std::string user, const std::string requestType, const std::string information, const std::string area, const int vacationDays = 0, const int vacationStartDate = 0, const int vacationEndDate = 0) const;
 
   /**
    * @brief Get the Requests Made in a certain Area
