@@ -2,14 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var buscarBtn = document.getElementById('buscarBtn');
     buscarBtn.addEventListener('click', buscarConstancia);
 
-    function buscarConstancia() {
-        var constanciaId = document.getElementById('constanciaId').value;
-        console.log(constanciaId);
-        var newWindow = window.open('');
-        newWindow.document.write(constanciaId);
-        // TODO: when DB API rest is up, change this to work
-        /*
-        fetch('', {
+    function makeFetch(constanciaId) {
+        fetch('/getConst', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -21,20 +15,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.text();
                 } else {
                     throw new Error('Error en la respuesta del servidor');
+                    return null;
                 }
             })
-            .then(function(data) {
-                // Crear una nueva pestaña y mostrar el contenido obtenido del fetch(constancia)
-                var newWindow = window.open('');
-                newWindow.document.write(data);
-            })
-            .catch(function(error) {
-                console.error('Error al realizar la búsqueda:', error);
-            });
     }
-});
+    function formatInfo(info) {
+        // TODO: finish this according info receiving from the fetch
+        let formattedText;
+        return formattedText;
+    }
+    function buscarConstancia() {
+        var constanciaId = document.getElementById('constanciaId').value;
+        var newWindow = window.open('');
+        newWindow.document.write(constanciaId); // remove this when below TODO is ready
+        // TODO: when DB API rest is up, change this to work
+        /*
+        let info = makeFetch(constanciaId);
+        if (info) {
+            formatInfo(info)
+            newWindow.document.write(constanciaId);
+        }
 
          */
-
     }
 });
