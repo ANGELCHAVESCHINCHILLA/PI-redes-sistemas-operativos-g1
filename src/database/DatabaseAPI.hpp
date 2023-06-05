@@ -98,7 +98,7 @@ class DatabaseAPI {
    * @return true if it was able to edit the state of the request
    * @return false if it was not able to edit the state of the request
    */
-  bool checkRequest(const int requestID, int state, const std::string feedback) const;
+  bool checkRequest(const int requestID, const int state, const std::string feedback) const;
 
   /**
    * @brief Get the Request By ID

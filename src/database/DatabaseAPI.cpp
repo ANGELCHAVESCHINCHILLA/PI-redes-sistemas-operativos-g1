@@ -268,7 +268,8 @@ bool DatabaseAPI::checkRequest(const int requestID, const int state, const std::
   if (error != SQLITE_OK) {
     std::cerr << error_message << "\n";
     sqlite3_free(error_message);
-    throw std::runtime_error("failed at exec from check requests" );
+  } else {
+    result = true;
   }
   
   return result;
