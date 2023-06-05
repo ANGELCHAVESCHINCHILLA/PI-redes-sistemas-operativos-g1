@@ -1,15 +1,20 @@
 // Copyright © Ignacio Robles Mayorga
 
 #include "./DatabaseWebApp.hpp"
+#include "HttpRequestHandlers/ConsultVacationHandler.hpp"
 // TODO: include all requestHandlers
 
 DatabaseWebApp::DatabaseWebApp() {
-  // this->initHandlers();
-  // this->database = Database::getInstance(path);
+  this->databaseApi = new DatabaseAPI();
+  this->initHandlers();
 }
 
 DatabaseWebApp::~DatabaseWebApp() {
+  delete this->databaseApi;
+}
 
+void DatabaseWebApp::initHandlers() {
+  this->requestHandlers.push_back(new ConsultVacationHandler(this->databaseApi));
 }
 
 bool DatabaseWebApp::start() {
@@ -17,12 +22,10 @@ bool DatabaseWebApp::start() {
 }
 
 bool DatabaseWebApp::run(HttpRequest& request, HttpResponse& response) {
-  /*
   for (auto& handler : this->requestHandlers) {
     if (handler->canHandle(request, response)) {
       return true;
     }
   }
-  */
   return false;
 }

@@ -3,6 +3,9 @@
 #ifndef DATABASE_REQUEST_HANDLER_HPP_
 #define DATABASE_REQUEST_HANDLER_HPP_
 
+#include <iostream>
+#include <string>
+
 #include "../../http/HttpRequest.hpp"
 #include "../../http/HttpResponse.hpp"
 #include "../../common/common.hpp"
@@ -29,6 +32,6 @@ class DatabaseRequestHandler {
    * @return false if it can't handle the response
    */
   virtual bool canHandle(HttpRequest& request, HttpResponse& response) = 0;
-}
+};
 
 #endif // DATABASE_REQUEST_HANDLER_HPP_

@@ -13,13 +13,14 @@
 #include "../http/HttpRequest.hpp"
 #include "../http/HttpResponse.hpp"
 #include "../url/URL.hpp"
-// TODO: include the requestHandler interface
+#include "HttpRequestHandlers/DatabaseRequestHandler.hpp"
 
 class DatabaseWebApp : public HttpApp {
   DISABLE_COPY(DatabaseWebApp);
 
  protected: 
-  // vector de requestHandlers
+  std::vector<DatabaseRequestHandler*> requestHandlers;
+  DatabaseAPI* databaseApi;
 
  public:
   // Default constructor
