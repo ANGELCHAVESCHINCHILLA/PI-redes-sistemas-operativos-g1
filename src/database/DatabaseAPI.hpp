@@ -34,7 +34,7 @@ class DatabaseAPI {
   /**
    * @brief consults the salary information of a certain user
    * 
-   * @param user the user whose salaty info will be returned
+   * @param user the user whose salary info will be returned
    * @return std::vector<std::vector<std::string>> a list of all salaries a given user has had
    */
   std::vector<std::vector<std::string>> consultSalaryByUser(const std::string user) const;

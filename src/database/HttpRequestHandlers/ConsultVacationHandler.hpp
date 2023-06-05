@@ -20,7 +20,7 @@ class ConsultVacationHandler : public DatabaseRequestHandler {
       // print user
       std::cout << user << std::endl;
 
-      // insert use into api to get the vacation balance
+      // insert user into api to get the vacation balance
       std::string vacationBalance = this->databaseApi->consultVacationBalanceByUser(user);
       // build the response
       response.setHeader("Content-Type", "text/plain");
