@@ -3,6 +3,8 @@
 #include "./DatabaseWebApp.hpp"
 #include "HttpRequestHandlers/ConsultVacationHandler.hpp"
 #include "HttpRequestHandlers/ConsultSalaryHandler.hpp"
+#include "HttpRequestHandlers/ConsultAnnotationsHandler.hpp"
+
 // TODO: include all requestHandlers
 
 DatabaseWebApp::DatabaseWebApp() {
@@ -17,6 +19,7 @@ DatabaseWebApp::~DatabaseWebApp() {
 void DatabaseWebApp::initHandlers() {
   this->requestHandlers.push_back(new ConsultVacationHandler(this->databaseApi));
   this->requestHandlers.push_back(new ConsultSalaryHandler(this->databaseApi));
+  this->requestHandlers.push_back(new ConsultAnnotationsHandler(this->databaseApi));
 }
 
 bool DatabaseWebApp::start() {
