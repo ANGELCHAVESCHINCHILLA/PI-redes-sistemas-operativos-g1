@@ -8,8 +8,7 @@
 #include "HttpRequestHandlers/ConsultRequestsByAreaHandler.hpp"
 #include "HttpRequestHandlers/ConsultRequestsByIDHandler.hpp"
 #include "HttpRequestHandlers/MakeRequestHandler.hpp"
-
-// TODO: include all requestHandlers
+#include "HttpRequestHandlers/CheckRequestHandler.hpp"
 
 DatabaseWebApp::DatabaseWebApp() {
   this->databaseApi = new DatabaseAPI();
@@ -28,6 +27,7 @@ void DatabaseWebApp::initHandlers() {
   this->requestHandlers.push_back(new ConsultRequestsByAreaHandler(this->databaseApi));
   this->requestHandlers.push_back(new ConsultRequestsByIDHandler(this->databaseApi));
   this->requestHandlers.push_back(new MakeRequestHandler(this->databaseApi));
+  this->requestHandlers.push_back(new CheckRequestHandler(this->databaseApi));
 }
 
 bool DatabaseWebApp::start() {
