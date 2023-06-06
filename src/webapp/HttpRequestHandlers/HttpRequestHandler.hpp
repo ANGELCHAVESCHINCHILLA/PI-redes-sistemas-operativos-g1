@@ -1,7 +1,7 @@
 // Copyright © 2023 Ángel Chaves Chinchilla, Camilo Suárez Sandí
 
-#ifndef HTTP_REQUEST_HANDLER
-#define HTTP_REQUEST_HANDLER
+#ifndef WEBAPP_HTTP_REQUEST_HANDLER
+#define WEBAPP_HTTP_REQUEST_HANDLER
 
 #include "../../http/HttpRequest.hpp"
 #include "../../http/HttpResponse.hpp"
@@ -59,4 +59,4 @@ class HttpRequestHandler {
 
 };
 
-#endif  // HTTP_REQUEST_HANDLER
+#endif  // WEBAPP_HTTP_REQUEST_HANDLER

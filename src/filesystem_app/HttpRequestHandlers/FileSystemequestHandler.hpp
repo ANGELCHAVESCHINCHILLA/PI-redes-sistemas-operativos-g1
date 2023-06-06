@@ -1,7 +1,7 @@
 // Copyright © 2023 Ángel Chaves Chinchilla
 
-#ifndef HTTP_REQUEST_HANDLER
-#define HTTP_REQUEST_HANDLER
+#ifndef FILESYSTEM_APP_HTTP_REQUEST_HANDLER
+#define FILESYSTEM_APP_HTTP_REQUEST_HANDLER
 
 #include "../../http/HttpRequest.hpp"
 #include "../../http/HttpResponse.hpp"
@@ -35,4 +35,4 @@ class FileSystemRequestHandler {
 
 };
 
-#endif  // HTTP_REQUEST_HANDLER
+#endif  // FILESYSTEM_APP_HTTP_REQUEST_HANDLER

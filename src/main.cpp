@@ -9,12 +9,12 @@
 #include <iostream>
 
 #include "configuration.hpp"
+#include "database/DatabaseWebApp.hpp"
 #include "error.hpp"
 #include "filesystem_app/FileSystemWebApp.hpp"
 #include "http/HttpServer.hpp"
 #include "menu/FSMenu.hpp"
 #include "webapp/GuachisWebApp.hpp"
-// #include "filesystem_app/FileSystemWebApp.hpp"
 
 int main(int argc, char** argv) {
   int error = EXIT_SUCCESS;
@@ -42,7 +42,9 @@ int main(int argc, char** argv) {
       std::string address = "127.0.0.1";
 
       if (configuration.hasApp("web")) {
-        // GuachisWebApp webapp;
+        GuachisWebApp webapp;
+
+        HttpServer::getInstance().appendApp(&webapp);
       }
 
       if (configuration.hasApp("fs")) {
@@ -52,7 +54,9 @@ int main(int argc, char** argv) {
       }
 
       if (configuration.hasApp("db")) {
-        // DatabaseWebApp webapp;
+        DatabaseWebApp webapp;
+
+        HttpServer::getInstance().appendApp(&webapp);
       }
 
       // Start the web server
