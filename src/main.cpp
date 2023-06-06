@@ -4,6 +4,8 @@
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
 
+#ifndef TEST
+
 #include <signal.h>
 
 #include <iostream>
@@ -70,3 +72,5 @@ int main(int argc, char** argv) {
 
   return error;
 }
+
+#endif  // TEST
