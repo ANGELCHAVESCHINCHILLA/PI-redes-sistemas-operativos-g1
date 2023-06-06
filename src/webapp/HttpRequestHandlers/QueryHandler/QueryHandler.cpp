@@ -8,7 +8,7 @@
 bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "GET") {
-    if (request.getTarget().getFullPath().find("consult") != std::string::npos) {
+    if (request.getTarget().getPath().find("consult") != std::string::npos) {
       // create a Tcp Client
       std::shared_ptr<TcpClient> client(new TcpClient);
       // Connect the socket of the TCP Client with the Data Base Server
@@ -22,7 +22,7 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         // receive the response of the server
         error = DBSocket.receive(result);
       } else {
-        throw std::runtime_error(request.getTarget().getFullPath()
+        throw std::runtime_error(request.getTarget().getPath()
           + ": Could not be sent to Data Base Server");
       }
 

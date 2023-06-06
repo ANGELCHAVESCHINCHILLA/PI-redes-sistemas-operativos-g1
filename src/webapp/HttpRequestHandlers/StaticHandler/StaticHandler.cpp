@@ -5,31 +5,31 @@
 
 bool StaticHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "GET") {
-    if (request.getTarget().getFullPath() == "/") {
+    if (request.getTarget().getPath() == "/") {
       if (this->servePage(request, response, "login.html")) {
         return true;
       }
     }
 
-    if (request.getTarget().getFullPath().rfind("/index.html", 0) == 0) {
+    if (request.getTarget().getPath().rfind("/index.html", 0) == 0) {
       if (this->servePage(request, response, "index.html")) {
         return true;
       }
     }
 
-    if (request.getTarget().getFullPath().rfind("/solicitudes", 0) == 0) {
+    if (request.getTarget().getPath().rfind("/solicitudes", 0) == 0) {
       if (this->servePage(request, response, "solicitudes.html")) {
         return true;
       }
     }
 
-    if (request.getTarget().getFullPath().rfind("/solicitar_vacaciones", 0) == 0) {
+    if (request.getTarget().getPath().rfind("/solicitar_vacaciones", 0) == 0) {
       if (this->servePage(
               request, response, "form_solicitar_vacaciones.html")) {
         return true;
       }
     }
-    if (request.getTarget().getFullPath().rfind("/verificar_constancia", 0) == 0) {
+    if (request.getTarget().getPath().rfind("/verificar_constancia", 0) == 0) {
       if (this->servePage(
               request, response, "verificar_constancia.html")) {
         return true;

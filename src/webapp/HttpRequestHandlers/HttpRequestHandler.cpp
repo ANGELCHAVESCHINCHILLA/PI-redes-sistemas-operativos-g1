@@ -24,7 +24,7 @@ bool HttpRequestHandler::serveStatic(const HttpRequest& request
 
   bool couldServe = false;
     
-  std::string path = request.getTarget().getFullPath();
+  std::string path = request.getTarget().getPath();
 
   std::cout << "Path generada: "<< path << std::endl;
 
