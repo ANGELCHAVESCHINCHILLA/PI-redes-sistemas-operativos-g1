@@ -1,155 +1,135 @@
-# C/C++ Makefile v2.3.0 2021-Nov-05 Jeisson Hidalgo ECCI-UCR CC-BY 4.0
+# Copyright © 2023 Camilo Suárez Sandí
 
-# Compiler and tool flags
-CC=gcc
-XC=g++
-DEFS=	# -DWEBSERVER -DFS_MENU
-FLAG=
-FLAGS=$(strip -Wall -Wextra $(FLAG) $(DEFS))
-FLAGC=$(FLAGS) -std=gnu11
-FLAGX=$(FLAGS) -std=gnu++17
-LIBS=-lcrypto -lsqlite3 -ljsoncpp
-LINTF=-build/header_guard,-build/include_subdir
-LINTC=$(LINTF),-readability/casting
-LINTX=$(LINTF),-build/c++11,-runtime/references
-ARGS=configuration.json
+# Project
+
+PROJECT_NAME = Proyecto Integrador
+PROJECT_ID = proyecto_integrador
+
+# Options
+
+ARGS = configuration.json
+DEFINITIONS = 
+DEPENDENCIES = openssl libssl-dev sqlite3 libsqlite3-dev libjsoncpp-dev libgtest-dev
+LIBRARIES = crypto sqlite3 jsoncpp gtest gtest_main
+
+LINT = --filter=-build/include_subdir --quiet
+
+# Language
+
+CC = gcc
+CXX = g++
+
+CC_VERSION = -std=gnu17
+CXX_VERSION = -std=gnu++20
+
+# Flags
+
+FLAGS = -Wall -Wextra
 
 # Directories
-BIN_DIR=bin
-OBJ_DIR=build
-DOC_DIR=doc
-SRC_DIR=src
-TST_DIR=tests
 
-# If src/ dir does not exist, use current directory .
-ifeq "$(wildcard $(SRC_DIR) )" ""
-	SRC_DIR=.
-endif
+SRC_DIR = src
+TEST_DIR = test
+BUILD_DIR = build
+BIN_DIR = bin
 
 # Files
-DIRS=$(shell find -L $(SRC_DIR) -type d)
-APPNAME=$(shell basename $(shell pwd))
-HEADERC=$(wildcard $(DIRS:%=%/*.h))
-HEADERX=$(wildcard $(DIRS:%=%/*.hpp))
-SOURCEC=$(wildcard $(DIRS:%=%/*.c))
-SOURCEX=$(wildcard $(DIRS:%=%/*.cpp))
-INPUTFC=$(strip $(HEADERC) $(SOURCEC))
-INPUTFX=$(strip $(HEADERX) $(SOURCEX))
-INPUTCX=$(strip $(INPUTFC) $(INPUTFX))
-OBJECTC=$(SOURCEC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-OBJECTX=$(SOURCEX:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-OBJECTS=$(strip $(OBJECTC) $(OBJECTX))
-TESTINF=$(wildcard $(TST_DIR)/input*.txt)
-TESTOUT=$(TESTINF:$(TST_DIR)/input%.txt=$(OBJ_DIR)/output%.txt)
-INCLUDE=$(DIRS:%=-I%)
-DEPENDS=$(OBJECTS:%.o=%.d)
-IGNORES=$(BIN_DIR) $(OBJ_DIR) $(DOC_DIR)
-EXEFILE=$(BIN_DIR)/$(APPNAME)
-EXEARGS=$(strip $(EXEFILE) $(ARGS))
-LD=$(if $(SOURCEC),$(CC),$(XC))
+
+C_SRC_FILES = $(shell find $(SRC_DIR) -type f -name '*.c')
+CPP_SRC_FILES = $(shell find $(SRC_DIR) -type f -name '*.cpp')
+
+C_TEST_SRC_FILES = $(shell find $(TEST_DIR) -type f -name '*.c')
+CPP_TEST_SRC_FILES = $(shell find $(TEST_DIR) -type f -name '*.cpp')
+
+C_OBJECT_FILES = $(C_SRC_FILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+CPP_OBJECT_FILES = $(CPP_SRC_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+
+C_TEST_OBJECT_FILES = \
+	$(C_TEST_SRC_FILES:$(TEST_DIR)/%.c=$(BUILD_DIR)/%.o)
+CPP_TEST_OBJECT_FILES = \
+	$(CPP_TEST_SRC_FILES:$(TEST_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+
+EXE_FILES = $(C_OBJECT_FILES) $(CPP_OBJECT_FILES)
+TEST_EXE_FILES = $(EXE_FILES) $(C_TEST_OBJECT_FILES) $(CPP_TEST_OBJECT_FILES)
+
+EXE = $(BIN_DIR)/$(PROJECT_ID)
+TEST_EXE = $(BIN_DIR)/$(TEST_DIR)/$(PROJECT_ID)
+
+LINT_FILES = $(C_SRC_FILES) $(CPP_SRC_FILES) \
+	$(C_HEADER_SRC_FILES) $(CPP_HEADER_SRC_FILES) \
+	$(C_TEST_SRC_FILES) $(CPP_TEST_SRC_FILES) \
+	$(C_HEADER_TEST_SRC_FILES) $(CPP_HEADER_TEST_SRC_FILES)
 
 # Targets
-default: debug
-all: doc lint memcheck helgrind test
-debug: FLAGS += -g
-debug: $(EXEFILE)
-release: FLAGS += -O3 -DNDEBUG
-release: $(EXEFILE)
-asan: FLAGS += -fsanitize=address -fno-omit-frame-pointer
-asan: debug
-msan: FLAGS += -fsanitize=memory
-msan: CC = clang
-msan: XC = clang++
-msan: debug
-tsan: FLAGS += -fsanitize=thread
-tsan: debug
-ubsan: FLAGS += -fsanitize=undefined
-ubsan: debug
 
--include *.mk $(DEPENDS)
-.SECONDEXPANSION:
+.PHONY: all build run test clean install lint check help
 
-# Linker call
-$(EXEFILE): $(OBJECTS) | $$(@D)/.
-	$(LD) $(FLAGS) $(INCLUDE) $^ -o $@ $(LIBS)
+all: build
 
-# Compile C source file
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $$(@D)/.
-	$(CC) -c $(FLAGC) $(INCLUDE) -MMD $< -o $@
+build: $(EXE)
 
-# Compile C++ source file
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $$(@D)/.
-	$(XC) -c $(FLAGX) $(INCLUDE) -MMD $< -o $@
+$(EXE): $(EXE_FILES)
+	@mkdir -p $(BIN_DIR)
+	$(CXX) $^ -o $@ $(addprefix -l, $(LIBRARIES))
 
-# Create a subdirectory if not exists
-.PRECIOUS: %/.
-%/.:
-	mkdir -p $(dir $@)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CC_VERSION) $(FLAGS) -c $< -o $@ $(addprefix -D, $(DEFINITIONS))
 
-# Test cases
-.PHONY: test
-test: $(EXEFILE) $(TESTOUT)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXX_VERSION) $(FLAGS) -c $< -o $@ $(addprefix -D, $(DEFINITIONS))
 
-$(OBJ_DIR)/output%.txt: SHELL:=/bin/bash
-$(OBJ_DIR)/output%.txt: $(TST_DIR)/input%.txt $(TST_DIR)/output%.txt
-	icdiff --no-headers $(word 2,$^) <($(EXEARGS) < $<)
+run: build
+	$(EXE) $(ARGS)
 
-# Documentation
-doc: $(INPUTCX)
-	doxygen
+test: DEFINITIONS += TEST
+test: $(TEST_EXE)
+	$(TEST_EXE) $(ARGS)
 
-# Utility rules
-.PHONY: lint run memcheck helgrind gitignore clean instdeps
+$(TEST_EXE): $(TEST_EXE_FILES)
+	@mkdir -p $(BIN_DIR)/$(TEST_DIR)
+	$(CXX) $^ -o $@ $(addprefix -l, $(LIBRARIES))
 
-lint:
-ifneq ($(INPUTFC),)
-	cpplint --filter=$(LINTC) $(INPUTFC)
-endif
-ifneq ($(INPUTFX),)
-	cpplint --filter=$(LINTX) $(INPUTFX)
-endif
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CC_VERSION) $(FLAGS) -I$(SRC_DIR) -c $< -o $@ \
+	$(addprefix -D, $(DEFINITIONS))
 
-run: $(EXEFILE)
-	$(EXEARGS)
-
-memcheck: $(EXEFILE)
-	valgrind --tool=memcheck $(EXEARGS)
-
-helgrind: $(EXEFILE)
-	valgrind --quiet --tool=helgrind $(EXEARGS)
-
-gitignore:
-	echo $(IGNORES) | tr " " "\n" > .gitignore
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXX_VERSION) $(FLAGS) -I$(SRC_DIR) -c $< -o $@ \
+	$(addprefix -D, $(DEFINITIONS))
 
 clean:
-	rm -rf $(IGNORES)
+	rm -fr $(BUILD_DIR) $(BIN_DIR)
 
-# Install dependencies (Debian)
 install:
-	sudo apt install build-essential clang valgrind icdiff doxygen \
-	python3-pip \
-	openssl libssl-dev \
-	sqlite3 libsqlite3-dev \
-	libjsoncpp-dev \
-	&& sudo pip3 install cpplint
+	sudo apt install python3
+	sudo apt install python3-pip
+	pip3 install cpplint
+	sudo apt install $(DEPENDENCIES)
+
+lint:
+	python3 -m cpplint $(LINT) $(LINT_FILES)
+
+check: test lint
+
+asan: FLAGS += -fsanitize=address
+asan: build
+
+tsan: FLAGS += -fsanitize=thread
+tsan: build
 
 help:
-	@echo "Usage make [-jN] [VAR=value] [target]"
-	@echo "  -jN       Compile N files simultaneously [N=1]"
-	@echo "  VAR=value Overrides a variable, e.g CC=mpicc DEFS=-DGUI"
-	@echo "  all       Run targets: doc lint [memcheck helgrind] test"
-	@echo "  asan      Build for detecting memory leaks and invalid accesses"
-	@echo "  clean     Remove generated directories and files"
-	@echo "  debug     Build an executable for debugging [default]"
-	@echo "  doc       Generate documentation from sources with Doxygen"
-	@echo "  gitignore Generate a .gitignore file"
-	@echo "  helgrind  Run executable for detecting thread errors with Valgrind"
-	@echo "  instdeps  Install needed packages on Debian-based distributions"
-	@echo "  lint      Check code style conformance using Cpplint"
-	@echo "  memcheck  Run executable for detecting memory errors with Valgrind"
-	@echo "  msan      Build for detecting uninitialized memory usage"
-	@echo "  release   Build an optimized executable"
-	@echo "  run       Run executable using ARGS value as arguments"
-	@echo "  test      Run executable against test cases in folder tests/"
-	@echo "  tsan      Build for detecting thread errors, e.g race conditions"
-	@echo "  ubsan     Build for detecting undefined behavior"
+	@echo "Usage: make [target] [variables]"
+	@echo ""
+	@echo "Targets:"
+	@echo "  build		Build the project."
+	@echo "  run		Run the binary."
+	@echo "  test		Build and run the tests."
+	@echo "  clean		Remove the binary files."
+	@echo "  install	Install the dependencies."
+	@echo "  lint		Run the linter."
+	@echo "  check		Run the tests and the linter."
+	@echo "  help		Print this help message."
