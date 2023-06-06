@@ -27,21 +27,35 @@ class CheckRequestHandler : public DatabaseRequestHandler {
       std::string responseBody;
 
       if (parsed) {
-        // access json data
-        int requestID = requestBody["request_id"].asInt();
-        int state = requestBody["state"].asInt();
-        std::string feedback = requestBody["feedback"].asString();
+        try {
+          // access json data
+          int requestID = requestBody["request_id"].asInt();
+          int state = requestBody["state"].asInt();
+          std::string feedback = requestBody["feedback"].asString();
 
-        // add data to request database
-        bool couldCheckRequest = this->databaseApi->checkRequest(requestID,
-         state, feedback);
+          // check if id is valid
+          bool idIsValid = this->databaseApi->idWasFound(requestID);
 
-        // check for errors while adding data
-        statusCode = couldCheckRequest ? 200 : 400;
-        responseBody = couldCheckRequest ? "Successfully" : "Failed";
+          if (idIsValid) {
+            // add data to request database
+            bool couldCheckRequest = this->databaseApi->checkRequest(requestID,
+            state, feedback);
+
+            // check for errors while adding data
+            statusCode = couldCheckRequest ? 200 : 400;
+            responseBody = couldCheckRequest ? "Successfully" : "Failed";
+          } else {
+            statusCode = 400;
+            responseBody = "id invalid";
+          }
+        } catch(const Json::LogicError err) {
+          std::cerr << err.what() << std::endl;
+          statusCode = 400;
+          responseBody = "JSON values error";
+        }
       } else {
         statusCode = 400;
-        responseBody = "JSON error";
+        responseBody = "JSON format error";
       }
 
       // build the response

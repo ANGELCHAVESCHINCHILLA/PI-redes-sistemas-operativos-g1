@@ -305,3 +305,31 @@ std::vector<std::string> DatabaseAPI::getRequestByID(const int requestID) const 
   
   return result;
 }
+
+static int idWasFoundCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  bool* result = reinterpret_cast<bool*>(NotUsed);
+  *result = true;
+  return 0;
+}
+
+bool DatabaseAPI::idWasFound(const int id) const {
+  int error = SQLITE_OK;
+
+  bool result = false;
+
+  char* error_message;
+
+  std::string query = "SELECT * from HRRequest where ID = ";
+  query.append(std::to_string(id));
+
+  error =
+    sqlite3_exec(this->database.reference, query.c_str(), idWasFoundCallback, &result, &error_message);
+
+  if (error != SQLITE_OK) {
+    result = false;
+    std::cerr << error_message << "\n";
+    sqlite3_free(error_message);
+  }
+  
+  return result;
+}

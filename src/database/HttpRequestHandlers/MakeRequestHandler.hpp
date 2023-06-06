@@ -27,25 +27,31 @@ class MakeRequestHandler : public DatabaseRequestHandler {
       std::string responseBody;
 
       if (parsed) {
-        // access json data
-        std::string user = requestBody["user"].asString();
-        std::string requestType = requestBody["request_type"].asString();
-        std::string information = requestBody["information"].asString();
-        std::string area = requestBody["area"].asString();
-        int vacationDays = requestBody["vacation_days"].asInt();
-        int vacationStartDate = requestBody["vacation_start_date"].asInt();
-        int vacationEndDate = requestBody["vacation_end_date"].asInt();
+        try {
+          // access json data
+          std::string user = requestBody["user"].asString();
+          std::string requestType = requestBody["request_type"].asString();
+          std::string information = requestBody["information"].asString();
+          std::string area = requestBody["area"].asString();
+          int vacationDays = requestBody["vacation_days"].asInt();
+          int vacationStartDate = requestBody["vacation_start_date"].asInt();
+          int vacationEndDate = requestBody["vacation_end_date"].asInt();
 
-        // add data to request database
-        bool couldMakeRequest = this->databaseApi->makeRequest(user, requestType,
-         information, area, vacationDays, vacationStartDate, vacationEndDate);
+          // add data to request database
+          bool couldMakeRequest = this->databaseApi->makeRequest(user, requestType,
+          information, area, vacationDays, vacationStartDate, vacationEndDate);
 
-        // check for errors while adding data
-        statusCode = couldMakeRequest ? 200 : 400;
-        responseBody = couldMakeRequest ? "Successfully" : "Failed";
+          // check for errors while adding data
+          statusCode = couldMakeRequest ? 200 : 400;
+          responseBody = couldMakeRequest ? "Successfully" : "Failed";
+        } catch (const Json::LogicError err) {
+          std::cerr << err.what() << std::endl;
+          statusCode = 400;
+          responseBody = "JSON values error";
+        }
       } else {
         statusCode = 400;
-        responseBody = "JSON error";
+        responseBody = "JSON format error";
       }
 
       // build the response

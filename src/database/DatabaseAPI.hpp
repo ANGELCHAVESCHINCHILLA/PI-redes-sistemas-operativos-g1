@@ -108,6 +108,14 @@ class DatabaseAPI {
    */
   std::vector<std::string> getRequestByID(const int requestID) const;
   
+  /**
+   * @brief checks wether an id is valid in the table or not
+   * 
+   * @param id the id to be found in the table
+   * @return true if it was found
+   * @return false if it wasn't found
+   */
+  bool idWasFound(const int id) const;
 };
 
 #endif  // DATABASE_API_HPP_
