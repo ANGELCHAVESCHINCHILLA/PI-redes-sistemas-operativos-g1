@@ -4,20 +4,33 @@
 #define QUERY_HANDLER
 
 #include "../HttpRequestHandler.hpp"
-#include "authenticator.hpp"
 
 class QueryHandler : public HttpRequestHandler {
  protected:
   /**
-  * @brief 
+  * @brief The database server
   * 
   */
-  Authenticator* authenticator;
+  std::string server;
+
+  /**
+   * @brief Port in which database server is listenning
+   * 
+   */
+  std::string port;
 
  public:
-  // TODO (any): look if needed
-  DECLARE_RULE4(QueryHandler, default);
+  DISABLE_COPY(QueryHandler);
 
+  QueryHandler() = default;
+
+  /**
+   * @brief Construct a new Login Handler object
+   * 
+   * @param server The filesystem server
+   * @param port Port in which filesystem server is listenning
+   */
+  QueryHandler(const std::string& server, const std::string& port);
   /**
    * @brief 
    * 
@@ -27,6 +40,14 @@ class QueryHandler : public HttpRequestHandler {
    * @return false 
    */
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
+
+  inline void setServer(const std::string& server);
+
+  inline void setPort(const std::string& port);
+
+  bool serveAuthFailed(HttpRequest& httpRequest,
+                                    HttpResponse& httpResponse);
 };
+
 
 #endif  // QUERY_HANDLER

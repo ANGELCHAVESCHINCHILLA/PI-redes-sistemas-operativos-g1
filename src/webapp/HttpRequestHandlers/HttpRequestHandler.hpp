@@ -38,20 +38,16 @@ class HttpRequestHandler {
    *
    * @param httpRequest An HTTP request.
    * @param httpResponse An HTTP response.
-   * @param path The path of the file, relative to the project directory.
-   * @param contentType The content type of the file.
    * @return true If the request was successfully handled by this app.
    */
-  static bool serveStatic(HttpRequest& httpRequest,
-                          HttpResponse& httpResponse,
-                          const std::string& path,
-                          const std::string& contentType,
-                          const std::string& charset = "; charset=utf-8");
-
   static bool serveStatic(const HttpRequest& request, HttpResponse& response);
 
   static bool servePage(const HttpRequest& request, HttpResponse& response,
     const std::string& path);
+
+  static bool serveAny(HttpResponse& response, int statusCode
+    , std::string contentType = "application/json"
+    , const std::string& body = "");
 
   // Read the file and write the text in the HTTP response
   static bool readFile(std::ostream& output, const std::string& relative_path);

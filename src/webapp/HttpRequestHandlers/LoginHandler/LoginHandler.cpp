@@ -79,20 +79,16 @@ LoginHandler::LoginHandler(const std::string& server, const std::string& port)
 bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "POST") {
-    if (request.getTarget().getPath() == "/login") {
+    if (request.getTarget().getFullPath() == "/login") {
       bool served = false;
       // Create the info for current user
       UserSession user(request);
 
       // If the username and password are correct then
       if (this->isValidUser(request, user)) {
-
-        // To send a token
-        Json::Value jsonResponse;
-        jsonResponse["token"] = user.strToken();
-
-        // try serve the token
-        served = this->serveJWT(request, response, jsonResponse, 200);
+        std::cout << "soy usuaro valido" << std::endl;
+        // serve a valid response
+        return this->serveAny(response, 200);
       } else {
         // serve an authentication failed
         served = this->serveAuthFailed(request, response);
@@ -176,3 +172,4 @@ bool LoginHandler::serveJWT(const HttpRequest& request, HttpResponse& response
 
   return response.buildResponse();
 }
+

@@ -27,6 +27,8 @@ if (login) {
           // lanza un error
           .then(response => {
             if (response.ok) {
+              localStorage.setItem('logged', "true");
+              window.location.href = 'index.html';
               return response.json();
             } else {
               alert("El usuario y/o la contraseña son incorrectos");
@@ -37,9 +39,6 @@ if (login) {
             console.log(error.message);
           });
 
-
-        localStorage.setItem('logged', "true");
-        window.location.href = 'index.html';
       } else {
         alert('Por favor complete todos los campos'); // 
       }
