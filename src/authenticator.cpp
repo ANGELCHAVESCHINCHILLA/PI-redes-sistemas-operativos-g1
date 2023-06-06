@@ -23,7 +23,8 @@ Authenticator::~Authenticator() {
 
 std::string Authenticator::getSalt(const std::string& usersFile,
     const std::string& username, const std::string& password) {
-  
+  (void) password;
+
   std::string info_salt = "";
 
   bool found_user = false;

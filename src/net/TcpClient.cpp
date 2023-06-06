@@ -73,6 +73,9 @@ int TcpClient::fetchPossibleAddresses(const char* server, const char* port) {
 }
 
 int TcpClient::openSocketWithServer(const char* server, const char* port) {
+  (void) server;
+  (void) port;
+
   assert(this->clientSocket.getFileDescriptor() == -1);
   int error = SocketError::NOT_OK_SOCKET;
   // Traverse the available addresses and select the first one that works

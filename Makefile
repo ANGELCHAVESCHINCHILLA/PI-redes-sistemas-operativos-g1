@@ -24,7 +24,7 @@ CXX_VERSION = -std=gnu++20
 
 # Flags
 
-FLAGS = -Wall -Wextra
+FLAGS = -Wall -Wextra -Wno-write-strings
 
 # Directories
 

@@ -20,9 +20,11 @@ class Configuration {
   // Constructor
   Configuration();
 
+ public:
   // Destructor
   ~Configuration();
 
+ private:
   // Copy Constructor
   Configuration(const Configuration&) = delete;
 

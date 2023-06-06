@@ -25,7 +25,7 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
       // pack all data into a json format string
       std::stringstream requestsAsJSON;
       requestsAsJSON << "{";
-      for (int i = 0; i < requestsData.size(); ++i) {
+      for (size_t i = 0; i < requestsData.size(); ++i) {
         std::string jsonEntry;
         switch(i) {
           case 0:

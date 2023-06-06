@@ -3,9 +3,11 @@
 #include "QueryHandler.hpp"
 #include <iostream>
 
-#include "../../../net/TcpClient.hpp";
+#include "../../../net/TcpClient.hpp"
 
 bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
+  (void) response;
+
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "GET") {
     if (request.getTarget().getPath().find("consult") != std::string::npos) {

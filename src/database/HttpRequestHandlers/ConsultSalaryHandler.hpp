@@ -28,9 +28,9 @@ class ConsultSalaryHandler : public DatabaseRequestHandler {
       std::stringstream salaryAsJSON;
       salaryAsJSON << "{ \"name\": \"" << nameAndCompany[0] << "\", \"company_name\": \""
       << nameAndCompany[1] << "\", \"salaries\": {";
-      for (int i = 0; i < salaryData.size(); ++i) {
+      for (size_t i = 0; i < salaryData.size(); ++i) {
         salaryAsJSON << "\"salary" << (i + 1) << "\": { ";
-        for (int j = 0; j < salaryData[i].size(); ++j) {
+        for (size_t j = 0; j < salaryData[i].size(); ++j) {
           std::string jsonEntry;
           if (j == 0) {
             jsonEntry = "gross_salary";

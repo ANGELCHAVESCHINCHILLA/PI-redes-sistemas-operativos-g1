@@ -48,7 +48,7 @@ class CheckRequestHandler : public DatabaseRequestHandler {
             statusCode = 400;
             responseBody = "id invalid";
           }
-        } catch(const Json::LogicError err) {
+        } catch(const Json::LogicError& err) {
           std::cerr << err.what() << std::endl;
           statusCode = 400;
           responseBody = "JSON values error";

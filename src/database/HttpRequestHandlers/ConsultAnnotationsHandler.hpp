@@ -28,7 +28,7 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
       std::stringstream annotationsAsJSON;
       annotationsAsJSON << "{ \"name\": \"" << nameAndCompany[0] << "\", \"company_name\": \""
       << nameAndCompany[1] << "\", \"annotations\": {";
-      for (int i = 0; i < annotationsData.size(); ++i) {
+      for (size_t i = 0; i < annotationsData.size(); ++i) {
         annotationsAsJSON << "\"annotation" << (i + 1) << "\": \"";
         annotationsAsJSON << annotationsData[i] << "\",";
       }

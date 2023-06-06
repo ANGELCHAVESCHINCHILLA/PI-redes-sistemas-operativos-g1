@@ -56,8 +56,12 @@ bool HttpRequestHandler::serveAny(HttpResponse& response, int statusCode
 }
 bool HttpRequestHandler::servePage(const HttpRequest& request, HttpResponse& response,
     const std::string& path) {
+  (void) request;
+
+  // TODO: Why declare this variable?
   bool fileOpen = HttpRequestHandler::readFile(response.getBody()
                   , "pages/" + path);
+  (void) fileOpen;
 
   response.setStatusCode(200);
   response.setHeader("Content-Type", "text/html; charset=utf8");
