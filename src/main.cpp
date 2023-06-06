@@ -43,23 +43,23 @@ int main(int argc, char** argv) {
 
       std::string address = "127.0.0.1";
 
-      if (configuration.hasApp("web")) {
-        GuachisWebApp webapp;
+      // if (configuration.hasApp("web")) {
+        GuachisWebApp webapp_1;
 
-        HttpServer::getInstance().appendApp(&webapp);
-      }
+        HttpServer::getInstance().appendApp(&webapp_1);
+      // }
 
-      if (configuration.hasApp("fs")) {
-        FileSystemWebApp webapp;
+      // if (configuration.hasApp("fs")) {
+        FileSystemWebApp webapp_2;
 
-        HttpServer::getInstance().appendApp(&webapp);
-      }
+        HttpServer::getInstance().appendApp(&webapp_2);
+      // }
 
-      if (configuration.hasApp("db")) {
-        DatabaseWebApp webapp;
+      // if (configuration.hasApp("db")) {
+        DatabaseWebApp webapp_3;
 
-        HttpServer::getInstance().appendApp(&webapp);
-      }
+        HttpServer::getInstance().appendApp(&webapp_3);
+      // }
 
       // Start the web server
       HttpServer::getInstance().start(address, configuration.port);
