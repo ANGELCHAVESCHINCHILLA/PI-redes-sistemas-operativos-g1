@@ -79,7 +79,7 @@ LoginHandler::LoginHandler(const std::string& server, const std::string& port)
 bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "POST") {
-    if (request.getTarget().getFullPath() == "/login") {
+    if (request.getTarget().getPath() == "/login") {
       bool served = false;
       // Create the info for current user
       UserSession user(request);

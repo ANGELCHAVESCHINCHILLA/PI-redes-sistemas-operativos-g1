@@ -7,7 +7,7 @@
 
 bool ValidateHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "POST" &&
-      request.getTarget().getFullPath() == "/validate") {
+      request.getTarget().getPath() == "/validate") {
     const std::string& body = request.getBody();
     Json::Value requestBody;
     Json::Reader reader;

@@ -8,7 +8,7 @@
 bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "POST") {
-    if (request.getTarget().getFullPath().find("consultSalaryByUser")
+    if (request.getTarget().getPath().find("consultSalaryByUser")
         != std::string::npos) {
 
       // Este código es para hacer pruebas, el real está más abajo
@@ -55,7 +55,7 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         // receive the response of the server
         error = DBSocket.receive(result);
       } else {
-        throw std::runtime_error(request.getTarget().getFullPath()
+        throw std::runtime_error(request.getTarget().getPath()
           + ": Could not be sent to Data Base Server");
       }
 
