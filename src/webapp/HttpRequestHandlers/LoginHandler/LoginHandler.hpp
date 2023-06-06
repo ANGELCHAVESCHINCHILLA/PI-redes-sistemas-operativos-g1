@@ -10,6 +10,11 @@
 
 class UserSession;
 
+/**
+ * @brief In charge of handle the login, has communication with Filesystem
+ * server
+ * 
+ */
 class LoginHandler : public HttpRequestHandler {
  protected:
   /**
