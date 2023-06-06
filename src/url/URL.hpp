@@ -42,8 +42,6 @@ class URL {
    */
   std::string path;
 
-  std::string fullPath;
-
   /**
    * @brief The query of the url, the input after the '?'.
    *
@@ -121,8 +119,6 @@ class URL {
    * @return const std::string& The path of the url.
    */
   const std::string& getPath() const;
-
-  const std::string& getFullPath() const;
 
   /**
    * @brief Returns a map of the query keys and values.
