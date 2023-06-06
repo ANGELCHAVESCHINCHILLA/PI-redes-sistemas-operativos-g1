@@ -5,28 +5,13 @@ include(CTest)
 enable_testing()
 
 add_executable(PI-redes-sistemas-operativos-g1
+    src/app/Database.cpp
+    src/app/Database.hpp
     src/main.cpp
-    src/error.hpp
-    src/fs.cpp
-    src/fs.hpp
-    src/hash.cpp
-    src/hash.hpp
-    src/concurrent/ThreadPool.cpp
-    src/concurrent/ThreadPool.hpp
-    src/net/Socket.cpp
-    src/net/Socket.hpp
-    src/net/TcpServer.cpp
-    src/net/TcpServer.hpp
-    src/http/HttpApp.cpp
-    src/http/HttpApp.hpp
-    src/http/HttpRequest.cpp
-    src/http/HttpRequest.hpp
-    src/http/HttpResponse.cpp
-    src/http/HttpResponse.hpp
-    src/http/HttpServer.cpp
-    src/http/HttpServer.hpp
-    src/url/URL.cpp
-    src/url/URL.hpp
+)
+
+target_link_libraries(PI-redes-sistemas-operativos-g1
+    sqlite3
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
