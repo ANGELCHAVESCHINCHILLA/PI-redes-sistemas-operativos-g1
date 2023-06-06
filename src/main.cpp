@@ -10,14 +10,10 @@
 
 #include "configuration.hpp"
 #include "error.hpp"
+#include "filesystem_app/FileSystemWebApp.hpp"
 #include "http/HttpServer.hpp"
 #include "menu/FSMenu.hpp"
-// #include "webapp/GuachisWebApp.hpp"
-#include "filesystem_app/FileSystemWebApp.hpp"
-
-void runMenu();
-
-void runServer();
+#include "webapp/GuachisWebApp.hpp"
 
 int main(int argc, char** argv) {
   int error = EXIT_SUCCESS;
@@ -37,44 +33,35 @@ int main(int argc, char** argv) {
   }
 
   if (!error) {
-    if (configuration.app == "menu") {
-      runMenu();
-    }
+    try {
+      // Register the ctrl + c and kill signals for program termination
+      ::signal(SIGTERM, HttpServer::stopServer);
+      ::signal(SIGINT, HttpServer::stopServer);
 
-    if (configuration.app == "server") {
-      runServer();
+      std::string address = "127.0.0.1";
+
+      if (configuration.hasApp("web")) {
+        // GuachisWebApp webapp;
+      }
+
+      if (configuration.hasApp("fs")) {
+        FileSystemWebApp webapp;
+
+        HttpServer::getInstance().appendApp(&webapp);
+      }
+
+      if (configuration.hasApp("db")) {
+        // DatabaseWebApp webapp;
+      }
+
+      // Start the web server
+      HttpServer::getInstance().start(address, configuration.port);
+
+      std::cout << "Servidor finalizado";
+    } catch (const std::runtime_error& error) {
+      std::cerr << "error: " << error.what() << std::endl;
     }
   }
 
   return error;
-}
-
-void runMenu() {
-  FSMenu* menu = FSMenu::getInstance();
-
-  menu->start();
-}
-
-void runServer() {
-  Configuration& configuration = Configuration::getInstance();
-
-  try {
-    // Register the ctrl + c and kill signals for program termination
-    ::signal(SIGTERM, HttpServer::stopServer);
-    ::signal(SIGINT, HttpServer::stopServer);
-
-    std::string address = "127.0.0.1";
-
-    // GuachisWebApp webapp;
-    FileSystemWebApp webapp;
-
-    HttpServer::getInstance().appendApp(&webapp);
-
-    // Start the web server
-    HttpServer::getInstance().start(address, configuration.port);
-
-    std::cout << "Servidor finalizado";
-  } catch (const std::runtime_error& error) {
-    std::cerr << "error: " << error.what() << std::endl;
-  }
 }

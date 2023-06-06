@@ -42,9 +42,19 @@ int Configuration::configure(const std::string& configuration_path) {
   }
 
   if (!error) {
-    this->app = root["app"].asString();
+    Json::Value apps = root["app"];
+
+    for (size_t index = 0; index < root["app"].size(); index++) {
+      this->apps.push_back(root["app"][(int) index].asString());
+    }
+
     this->port = root["port"].asInt();
   }
 
   return error;
+}
+
+bool Configuration::hasApp(const std::string& app) const {
+  return std::find(this->apps.begin(), this->apps.end(), app) !=
+         this->apps.end();
 }

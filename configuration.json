@@ -1,4 +1,8 @@
 {
-    "app": "server",
+    "apps": [
+        "web",
+        "fs",
+        "db"
+    ],
     "port": 8080
 }

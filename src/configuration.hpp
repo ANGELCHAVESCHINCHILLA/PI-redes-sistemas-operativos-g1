@@ -3,13 +3,16 @@
 #ifndef CONFIGURATION_HPP_
 #define CONFIGURATION_HPP_
 
+#include <algorithm>
 #include <string>
+#include <vector>
 
 class Configuration {
  public:
   static Configuration& getInstance();
 
-  std::string app;
+  // TODO: Maybe change to a set
+  std::vector<std::string> apps;
 
   int port;
 
@@ -34,6 +37,8 @@ class Configuration {
 
  public:
   int configure(const std::string& configuration_path);
+
+  bool hasApp(const std::string& app) const;
 };
 
 #endif  // CONFIGURATION_HPP_
