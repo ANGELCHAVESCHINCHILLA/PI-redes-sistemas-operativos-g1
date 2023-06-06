@@ -9,7 +9,6 @@
 /**
  * @brief Handler the request from the employee, employer or some else.
  * Example of a request: Solicitud de vacaciones
- * Also serve pages, scripts or styles related to requests.
  * 
  */
 class RequestHandler : public HttpRequestHandler {

@@ -12,8 +12,8 @@
 #include "error.hpp"
 #include "http/HttpServer.hpp"
 #include "menu/FSMenu.hpp"
-// #include "webapp/GuachisWebApp.hpp"
-#include "filesystem_app/FileSystemWebApp.hpp"
+#include "webapp/GuachisWebApp.hpp"
+// #include "filesystem_app/FileSystemWebApp.hpp"
 
 void runMenu();
 
@@ -65,8 +65,8 @@ void runServer() {
 
     std::string address = "127.0.0.1";
 
-    // GuachisWebApp webapp;
-    FileSystemWebApp webapp;
+    GuachisWebApp webapp;
+    // FileSystemWebApp webapp;
 
     HttpServer::getInstance().appendApp(&webapp);
 
