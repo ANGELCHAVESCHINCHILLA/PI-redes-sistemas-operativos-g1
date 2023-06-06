@@ -3,7 +3,7 @@
 #include "LoginHandler.hpp"
 #include <iostream>
 
-#include "../../../net/TcpClient.hpp";
+#include "../../../net/TcpClient.hpp"
 
 
 struct UserInfo {
@@ -160,6 +160,7 @@ bool LoginHandler::serveAuthFailed(HttpRequest& httpRequest,
 
 bool LoginHandler::serveJWT(const HttpRequest& request, HttpResponse& response
     , Json::Value& jsonResponse, int statusCode) {
+  (void) request;
 
   response.setStatusCode(statusCode);
   response.setHeader("Content-Type", "application/json");

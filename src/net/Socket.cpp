@@ -80,6 +80,8 @@ struct SharedSocket {
   }
 
   int bind(const std::string& address, int port) {
+    (void) address;
+
     int error = SocketError::OK_SOCKET;
 
     this->addr.sin_family = AF_INET;
@@ -150,6 +152,8 @@ struct SharedSocket {
   }
 
   int connect(const std::string& address, int port) {
+    (void) address;
+
     int error = SocketError::OK_SOCKET;
 
     this->addr.sin_family = AF_INET;

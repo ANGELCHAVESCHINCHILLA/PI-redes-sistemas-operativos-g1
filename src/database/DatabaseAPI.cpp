@@ -11,6 +11,9 @@ DatabaseAPI::~DatabaseAPI() {
 }
 
 static int consultVacationBalanceByUserCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  (void) argc;
+  (void) szColName;
+
   std::cout << szColName[0] << " = " << argv[0] << std::endl;
   strcpy(reinterpret_cast<char*>(NotUsed), argv[0]);
   return 0;
@@ -40,6 +43,8 @@ std::string DatabaseAPI::consultVacationBalanceByUser(const std::string user) co
 }
 
 static int consultSalaryByUserCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  (void) szColName;
+
   std::vector<std::vector<std::string>>* matrix = reinterpret_cast<std::vector<std::vector<std::string>>*>(NotUsed);
   std::vector<std::string> row;
   for (int i = 0; i < argc; i++) {
@@ -77,6 +82,9 @@ std::vector<std::vector<std::string>> DatabaseAPI::consultSalaryByUser(const std
 }
 
 static int consultRecordAnnotationsByUserCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  (void) argc;
+  (void) szColName;
+
   std::vector<std::string>* vector = reinterpret_cast<std::vector<std::string>*>(NotUsed);
   vector->push_back(argv[0]);
   std::cout << "the annotation was: " << argv[0] << std::endl;
@@ -108,6 +116,9 @@ std::vector<std::string> DatabaseAPI::consultRecordAnnotationsByUser(const std::
 }
 
 static int consultNameAndEnterpriseByUserCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  (void) argc;
+  (void) szColName;
+
   std::vector<std::string>* vector = reinterpret_cast<std::vector<std::string>*>(NotUsed);
   vector->push_back(argv[0]);
   vector->push_back(argv[1]);
@@ -140,6 +151,8 @@ std::vector<std::string> DatabaseAPI::consultNameAndEnterpriseByUser(const std::
 }
 
 static int consultRequestsMadeByUserCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  (void) szColName;
+
   std::vector<std::vector<std::string>>* matrix = reinterpret_cast<std::vector<std::vector<std::string>>*>(NotUsed);
   std::vector<std::string> row;
   for (int i = 0; i < argc; i++) {
@@ -211,6 +224,8 @@ bool DatabaseAPI::makeRequest(const std::string user, const std::string requestT
 }
 
 static int getRequestsMadeByAreaCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  (void) szColName;
+
   std::vector<std::vector<std::string>>* matrix = reinterpret_cast<std::vector<std::vector<std::string>>*>(NotUsed);
   std::vector<std::string> row;
   for (int i = 0; i < argc; i++) {
@@ -276,6 +291,8 @@ bool DatabaseAPI::checkRequest(const int requestID, const int state, const std::
 }
 
 static int getRequestByIDCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  (void) szColName;
+
   std::vector<std::string>* vector = reinterpret_cast<std::vector<std::string>*>(NotUsed);
   for (int i = 0; i < argc; ++i) {
     vector->push_back(argv[i]);
@@ -307,6 +324,10 @@ std::vector<std::string> DatabaseAPI::getRequestByID(const int requestID) const 
 }
 
 static int idWasFoundCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+  (void) argc;
+  (void) argv;
+  (void) szColName;
+
   bool* result = reinterpret_cast<bool*>(NotUsed);
   *result = true;
   return 0;
