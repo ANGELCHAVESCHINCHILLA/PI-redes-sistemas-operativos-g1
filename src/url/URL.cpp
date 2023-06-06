@@ -40,6 +40,10 @@ const std::string& URL::getPath() const {
   return this->path;
 }
 
+const std::string& URL::getFullPath() const {
+  return this->fullPath;
+}
+
 const std::map<std::string, std::string>& URL::getQuery() const {
   return this->query;
 }
@@ -51,6 +55,7 @@ const std::string& URL::getFragment() const {
 URL& URL::move(URL&& other) {
   std::swap(this->input, other.input);
   std::swap(this->path, other.path);
+  std::swap(this->fullPath, other.fullPath);
   std::swap(this->query, other.query);
   std::swap(this->fragment, other.fragment);
 
@@ -130,7 +135,13 @@ void URL::parsePath(std::string& input) {
     throw std::runtime_error("The url is missing the path.");
   }
 
-  this->path = input.substr(pos);
+  const size_t fullPos = input.find_first_of("/");
+
+  if (fullPos == std::string::npos) {
+    throw std::runtime_error("The url is missing the path.");
+  }
+
+  this->fullPath = input.substr(fullPos);
 
   input = input.substr(0, pos);
 }
