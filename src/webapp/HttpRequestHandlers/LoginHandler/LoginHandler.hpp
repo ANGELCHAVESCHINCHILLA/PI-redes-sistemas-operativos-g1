@@ -5,8 +5,8 @@
 
 #include <jsoncpp/json/json.h>
 #include "../HttpRequestHandler.hpp"
-#include "authenticator.hpp"
-#include "jwt.hpp"
+#include "../../../authenticator.hpp"
+#include "../../../jwt/jwt.hpp"
 
 class UserSession;
 

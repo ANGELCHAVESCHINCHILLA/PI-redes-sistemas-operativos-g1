@@ -3,7 +3,7 @@
 #include "GuachisWebApp.hpp"
 #include <iostream>
 
-#include "ValidateHandler/ValidateHandler.hpp"
+#include "HttpRequestHandlers/ValidateHandler/ValidateHandler.hpp"
 
 GuachisWebApp::GuachisWebApp() {
   this->requestHandlers.push_back(new StaticHandler());

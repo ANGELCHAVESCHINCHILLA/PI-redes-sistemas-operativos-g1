@@ -7,7 +7,7 @@
 #include "./HttpRequestHandlers/AddUserHandler.hpp"
 #include "./HttpRequestHandlers/Authhandler.hpp"
 #include "./HttpRequestHandlers/PermissionsHandler.hpp"
-#include "Log.hpp"
+#include "../common/Log.hpp"
 
 FileSystemWebApp::FileSystemWebApp() {
   this->fileSystemApi = new FileSystemAPI();

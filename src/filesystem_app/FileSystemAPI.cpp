@@ -9,7 +9,7 @@
 #include <string>
 
 #include "../common/Util.hpp"
-#include "Log.hpp"
+#include "../common/Log.hpp"
 
 #define USERNAME_LENGTH 10
 

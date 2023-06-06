@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "./Database.hpp"
-#include "../../common/common.hpp"
+#include "../common/common.hpp"
 
 class DatabaseAPI {
   DISABLE_COPY(DatabaseAPI);

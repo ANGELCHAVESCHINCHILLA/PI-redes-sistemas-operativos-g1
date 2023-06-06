@@ -7,8 +7,8 @@
 
 #include "../http/HttpApp.hpp"
 #include "../url/URL.hpp"
-#include "LoginHandler.hpp"
-#include "StaticHandler.hpp"
+#include "HttpRequestHandlers/LoginHandler/LoginHandler.hpp"
+#include "HttpRequestHandlers/StaticHandler/StaticHandler.hpp"
 #include "../http/HttpResponse.hpp"
 #include "../http/HttpRequest.hpp"
 
