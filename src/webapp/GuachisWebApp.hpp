@@ -9,6 +9,7 @@
 #include "../url/URL.hpp"
 #include "LoginHandler.hpp"
 #include "StaticHandler.hpp"
+#include "QueryHandler.hpp"
 #include "../http/HttpResponse.hpp"
 #include "../http/HttpRequest.hpp"
 
