@@ -86,7 +86,7 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
       // If the username and password are correct then
       if (this->isValidUser(request, user)) {
-        std::cout << "soy usuaro valido" << std::endl;
+        // std::cout << "soy usuaro valido" << std::endl;
         // serve a valid response
         return this->serveAny(response, 200);
       } else {

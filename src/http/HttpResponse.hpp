@@ -19,13 +19,30 @@ class HttpResponse : public HttpMessage {
   static const ReasonPhrases reasonPhrases;
 
  protected:
+  /**
+   * @brief The complete http response in string
+   * 
+   */
   std::string output;
 
+  /**
+   * @brief The headers of the http response represented as a map. The key is
+   * the name of the header and value will be the value of the header
+   * 
+   */
   typedef std::map<std::string, std::string> Headers;
   Headers headers;
 
+  /**
+   * @brief The phrase of the status code, example OK if the status code is 200
+   * 
+   */
   std::string reasonPhrase;
 
+  /**
+   * @brief The body, will be the same for all the copis of this object
+   * 
+   */
   std::shared_ptr<std::stringstream> sharedBody;
 
   /**
@@ -39,7 +56,13 @@ class HttpResponse : public HttpMessage {
    * @brief Default constructor.
    *
    */
-  HttpResponse(const std::string& input);
+  HttpResponse(const std::string& output);
+
+  /**
+   * @brief Default constructor.
+   *
+   */
+  HttpResponse() = default;
 
   /**
    * @brief Destructor.

@@ -177,16 +177,44 @@ function reloadDetailsBtns() {
 }
 
 function showBaseSalary() {
-    // TODO: search 'employee' data in database calling a method in FileSystem API
-    let salary = 5000000;
-    let salaryStr = numeroALetras.convertir(salary);
-    let title = "Salario Base";
-    const content = `Su salario base es de: CRC${salary} (${salaryStr})<br><br>
-            [Nombre y cargo del representante de la empresa] <br>
-            [Nombre de la empresa]<br>
-            [Fecha de emisión]<br>`;
+  var sessionId = localStorage.getItem('logged');
 
-    createTextBlankPage(title, content);
+  fetch('/consultSalaryByUser', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({sessionId: sessionId})
+  })
+    .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          window.location.href = PAGE_PRINCIPAL;
+        }
+    })
+    .then(function (data) {
+      console.log(data);
+      console.log(data.name);
+      console.log(data.company_name);
+      console.log(data.salaries[0]);  // Gross Salary
+      console.log(data.salaries[1]);  // Net Salary
+      console.log(data.salaries[2]);  // Salary Start Date
+    
+      // TODO: search 'employee' data in database calling a method in FileSystem API
+      let salaryStr = numeroALetras.convertir(data.salaries[0]);
+      let title = "Salario Base";
+      const content = `Su salario base es de: CRC${data.salaries[0]} (${salaryStr})<br><br>
+              [Nombre y cargo del representante de la empresa] <br>
+              Compañía: ${data.company_name}<br>
+              [Fecha de emisión]<br>`;
+
+      createTextBlankPage(title, content);
+    })
+    .catch(function (error) {
+      // Manejar el error en caso de que la solicitud falle
+      console.error('Error al enviar la solicitud:', error);
+    });
 }
 
 function showVacationsBalance() {

@@ -87,33 +87,36 @@ bool HttpResponse::setStatusCode(int statusCode,
 }
 
 void HttpResponse::parseHttpResponse(const std::string& response) {
-    std::istringstream responseStream(response);
+  this->output = response;
+  std::istringstream responseStream(response);
 
-    std::string statusLine;
+  std::string statusLine;
 
-    // Leer la línea de estado
-    std::getline(responseStream, statusLine);
+  // Leer la línea de estado
+  std::getline(responseStream, statusLine);
 
-    // Extraer el código de estado
-    std::istringstream statusLineStream(statusLine);
-    statusLineStream >> this->httpVersion;
-    statusLineStream >> this->statusCode;
-    statusLineStream >> this->reasonPhrase;
+  // Extraer el código de estado
+  std::istringstream statusLineStream(statusLine);
+  statusLineStream >> this->httpVersion;
+  statusLineStream >> this->statusCode;
+  statusLineStream >> this->reasonPhrase;
 
-    // Leer los encabezados
-    std::string line;
-    while (std::getline(responseStream, line) && line != "\r") {
-      size_t colonPos = line.find(':');
-      if (colonPos != std::string::npos) {
-        std::string_view keyView(line.data(), colonPos);
-        std::string_view valueView(line.data() + colonPos + 1
-          , line.size() - colonPos - 1);
-        this->headers.emplace(std::string(keyView), std::string(valueView));
-      }
-    }
+  // Leer los encabezados
+  // TODO
+  // std::string line;
+  // while (std::getline(responseStream, line) && line != HttpMessage::lineSeparator) {
+  //   size_t colonPos = line.find(':');
+  //   if (colonPos != std::string::npos) {
+  //     std::string_view keyView(line.data(), colonPos);
+  //     std::string_view valueView(line.data() + colonPos + 1
+  //       , line.size() - colonPos - 1);
+  //     this->headers.emplace(std::string(keyView), std::string(valueView));
+  //   }
+  // }
 
-    // Leer el cuerpo de la respuesta
-    *this->sharedBody << responseStream.str();
+  // // Leer el cuerpo de la respuesta
+  // TODO
+  // *this->sharedBody << responseStream.str();
 }
 
 // {Code, "Reason-Phrase"}

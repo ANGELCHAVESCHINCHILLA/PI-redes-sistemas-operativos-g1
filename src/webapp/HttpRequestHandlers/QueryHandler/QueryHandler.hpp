@@ -3,6 +3,7 @@
 #ifndef QUERY_HANDLER
 #define QUERY_HANDLER
 
+#include <jsoncpp/json/json.h>
 #include "../HttpRequestHandler.hpp"
 
 class QueryHandler : public HttpRequestHandler {
