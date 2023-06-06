@@ -4,72 +4,31 @@
 // David Cerdas Alvarado (C02001) david.cerdasalvarado@ucr.ac.cr
 // Ignacio Robles Mayorga (B96549) ignacio.robles@ucr.ac.cr
 
-#include "database/DatabaseApp.hpp"
+#include <signal.h>
+
+#include "database/DatabaseWebApp.hpp"
+#include "error.hpp"
+#include "http/HttpServer.hpp"
 
 int main(int argc, char* argv[]) {
-  int error = SQLITE_OK;
 
-  // this path didn't work, changed to database.bd
-  // char* path = "/home/usr/PI-redes-sistemas-operativos-g1/database.db";
-  char* path = "database.db";
+  try {
+    ::signal(SIGTERM, HttpServer::stopServer);
+    ::signal(SIGINT, HttpServer::stopServer);
 
-  // Database& database = Database::getInstance(path);
-  DatabaseApp databaseApp;
+    std::string address = "127.0.0.1";
 
-  HRRequest::Builder builder = HRRequest::Builder();
+    DatabaseWebApp webApp;
 
-  builder.setUser("Miguel");
-  builder.setID(23);
-  builder.setState(2);
-  builder.setPadding("      ");
-  builder.setInformation("Buenas tardes, quiero pedir la renuncia");
-  builder.setFeedback("buenas tardes, no le podemos permitir renunciar");
-  builder.setRequestType("Vacaciones");
-  builder.setVacationDays(30);
-  builder.setVacationStartDate(12345678);
-  builder.setVacationEndDate(12345678);
-  builder.setArea("San Jose");
+    HttpServer::getInstance().appendApp(&webApp);
 
-  HRRequest hr_request = builder.build();
+    HttpServer::getInstance().start(address, 8080);
 
-  error = databaseApp.database.addHRRequest(hr_request);
+    std::cout << "server finalized" << std::endl;
 
-  if (error) {
-    std::cout << "error at adding job data 1" << std::endl;
-    return 0;
+  } catch (const std::runtime_error e) {
+    std::cerr << "error: " << e.what() << std::endl;
   }
 
-  builder.setUser("Miguel");
-  builder.setID(24);
-  builder.setState(1);
-  builder.setPadding("      ");
-  builder.setInformation("Buenas tardes, quiero pedir mas vacaciones");
-  builder.setFeedback("buenas tardes, esta bien, puede retirarse");
-  builder.setRequestType("Vacaciones");
-  builder.setVacationDays(30);
-  builder.setVacationStartDate(12345678);
-  builder.setVacationEndDate(12345678);
-  builder.setArea("Cartago");
-
-  HRRequest hr_request2 = builder.build();
-
-  error = databaseApp.database.addHRRequest(hr_request2);
-
-  if (!error) {
-    try {
-      std::vector<std::vector<std::string>> requests = databaseApp.consultRequestsMadeByUser("Miguel");
-      for (int i = 0; i < requests.size(); i++) {
-        for (int j = 0; j < requests[i].size(); ++j) {
-          std::cout << requests[i][j] << " "; 
-        }
-        std::cout << std::endl;
-      }
-    } catch (std::runtime_error e) {
-      std::cout << "exception " << e.what() << std::endl;
-    }
-  } else {
-    std::cout << "error at adding job data 2" << std::endl;
-  }
-
-  return error;
+  return 0;
 }
