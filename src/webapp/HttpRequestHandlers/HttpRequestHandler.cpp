@@ -19,36 +19,19 @@ std::map<std::string, std::string> HttpRequestHandler::CONTENT_TYPE_MAP = {
     { ".png",        "image/png"},
 };
 
-bool HttpRequestHandler::serveStatic(HttpRequest& httpRequest,
-                                HttpResponse& httpResponse,
-                                const std::string& path,
-                                const std::string& contentType,
-                                const std::string& charset) {
-  (void)httpRequest;
-
-  // Set the content type and the character encoding
-  httpResponse.setStatusCode(200);
-  httpResponse.setHeader("Content-Type", contentType + "; charset=" + charset);
-  httpResponse.setHeader("Server", "AttoServer v1.0");
-
-  // Read the file and write the text in the HTTP response
-  HttpRequestHandler::readFile(httpResponse.getBody(), path);
-
-  return httpResponse.buildResponse();
-}
-
 bool HttpRequestHandler::serveStatic(const HttpRequest& request
     , HttpResponse& response) {
 
   bool couldServe = false;
     
-  std::string path = request.getTarget().getPath();
+  std::string path = request.getTarget().getFullPath();
+
+  std::cout << "Path generada: "<< path << std::endl;
 
   bool fileOpen = HttpRequestHandler::readFile(response.getBody()
                   , "public/" + path);
 
   if (fileOpen) {
-
     response.setStatusCode(200);
     response.setHeader(
         "Content-Type", HttpRequestHandler::getContentType(request, path)
@@ -56,12 +39,21 @@ bool HttpRequestHandler::serveStatic(const HttpRequest& request
     response.setHeader("Server", "AttoServer v1.0");
     couldServe = response.buildResponse();
   } else {
+    std::cout << "no logr[e abrir el archiv]" << std::endl;
     couldServe = false;
   }
 
   return couldServe;
 }
 
+bool HttpRequestHandler::serveAny(HttpResponse& response, int statusCode
+  , std::string contentType, const std::string& body) {
+  response.setStatusCode(statusCode);
+  response.setHeader("Content-Type", contentType);
+  response.setHeader("Server", "AttoServer v1.0");
+  response.getBody().str(body);
+  return response.buildResponse();
+}
 bool HttpRequestHandler::servePage(const HttpRequest& request, HttpResponse& response,
     const std::string& path) {
   bool fileOpen = HttpRequestHandler::readFile(response.getBody()
@@ -85,9 +77,12 @@ bool HttpRequestHandler::readFile(std::ostream& output
 
   path /= relative_path;
 
+  std::cout << path << std::endl;
+
   std::ifstream file(path);
 
   if (!file) {
+    std::cout << "No encontr[e el archivo]";
     return false;
   }
 
