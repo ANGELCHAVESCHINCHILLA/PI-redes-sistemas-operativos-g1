@@ -42,10 +42,10 @@ int Configuration::configure(const std::string& configuration_path) {
   }
 
   if (!error) {
-    Json::Value apps = root["app"];
+    Json::Value apps = root["apps"];
 
-    for (size_t index = 0; index < root["app"].size(); index++) {
-      this->apps.push_back(root["app"][(int) index].asString());
+    for (size_t index = 0; index < root["apps"].size(); index++) {
+      this->apps.push_back(root["apps"][(int) index].asString());
     }
 
     this->port = root["port"].asInt();
