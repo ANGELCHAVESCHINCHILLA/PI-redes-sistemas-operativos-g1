@@ -4,8 +4,10 @@
 #include <iostream>
 
 #include "HttpRequestHandlers/ValidateHandler/ValidateHandler.hpp"
+#include "HttpRequestHandlers/UserAdminHandler/UserAdminHandler.hpp"
 
 GuachisWebApp::GuachisWebApp() {
+  this->requestHandlers.push_back(new UserAdminHandler());
   this->requestHandlers.push_back(new StaticHandler());
   this->requestHandlers.push_back(new LoginHandler("127.0.0.1", "8000"));
   this->requestHandlers.push_back(new QueryHandler());
