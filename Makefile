@@ -62,7 +62,7 @@ LINT_FILES = $(C_SRC_FILES) $(CPP_SRC_FILES) \
 
 # Targets
 
-.PHONY: all build run test clean install lint check help
+.PHONY: all build run test debug release clean install lint check help asan tsan
 
 all: build
 
@@ -74,11 +74,11 @@ $(EXE): $(EXE_FILES)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CC_VERSION) $(FLAGS) -c $< -o $@ $(addprefix -D, $(DEFINITIONS))
+	$(CC) $(CC_VERSION) -c $< -o $@ $(FLAGS) $(addprefix -D, $(DEFINITIONS))
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXX_VERSION) $(FLAGS) -c $< -o $@ $(addprefix -D, $(DEFINITIONS))
+	$(CXX) $(CXX_VERSION) -c $< -o $@ $(FLAGS) $(addprefix -D, $(DEFINITIONS))
 
 run: build
 	$(EXE) $(ARGS)
@@ -93,13 +93,20 @@ $(TEST_EXE): $(TEST_EXE_FILES)
 
 $(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CC_VERSION) $(FLAGS) -I$(SRC_DIR) -c $< -o $@ \
-	$(addprefix -D, $(DEFINITIONS))
+	$(CC) $(CC_VERSION) -c $< -o $@ $(FLAGS) -I$(SRC_DIR) $(addprefix -D, $(DEFINITIONS))
 
 $(BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXX_VERSION) $(FLAGS) -I$(SRC_DIR) -c $< -o $@ \
-	$(addprefix -D, $(DEFINITIONS))
+	$(CXX) $(CXX_VERSION) -c $< -o $@ $(FLAGS) -I$(SRC_DIR) $(addprefix -D, $(DEFINITIONS))
+
+debug: FLAGS += -g -O0
+# debug: DEFINITIONS += DEBUG
+debug: build
+	gdb $(EXE)
+
+release: FLAGS += -s -O3
+release: DEFINITIONS += NDEBUG
+release: build
 
 clean:
 	rm -fr $(BUILD_DIR) $(BIN_DIR)
@@ -128,8 +135,12 @@ help:
 	@echo "  build		Build the project."
 	@echo "  run		Run the binary."
 	@echo "  test		Build and run the tests."
+	@echo "  debug		Build the debug version and run the debugger."
+	@echo "  release	Build the release version."
 	@echo "  clean		Remove the binary files."
 	@echo "  install	Install the dependencies."
 	@echo "  lint		Run the linter."
 	@echo "  check		Run the tests and the linter."
 	@echo "  help		Print this help message."
+	@echo "  asan		Build with the address sanitizer."
+	@echo "  tsan		Build with the thread sanitizer."
