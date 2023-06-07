@@ -30,6 +30,8 @@ de datos debe trabajarlo como POST y que el username venga en el body tipo JSON.
 */
 
 bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
+  (void) response;
+
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "POST") {
     if (request.getTarget().getPath().find("consult") != std::string::npos) {
