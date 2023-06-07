@@ -5,6 +5,8 @@ if (login) {
       event.preventDefault(); // Avoid default shipment
 
       const username = login.elements['username'].value;
+      localStorage.setItem('username', username);
+
       const password = login.elements['password'].value;
   
       if (username && password) { // Check if exists
@@ -14,7 +16,7 @@ if (login) {
           username: username,
           password: password
         };
-
+        // TODO: encriptar el password
         // Envía los datos de usuario y contraseñ
         fetch('/login', {
           method: 'POST',

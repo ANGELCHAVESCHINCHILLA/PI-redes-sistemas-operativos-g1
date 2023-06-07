@@ -177,14 +177,14 @@ function reloadDetailsBtns() {
 }
 
 function showBaseSalary() {
-  var sessionId = localStorage.getItem('logged');
-
+  var username = localStorage.getItem('username');
+  // envia un post al servidor para consulta salario
   fetch('/consultSalaryByUser', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
-      body: JSON.stringify({sessionId: sessionId})
+      body: JSON.stringify({username: username})
   })
     .then(function (response) {
         if (response.ok) {
@@ -194,6 +194,7 @@ function showBaseSalary() {
         }
     })
     .then(function (data) {
+      // for debug
       console.log(data);
       console.log(data.name);
       console.log(data.company_name);
@@ -201,7 +202,7 @@ function showBaseSalary() {
       console.log(data.salaries[1]);  // Net Salary
       console.log(data.salaries[2]);  // Salary Start Date
     
-      // TODO: search 'employee' data in database calling a method in FileSystem API
+      // Crea la pagina de 
       let salaryStr = numeroALetras.convertir(data.salaries[0]);
       let title = "Salario Base";
       const content = `Su salario base es de: CRC${data.salaries[0]} (${salaryStr})<br><br>
@@ -218,31 +219,92 @@ function showBaseSalary() {
 }
 
 function showVacationsBalance() {
-    console.log("asd");
-    // TODO: search 'employee' data in database calling a method in FileSystem API
-    let vacations = 15;
-    let vacationsStr = numeroALetras.convertir(15);
-    let title = "Saldo de Vacaciones";
-    const content = `Su saldo de vacaciones es de: ${vacations} (${vacationsStr}) días.<br><br>
-            [Nombre y cargo del representante de la empresa] <br>
-            [Nombre de la empresa]<br>
-            [Fecha de emisión]<br>`;
+  var username = localStorage.getItem('username');
+  // envia un post al servidor para consultar balance de vacaciones
+  fetch('/consultVacationBalanceByUser', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({username: username})
+  })
+    .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          window.location.href = PAGE_PRINCIPAL;
+        }
+    })
+    .then(function (data) {
+      // conse.log for debug
+      console.log(data);
+      console.log(data.vacationBalance);  // balance de vacaciones
+      
+      // cree le pagina que mostrará el balance de vacaciones
+      let vacationsStr = numeroALetras.convertir(data.vacationBalance);
+      let title = "Saldo de Vacaciones";
+      const content = `Su saldo de vacaciones es de: ${data.vacationBalance} (${vacationsStr}) días.<br><br>
+              [Nombre y cargo del representante de la empresa] <br>
+              [Nombre de la empresa]<br>
+              [Fecha de emisión]<br>`;
 
-    createTextBlankPage(title, content);
+      createTextBlankPage(title, content);
+    })
+    .catch(function (error) {
+      // Manejar el error en caso de que la solicitud falle
+      console.error('Error al enviar la solicitud:', error);
+    });
 }
 
 function showExpedientAnotations() {
-    // TODO: search 'employee' data in database calling a method in FileSystem API
-    let title = "Anotaciones al expediente";
-    const content = `- El [fecha], el empleado llegó tarde al trabajo sin previo aviso y sin una justificación válida. Se le ha recordado la política de puntualidad de la empresa y se le ha informado que otra falta similar podría resultar en una medida disciplinaria. <br><br>
-  - El [fecha], se recibió una queja de un cliente que afirma que el empleado fue poco amable y no pudo solucionar su problema de manera efectiva. Se ha hablado con el empleado y se le ha recordado la importancia de mantener un servicio al cliente de alta calidad. <br><br>
-  - El [fecha], el empleado tuvo una reunión con su supervisor para discutir su desempeño. Se discutieron áreas en las que el empleado ha mostrado fortalezas y áreas que necesitan mejorar. Se acordó un plan de acción para ayudar al empleado a alcanzar sus objetivos de desempeño. <br><br>
-  - El [fecha], el empleado recibió un reconocimiento por su excelente desempeño en la finalización de un proyecto importante. Se le agradeció por su dedicación y esfuerzo en la empresa.<br><br>
-            [Nombre y cargo del representante de la empresa] <br>
-            [Nombre de la empresa]<br>
-            [Fecha de emisión]<br>`;
+  var username = localStorage.getItem('username');
+  // envia un post al servidor para consultar expediente de anotaciones
+  fetch('/consultAnnotationsByUser', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({username: username})
+  })
+    .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          window.location.href = PAGE_PRINCIPAL;
+        }
+    })
+    .then(function (data) {
+      // conse.log for debug
+      console.log(data);
+      console.log(data.name);  // nombre del empleado?
+      console.log(data.company_name);  // nombre de la compañía
+      console.log(data.annotations);  // arreglo de anotaciones
 
-    createTextBlankPage(title, content);
+      let title = "Anotaciones al expediente";
+
+      let content = ``;
+      // Append each annotation
+      for (let index = 0; index < data.annotations.length; index++) {
+        content += `- ${data.annotations[index]} <br><br>`;
+      }
+      
+      // let content = `- El [fecha], el empleado llegó tarde al trabajo sin previo aviso y sin una justificación válida. Se le ha recordado la política de puntualidad de la empresa y se le ha informado que otra falta similar podría resultar en una medida disciplinaria. <br><br>
+      // - El [fecha], se recibió una queja de un cliente que afirma que el empleado fue poco amable y no pudo solucionar su problema de manera efectiva. Se ha hablado con el empleado y se le ha recordado la importancia de mantener un servicio al cliente de alta calidad. <br><br>
+      // - El [fecha], el empleado tuvo una reunión con su supervisor para discutir su desempeño. Se discutieron áreas en las que el empleado ha mostrado fortalezas y áreas que necesitan mejorar. Se acordó un plan de acción para ayudar al empleado a alcanzar sus objetivos de desempeño. <br><br>
+      // - El [fecha], el empleado recibió un reconocimiento por su excelente desempeño en la finalización de un proyecto importante. Se le agradeció por su dedicación y esfuerzo en la empresa.<br><br>
+
+      // Append other info
+      content += `[Nombre y cargo del representante de la empresa] <br>
+                Empresa: ${data.company_name}<br>
+                [Fecha de emisión]<br>`;
+
+      // Create page
+      createTextBlankPage(title, content);
+    })
+    .catch(function (error) {
+      // Manejar el error en caso de que la solicitud falle
+      console.error('Error al enviar la solicitud:', error);
+    });
 }
 
 /**

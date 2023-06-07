@@ -6,10 +6,15 @@
 #include <jsoncpp/json/json.h>
 #include "../HttpRequestHandler.hpp"
 
+/**
+ * @brief Is a query handler like consult salary or others. It has connection
+ * with Data Base server.
+ * 
+ */
 class QueryHandler : public HttpRequestHandler {
  protected:
   /**
-  * @brief The database server
+  * @brief The database server.
   * 
   */
   std::string server;
@@ -26,10 +31,10 @@ class QueryHandler : public HttpRequestHandler {
   QueryHandler() = default;
 
   /**
-   * @brief Construct a new Login Handler object
+   * @brief Construct a new Query Handler object
    * 
-   * @param server The filesystem server
-   * @param port Port in which filesystem server is listenning
+   * @param server The Data Base server
+   * @param port Port in which Data Base server is listenning
    */
   QueryHandler(const std::string& server, const std::string& port);
   /**
@@ -45,9 +50,6 @@ class QueryHandler : public HttpRequestHandler {
   inline void setServer(const std::string& server);
 
   inline void setPort(const std::string& port);
-
-  bool serveAuthFailed(HttpRequest& httpRequest,
-                                    HttpResponse& httpResponse);
 };
 
 
