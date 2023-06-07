@@ -92,11 +92,11 @@ void HttpServer::handleClientConnection(const std::string& request
       // client
       if (client.send(http_response.getOutput()) != SocketError::OK_SOCKET) {
         // If could not sent data then close the connection
-        std::cout << "No se logró enviar la respuesta \n" << std::endl;
+        // std::cout << "No se logró enviar la respuesta \n" << std::endl;
         client.close();
       } else {
-        std::cout << "Respuesta enviada: \n" << std::endl;
-        std::cout << http_response.getOutput() << std::endl;
+        // std::cout << "Respuesta enviada: \n" << std::endl;
+        // std::cout << http_response.getOutput() << std::endl;
       }
     }
   //   break;
@@ -108,12 +108,12 @@ bool HttpServer::route(HttpRequest& request, HttpResponse& response) {
     // Ask to te app if it could handle the connection
     if (app->run(request, response)) {
       // Impresión para debug
-      std::cout << "Logré manejar mi solicitud" << std::endl;
+      // std::cout << "Logré manejar mi solicitud" << std::endl;
       return true;
     }
   }
   // If no one handle the connection then build a Serve Not Found response
-  std::cout << "Voy a servir un NOT FOUND" << std::endl;
+  // std::cout << "Voy a servir un NOT FOUND" << std::endl;
   return serveNotFound(request, response);
 }
 

@@ -29,7 +29,7 @@ bool HttpResponse::buildResponse() {
   const std::string& contentType = this->getHeader("Content-Type");
   if (contentType.empty()) {
     // No Content-type was set
-    std::cout << "Error en Content-type" << std::endl;
+    // std::cout << "Error en Content-type" << std::endl;
     return false;
   }
 
