@@ -68,8 +68,6 @@ class LoginHandler : public HttpRequestHandler {
   bool serveAuthFailed(HttpRequest& httpRequest,
                                     HttpResponse& httpResponse);
 
-  bool serveJWT(const HttpRequest& request, HttpResponse& response
-    , Json::Value& jsonResponse, int statusCode);
 };
 
 #endif  // LOGIN_HANDLER

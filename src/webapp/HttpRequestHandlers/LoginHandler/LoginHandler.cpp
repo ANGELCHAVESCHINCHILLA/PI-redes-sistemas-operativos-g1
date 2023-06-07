@@ -10,7 +10,6 @@ struct UserInfo {
  public:
   std::string username;
   std::string password;
-  std::string permissions;
 
  public:
   DECLARE_RULE4(UserInfo, default);
@@ -20,7 +19,6 @@ struct UserInfo {
   UserInfo(const std::string& username, const std::string& password)
     : username(username)
     , password(password) {
-
   }
 };
 class UserSession {
@@ -29,16 +27,11 @@ class UserSession {
  protected:
   std::shared_ptr<TcpClient> client;
 
-  std::shared_ptr<JWT> token;
-
-  std::string secretKey;
-
   UserInfo userInfo;
 
  public:
   UserSession(HttpRequest& request)
-      : client(new TcpClient())
-      , token(new JWT(JWT::generateRandomKey(32))) {
+      : client(new TcpClient()) {
     Json::Value root;
     Json::Reader reader;
 
@@ -52,17 +45,7 @@ class UserSession {
     this->userInfo.password = root["password"].asString();
     this->userInfo.username = root["username"].asString();
 
-    (*this->token).addClaim("username", this->userInfo.username);
-    (*this->token).addClaim("password", this->userInfo.password);
-
-    // "{\"alg\":\"HS256\",\"typ\":\"JWT\"}"
-    (*this->token).addHeader("alg", "HS256");
-    (*this->token).addHeader("alg", "JWT");
-
-    (*this->token).generateJWT();
   }
-
-  inline std::string strToken() const { return (*this->token).toString(); }
 
   Socket& connect(const char* server, const char* port) {
     return (*this->client).connect(server, port);
@@ -111,7 +94,7 @@ bool LoginHandler::isValidUser(HttpRequest& request, UserSession& user) {
   std::string result;
 
   if (!error) {
-    // receive the response of the server
+    // receive the response from the FS server
     error = loginSocket.receive(result);
   } else {
     throw std::runtime_error("Could not send to File System Server");
@@ -121,7 +104,7 @@ bool LoginHandler::isValidUser(HttpRequest& request, UserSession& user) {
     // Construct the response received
     HttpResponse validationResponse(result);
 
-    // parse the response receivde
+    // parse the response received
     validationResponse.parseHttpResponse(result);
 
     // If is the received response has a succesfull status code then return true
@@ -158,19 +141,4 @@ bool LoginHandler::serveAuthFailed(HttpRequest& httpRequest,
   return httpResponse.buildResponse();
 }
 
-bool LoginHandler::serveJWT(const HttpRequest& request, HttpResponse& response
-    , Json::Value& jsonResponse, int statusCode) {
-  (void) request;
-
-  response.setStatusCode(statusCode);
-  response.setHeader("Content-Type", "application/json");
-  response.setHeader("Server", "AttoServer v1.0");
-
-  Json::StreamWriterBuilder writer;
-    std::string jsonString = Json::writeString(writer, jsonResponse);
-
-  response.getBody().str(jsonString);
-
-  return response.buildResponse();
-}
 
