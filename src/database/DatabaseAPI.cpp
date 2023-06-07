@@ -19,7 +19,7 @@ static int consultVacationBalanceByUserCallback(void* NotUsed, int argc, char** 
 std::string DatabaseAPI::consultVacationBalanceByUser(const std::string user) const {
   int error = SQLITE_OK;
 
-  std::string result = "          ";
+  std::string result = "user not found";
 
   char* error_message;
 
