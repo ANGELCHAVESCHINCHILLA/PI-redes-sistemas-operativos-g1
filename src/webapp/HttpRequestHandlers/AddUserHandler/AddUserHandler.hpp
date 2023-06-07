@@ -1,12 +1,18 @@
-// 
+// Copyright © 2023 Ángel Chaves Chinchilla
 
 #ifndef ADD_USER_HANDLER_HPP
 #define ADD_USER_HANDLER_HPP
 
 #include <jsoncpp/json/json.h>
 #include "../HttpRequestHandler.hpp"
-#include "Log.hpp"
+#include "../../../common/Log.hpp"
 
+// HAD NOT BEEN PROVE YET WITH FS SERVER
+
+/**
+ * @brief Handle a request that need to add a user in FS.
+ * 
+ */
 class AddUserHandler : public HttpRequestHandler {
  protected:
   /**

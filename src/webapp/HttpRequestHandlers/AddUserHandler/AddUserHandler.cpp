@@ -1,4 +1,4 @@
-//
+// Copyright © 2023 Ángel Chaves Chinchilla
 
 #include "AddUserHandler.hpp"
 
@@ -8,7 +8,8 @@ bool AddUserHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "POST" &&
       request.getTarget().getPath() == "/adduser") {
 
-    Log::getInstance().write(Log::INFO, "AddUserRequestHandled", request.getTarget().getPath());
+    Log::getInstance().write(Log::INFO, "AddUserRequestHandled"
+      , request.getTarget().getPath());
     const std::string& body = request.getBody();
 
     if (this->couldAddUser(request)) {
@@ -41,7 +42,7 @@ bool AddUserHandler::couldAddUser(HttpRequest& request) {
     // receive the response of the server
     error = addUserSocket.receive(response);
   } else {
-    throw std::runtime_error(request.getTarget().getFullPath()
+    throw std::runtime_error(request.getTarget().getPath()
       + ": Could not send request to File System Server");
   }
 
