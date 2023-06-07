@@ -4,7 +4,10 @@
 #define STATIC_HANDLER
 
 #include "../HttpRequestHandler.hpp"
-
+/**
+ * @brief Serve static html, js, assets and css files.
+ * 
+ */
 class StaticHandler : public HttpRequestHandler {
  protected:
 

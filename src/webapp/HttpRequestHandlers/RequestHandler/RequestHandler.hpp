@@ -20,7 +20,6 @@ class RequestHandler : public HttpRequestHandler {
   Authenticator* authenticator;
 
  public:
-  // TODO (any): look if needed
   DECLARE_RULE4(RequestHandler, default);
 
   /**
@@ -31,6 +30,7 @@ class RequestHandler : public HttpRequestHandler {
    * @return true 
    * @return false 
    */
+  // TODO (any): look if needed
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 };
 
