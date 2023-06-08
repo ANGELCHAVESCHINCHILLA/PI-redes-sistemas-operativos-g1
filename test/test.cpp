@@ -7,6 +7,7 @@
 
 #include "http/HttpRequest.hpp"
 #include "http/HttpResponse.hpp"
+#include "http/HttpServer.hpp"
 #include "url/URL.hpp"
 
 TEST(URLTest, URLParseTest) {
@@ -102,6 +103,21 @@ Content-Type: application/json
 
   ASSERT_EQ(message, std::string("Hello, World!"));
   ASSERT_EQ(status, std::string("Success"));
+}
+
+TEST(HttpServerTest, HttpServerFetchTest) {
+  std::string string = "GET http://httpbin.org:80/get HTTP/1.1\n\n";
+
+  HttpRequest request(string);
+
+  auto future = HttpServer::fetch(request);
+
+  std::cout << "I'm waiting for an http response...\n";
+
+  HttpResponse response = future.get();
+
+  ASSERT_EQ(response.getStatusCode(), 200);
+  ASSERT_EQ(response.getReasonPhrase(), std::string("OK"));
 }
 
 #ifdef TEST

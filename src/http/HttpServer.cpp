@@ -2,15 +2,16 @@
 
 #include "HttpServer.hpp"
 
-#include <iostream>
 #include <cassert>
+#include <iostream>
+
 #include "../common/Log.hpp"
+#include "../net/TcpClient.hpp"
 
 HttpServer& HttpServer::getInstance() {
   static HttpServer server;
   return server;
 }
-
 
 HttpServer::HttpServer() {
   //
@@ -28,7 +29,7 @@ int HttpServer::appendApp(HttpApp* application) {
 
 void HttpServer::stopServer(int signal) {
   std::cerr << "Signal " << signal << " received" << std::endl;
-  Log::getInstance().write(Log::INFO, "finish","Server closed");
+  Log::getInstance().write(Log::INFO, "finish", "Server closed");
   Log::getInstance().stop();
   HttpServer::getInstance().stop();
 }
@@ -41,7 +42,7 @@ void HttpServer::stop() {
 int HttpServer::start(const std::string& address, int port) {
   int error = SocketError::OK_SOCKET;
   Log::getInstance().start("log.log");
-  Log::getInstance().write(Log::INFO, "start","Server started");
+  Log::getInstance().write(Log::INFO, "start", "Server started");
   const std::string sport = std::to_string(port);
 
   error = this->fetchPossibleAddresses(sport.data());
@@ -68,37 +69,36 @@ int HttpServer::start(const std::string& address, int port) {
 // En este momento es serial, por lo tanto el server procesará una solicitud a
 // la vez, se deben agregar HttpConnectionHandler si se quiere hacer concurrente
 // TODO(everyone): Pensar en si es necesario agregar estos handlers.
-void HttpServer::handleClientConnection(const std::string& request
-    , std::string& response, Socket& client) {
+void HttpServer::handleClientConnection(
+    const std::string& request, std::string& response, Socket& client) {
   // Impresión para debug
   std::cout << "Solicitud realizada:\n" << request << std::endl;
-// While the same client asks for HTTP requests in the same connection
+  // While the same client asks for HTTP requests in the same connection
   // while (true) {
-    // Revisar si el parse falla, en teoría no debería cerrarse la conexión aún
-    HttpRequest http_request(request);
-    HttpResponse http_response(response);
+  // Revisar si el parse falla, en teoría no debería cerrarse la conexión aún
+  HttpRequest http_request(request);
+  HttpResponse http_response(response);
 
-    // Give the oportunity to apps to handle the client connection
-    const bool handled = this->route(http_request, http_response);
+  // Give the oportunity to apps to handle the client connection
+  const bool handled = this->route(http_request, http_response);
 
-
-    // If subclass did not handle the request or the client used HTTP/1.0
-    if (!handled || http_request.getHttpVersion() == "HTTP/1.0") {
-      // The socket will not be more used, close the connection
+  // If subclass did not handle the request or the client used HTTP/1.0
+  if (!handled || http_request.getHttpVersion() == "HTTP/1.0") {
+    // The socket will not be more used, close the connection
+    client.close();
+    // break;
+  } else {
+    // If the request was succesfull handled then send Httt Response to the
+    // client
+    if (client.send(http_response.getOutput()) != SocketError::OK_SOCKET) {
+      // If could not sent data then close the connection
+      // std::cout << "No se logró enviar la respuesta \n" << std::endl;
       client.close();
-      // break;
     } else {
-      // If the request was succesfull handled then send Httt Response to the
-      // client
-      if (client.send(http_response.getOutput()) != SocketError::OK_SOCKET) {
-        // If could not sent data then close the connection
-        // std::cout << "No se logró enviar la respuesta \n" << std::endl;
-        client.close();
-      } else {
-        // std::cout << "Respuesta enviada: \n" << std::endl;
-        // std::cout << http_response.getOutput() << std::endl;
-      }
+      // std::cout << "Respuesta enviada: \n" << std::endl;
+      // std::cout << http_response.getOutput() << std::endl;
     }
+  }
   //   break;
   // }
 }
@@ -117,8 +117,8 @@ bool HttpServer::route(HttpRequest& request, HttpResponse& response) {
   return serveNotFound(request, response);
 }
 
-bool HttpServer::serveNotFound(HttpRequest& httpRequest,
-                                    HttpResponse& httpResponse) {
+bool HttpServer::serveNotFound(
+    HttpRequest& httpRequest, HttpResponse& httpResponse) {
   (void) httpRequest;
 
   // Set HTTP response metadata (headers)
@@ -141,4 +141,37 @@ bool HttpServer::serveNotFound(HttpRequest& httpRequest,
 
   // Send the response to the client (user agent)
   return httpResponse.buildResponse();
+}
+
+HttpResponse HttpServer::privateFetch(HttpRequest& request) {
+  int error = SocketError::OK_SOCKET;
+
+  URL url = request.getTarget().copy();
+
+  const char* host = std::string(url.getHost()).c_str();
+
+  const char* port = std::to_string(url.getPort()).c_str();
+
+  std::shared_ptr<TcpClient> client = std::make_shared<TcpClient>();
+
+  Socket& client_socket = client->connect(host, port);
+
+  error = client_socket.send(request.toString());
+
+  std::string response;
+
+  if (!error) {
+    error = client_socket.receive(response);
+  }
+
+  if (error) {
+    throw std::runtime_error("Can't execute fetch.");
+  }
+
+  return HttpResponse(response);
+}
+
+std::future<HttpResponse> HttpServer::fetch(HttpRequest& request) {
+  return std::async(
+      std::launch::async, HttpServer::privateFetch, std::ref(request));
 }

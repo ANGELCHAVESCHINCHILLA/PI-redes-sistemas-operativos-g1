@@ -79,10 +79,10 @@ class HttpResponse : public HttpMessage {
   HttpResponse& operator=(const HttpResponse& other) = delete;
 
   // Move Constructor
-  HttpResponse(HttpResponse&& other) = delete;
+  HttpResponse(HttpResponse&& other) = default;
 
   // Move Assignment Operator
-  HttpResponse& operator=(HttpResponse&& other) = delete;
+  HttpResponse& operator=(HttpResponse&& other) = default;
 
  public:
   /**
