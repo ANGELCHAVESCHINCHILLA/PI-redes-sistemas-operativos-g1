@@ -40,7 +40,7 @@ void HttpServer::stop() {
 
 int HttpServer::start(const std::string& address, int port) {
   int error = SocketError::OK_SOCKET;
-  Log::getInstance().start("Logs");
+  Log::getInstance().start("log.log");
   Log::getInstance().write(Log::INFO, "start","Server started");
   const std::string sport = std::to_string(port);
 
