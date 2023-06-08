@@ -7,7 +7,7 @@
 
 #include <jsoncpp/json/json.h>
 
-#include "FileSystemequestHandler.hpp"
+#include "FileSystemRequestHandler.hpp"
 #include "../../common/Log.hpp"
 
 class AddUserHandler : public FileSystemRequestHandler {

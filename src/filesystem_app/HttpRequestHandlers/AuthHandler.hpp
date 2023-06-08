@@ -7,7 +7,7 @@
 
 #include <jsoncpp/json/json.h>
 
-#include "FileSystemequestHandler.hpp"
+#include "FileSystemRequestHandler.hpp"
 
 class AuthHandler : public FileSystemRequestHandler {
  public:

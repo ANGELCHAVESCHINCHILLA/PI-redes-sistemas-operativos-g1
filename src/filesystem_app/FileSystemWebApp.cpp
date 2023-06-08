@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "./HttpRequestHandlers/AddUserHandler.hpp"
-#include "./HttpRequestHandlers/Authhandler.hpp"
+#include "./HttpRequestHandlers/AuthHandler.hpp"
 #include "./HttpRequestHandlers/PermissionsHandler.hpp"
 #include "../common/Log.hpp"
 
