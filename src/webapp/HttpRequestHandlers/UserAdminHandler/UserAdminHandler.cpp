@@ -9,6 +9,24 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         return true;
       }
     }
+
+    if (request.getTarget().getPath() == "/admin/add_user") {
+      if (this->servePage(request, response, "admin/add_user.html")) {
+        return true;
+      }
+    }
+
+    if (request.getTarget().getPath() == "/admin/remove_user") {
+      if (this->servePage(request, response, "admin/remove_user.html")) {
+        return true;
+      }
+    }
+
+    if (request.getTarget().getPath() == "/admin/edit_user") {
+      if (this->servePage(request, response, "admin/edit_user.html")) {
+        return true;
+      }
+    }
   }
 
   return false;
