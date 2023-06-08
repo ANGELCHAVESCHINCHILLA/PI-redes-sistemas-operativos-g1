@@ -80,10 +80,10 @@ class URL {
   URL& operator=(const URL& other) = delete;
 
   // Move Constructor
-  URL(URL&& other) = delete;
+  URL(URL&& other) = default;
 
   // Move Assignment Operator
-  URL& operator=(URL&& other);
+  URL& operator=(URL&& other) = default;
 
   /**
    * @brief Returns all of the url.
@@ -135,9 +135,21 @@ class URL {
    */
   const std::string& getFragment() const;
 
- private:
-  URL& move(URL&& other);
+  /**
+   * @brief Returns a copy of the url.
+   *
+   * @return URL A copy of the url.
+   */
+  URL copy() const;
 
+  /**
+   * @brief Returns the string version of the url.
+   *
+   * @return std::string The url string.
+   */
+  std::string toString() const;
+
+ private:
   /**
    * @brief Parses all of the input.
    *

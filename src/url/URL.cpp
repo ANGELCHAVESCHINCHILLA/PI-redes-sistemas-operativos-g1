@@ -2,6 +2,7 @@
 
 #include "URL.hpp"
 
+#include <sstream>
 #include <stdexcept>
 
 URL::URL() {
@@ -14,10 +15,6 @@ URL::URL(const std::string& input) : input(input) {
 }
 
 URL::~URL() {
-}
-
-URL& URL::operator=(URL&& other) {
-  return this->move(std::move(other));
 }
 
 const std::string& URL::getInput() const {
@@ -48,13 +45,56 @@ const std::string& URL::getFragment() const {
   return this->fragment;
 }
 
-URL& URL::move(URL&& other) {
-  std::swap(this->input, other.input);
-  std::swap(this->path, other.path);
-  std::swap(this->query, other.query);
-  std::swap(this->fragment, other.fragment);
+URL URL::copy() const {
+  URL url;
 
-  return *this;
+  url.input = std::string(this->input);
+  url.scheme = std::string(this->scheme);
+  url.host = std::string(this->host);
+  url.port = this->port;
+  url.path = std::string(this->path);
+  url.query = std::map(this->query);
+  url.fragment = std::string(fragment);
+
+  return url;
+}
+
+std::string URL::toString() const {
+  std::stringstream ss;
+
+  if (!this->scheme.empty()) {
+    ss << this->scheme << "://";
+  }
+
+  ss << host;
+
+  if (this->port != -1) {
+    ss << ":" << this->port;
+  }
+
+  ss << this->path;
+
+  if (!this->query.empty()) {
+    ss << "?";
+
+    size_t index = 0;
+
+    for (auto& [key, value] : this->query) {
+      ss << key << "=" << value;
+
+      if (index < this->query.size() - 1) {
+        ss << "&";
+      }
+
+      index++;
+    }
+  }
+
+  if (!this->fragment.empty()) {
+    ss << "#" << this->fragment;
+  }
+
+  return ss.str();
 }
 
 void URL::parse(std::string& input) {
