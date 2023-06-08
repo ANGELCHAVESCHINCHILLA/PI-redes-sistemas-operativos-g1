@@ -9,6 +9,8 @@
 #include "HttpRequestHandlers/ConsultRequestsByIDHandler.hpp"
 #include "HttpRequestHandlers/MakeRequestHandler.hpp"
 #include "HttpRequestHandlers/CheckRequestHandler.hpp"
+#include "HttpRequestHandlers/JobDataHandler.hpp"
+#include "HttpRequestHandlers/PersonalDataHandler.hpp"
 
 DatabaseWebApp::DatabaseWebApp() {
   this->databaseApi = new DatabaseAPI();
@@ -28,6 +30,8 @@ void DatabaseWebApp::initHandlers() {
   this->requestHandlers.push_back(new ConsultRequestsByIDHandler(this->databaseApi));
   this->requestHandlers.push_back(new MakeRequestHandler(this->databaseApi));
   this->requestHandlers.push_back(new CheckRequestHandler(this->databaseApi));
+  this->requestHandlers.push_back(new JobDataHandler(this->databaseApi));
+  this->requestHandlers.push_back(new PersonalDataHandler(this->databaseApi));
 }
 
 bool DatabaseWebApp::start() {
