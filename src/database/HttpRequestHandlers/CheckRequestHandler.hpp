@@ -43,19 +43,19 @@ class CheckRequestHandler : public DatabaseRequestHandler {
 
             // check for errors while adding data
             statusCode = couldCheckRequest ? 200 : 400;
-            responseBody = couldCheckRequest ? "Successfully" : "Failed";
+            responseBody = couldCheckRequest ? POST_SUCCESS : POST_FAIL;
           } else {
             statusCode = 400;
-            responseBody = "id invalid";
+            responseBody = INVALID_ID;
           }
         } catch(const Json::LogicError& err) {
           std::cerr << err.what() << std::endl;
           statusCode = 400;
-          responseBody = "JSON values error";
+          responseBody = JSON_VALUES_ERROR;
         }
       } else {
         statusCode = 400;
-        responseBody = "JSON format error";
+        responseBody = JSON_FORMAT_ERROR;
       }
 
       // build the response

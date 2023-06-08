@@ -11,6 +11,16 @@
 #include "../../common/common.hpp"
 #include "../DatabaseAPI.hpp"
 
+#define URL_ERROR "Error in the url given"
+#define INVALID_USER "User not found"
+#define INVALID_ID "Id not found"
+#define PARAM_NOT_INTEGER "Param given was not an integer"
+#define JSON_VALUES_ERROR "Error in the json values"
+#define JSON_FORMAT_ERROR "Error in the json format"
+#define INVALID_AREA "Area not found"
+#define POST_SUCCESS "Post success"
+#define POST_FAIL "Post fail"
+
 class DatabaseRequestHandler {
   DISABLE_COPY(DatabaseRequestHandler);
 
