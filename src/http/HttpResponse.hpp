@@ -3,66 +3,68 @@
 #ifndef HTTP_RESPONSE_HPP_
 #define HTTP_RESPONSE_HPP_
 
-#include "HttpMessage.hpp"
-
 #include <map>
 #include <memory>
-#include <string>
 #include <sstream>
 
 #include "../net/Socket.hpp"
+#include "HttpMessage.hpp"
 
 class HttpResponse : public HttpMessage {
  public:
-  /// Statard status codes and their reason phrases according to RFC 7231
-  typedef std::map<int, const char*> ReasonPhrases;
-  static const ReasonPhrases reasonPhrases;
+  /// Standard status codes and their reason phrases according to RFC 7231
+  typedef std::map<int, std::string> ReasonPhrases;
+  static const ReasonPhrases REASON_PHRASES;
 
  protected:
   /**
-   * @brief The complete http response in string
-   * 
+   * @brief The input.
+   *
    */
+  std::string input;
+
+  // TODO: Remove
   std::string output;
 
   /**
+   * @brief The status code of the response, for example 200.
+   *
+   */
+  size_t status_code = 200;
+
+  /**
+   * @brief The phrase of the status code, for example OK if the status code is
+   * 200.
+   *
+   */
+  std::string reason_phrase = "OK";
+
+  /**
    * @brief The headers of the http response represented as a map. The key is
-   * the name of the header and value will be the value of the header
-   * 
+   * the name of the header and value will be the value of the header.
+   *
    */
   typedef std::map<std::string, std::string> Headers;
   Headers headers;
 
   /**
-   * @brief The phrase of the status code, example OK if the status code is 200
-   * 
+   * @brief The body of the response.
+   *
    */
-  std::string reasonPhrase;
-
-  /**
-   * @brief The body, will be the same for all the copis of this object
-   * 
-   */
-  std::shared_ptr<std::stringstream> sharedBody;
-
-  /**
-   * @brief e.g: 200 OK, 500 Internal server error,..
-   * 
-   */
-  int statusCode;
+  std::shared_ptr<std::stringstream> body;
 
  public:
   /**
    * @brief Default constructor.
    *
    */
-  HttpResponse(const std::string& output);
+  HttpResponse();
 
   /**
-   * @brief Default constructor.
+   * @brief Constructor with the input.
    *
    */
-  HttpResponse() = default;
+  explicit HttpResponse(const std::string& input);
 
   /**
    * @brief Destructor.
@@ -82,34 +84,51 @@ class HttpResponse : public HttpMessage {
   // Move Assignment Operator
   HttpResponse& operator=(HttpResponse&& other) = delete;
 
- public:  // accesors
-  inline const std::stringstream& getBody() const { return *this->sharedBody; }
+ public:
+  /**
+   * @brief Sets the status code and the reason phrase. Throws an error if it
+   * gets an unknown status code.
+   *
+   * @param status_code
+   */
+  void setStatusCode(size_t status_code);
 
-  inline std::stringstream& getBody() { return *this->sharedBody; }
+  void setHeader(const std::string& key, const std::string& value);
 
-  inline const std::string& getOutput() const { return this->output; }
+  size_t getStatusCode() const;
 
-  inline int getStatusCode() const { return this->statusCode; }
+  const std::string& getReasonPhrase() const;
 
-  std::string getHeader(const std::string& key
-    , const std::string& defaultvalue = "");
+  const std::stringstream& getBody() const;
 
-  /// e.g: "HTTP/1.1 200 OK" or "HTTP/1.0 404 Not found"
-  std::string buildStatusLine() const;
+  std::stringstream& getBody();
 
-  bool buildResponse();
+  size_t getBodyLength() const;
 
-  inline size_t getBodyLength() const { return this->getBody().str().length(); }
+  bool hasHeader(const std::string& key) const;
 
+  const std::string& getHeader(const std::string& key) const;
+
+  std::string toString() const;
+
+ private:
+  void parse(std::string& input);
+
+  void parseLine(std::string& input);
+
+  void parseHeaders(std::string& input);
+
+  void parseHeader(std::string& input);
 
  public:
-  void parseHttpResponse(const std::string& response);
+  // deprecated("Use HttpResponse::toString().")
+  bool buildResponse();
 
-  inline void setHeader(const std::string& key, const std::string& value) {
-    this->headers[key] = value;
-  }
+  // deprecated("Use the constructor HttpResponse(const std::string&).")
+  void parseHttpResponse(std::string& input);
 
-  bool setStatusCode(int statusCode, const std::string& reasonPhrase = "");
+  // deprecated("Use HttpResponse::toString().")
+  const std::string& getOutput();
 };
 
 #endif  // HTTP_RESPONSE_HPP_
