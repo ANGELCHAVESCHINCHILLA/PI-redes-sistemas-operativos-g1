@@ -7,11 +7,9 @@
 
 class SaltHandler : public FileSystemRequestHandler {
  public:
- private:
   // Constructor
   explicit SaltHandler(FileSystemAPI* api);
 
- public:
   // Destructor
   ~SaltHandler();
 
@@ -30,6 +28,8 @@ class SaltHandler : public FileSystemRequestHandler {
 
  public:
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
+
+ private:
 };
 
 #endif  // SALT_HANDLER_HPP_
