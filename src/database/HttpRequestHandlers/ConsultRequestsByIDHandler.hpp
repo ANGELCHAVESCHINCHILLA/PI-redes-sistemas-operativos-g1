@@ -86,12 +86,12 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(statusCode);
         response.getBody() << responseBody.str();
-      } catch(std::bad_alloc err) {
+      } catch(std::bad_alloc& err) {
         std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
-      } catch(const std::invalid_argument err) {
+      } catch(const std::invalid_argument& err) {
         std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);

@@ -61,7 +61,7 @@ class ConsultSalaryHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(statusCode);
         response.getBody() << responseBody.str();
-      } catch(const std::bad_alloc err) {
+      } catch(const std::bad_alloc& err) {
         std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);

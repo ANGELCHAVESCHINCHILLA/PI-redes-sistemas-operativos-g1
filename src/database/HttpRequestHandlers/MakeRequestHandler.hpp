@@ -44,7 +44,7 @@ class MakeRequestHandler : public DatabaseRequestHandler {
           // check for errors while adding data
           statusCode = couldMakeRequest ? 200 : 400;
           responseBody = couldMakeRequest ? POST_SUCCESS : POST_FAIL;
-        } catch (const Json::LogicError err) {
+        } catch (const Json::LogicError& err) {
           std::cerr << err.what() << std::endl;
           statusCode = 400;
           responseBody = JSON_VALUES_ERROR;

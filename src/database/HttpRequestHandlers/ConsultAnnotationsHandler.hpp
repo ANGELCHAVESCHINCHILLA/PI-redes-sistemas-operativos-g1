@@ -48,7 +48,7 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(statusCode);
         response.getBody() << responseBody.str();
-      } catch(std::bad_alloc err) {
+      } catch(std::bad_alloc& err) {
         std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
