@@ -3,17 +3,23 @@
 #ifndef CONFIGURATION_HPP_
 #define CONFIGURATION_HPP_
 
-#include <algorithm>
+#include <map>
+#include <set>
 #include <string>
-#include <vector>
+
+struct ServerConfiguration {
+  std::string address;
+  int port;
+};
 
 class Configuration {
  public:
   static Configuration& getInstance();
 
-  // TODO: Maybe change to a set
-  std::vector<std::string> apps;
+  std::set<std::string> apps;
+  std::map<std::string, ServerConfiguration> servers;
 
+  // TODO: Remove after it stops being used.
   int port;
 
  private:
@@ -41,6 +47,8 @@ class Configuration {
   int configure(const std::string& configuration_path);
 
   bool hasApp(const std::string& app) const;
+
+  const ServerConfiguration& getServer(const std::string& app);
 };
 
 #endif  // CONFIGURATION_HPP_

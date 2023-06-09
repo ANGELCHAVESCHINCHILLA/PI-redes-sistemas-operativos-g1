@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+#include "configuration.hpp"
 #include "http/HttpRequest.hpp"
 #include "http/HttpResponse.hpp"
 #include "http/HttpServer.hpp"
@@ -103,6 +104,39 @@ Content-Type: application/json
 
   ASSERT_EQ(message, std::string("Hello, World!"));
   ASSERT_EQ(status, std::string("Success"));
+}
+
+TEST(ConfigurationTest, ConfigurationParseTest) {
+  Configuration& configuration = Configuration::getInstance();
+
+  std::string configuration_path = "test/configuration.json";
+
+  configuration.configure(configuration_path);
+
+  ASSERT_EQ(configuration.apps.size(), 3);
+
+  ASSERT_TRUE(configuration.hasApp("web"));
+  ASSERT_TRUE(configuration.hasApp("fs"));
+  ASSERT_TRUE(configuration.hasApp("db"));
+
+  ASSERT_EQ(configuration.port, 8080);
+
+  ASSERT_EQ(configuration.servers.size(), 4);
+
+  const ServerConfiguration& web = configuration.getServer("web");
+
+  ASSERT_EQ(web.address, std::string("127.0.0.1"));
+  ASSERT_EQ(web.port, 8001);
+
+  const ServerConfiguration& fs = configuration.getServer("fs");
+
+  ASSERT_EQ(fs.address, std::string("127.0.0.1"));
+  ASSERT_EQ(fs.port, 8002);
+
+  const ServerConfiguration& db = configuration.getServer("db");
+
+  ASSERT_EQ(db.address, std::string("127.0.0.1"));
+  ASSERT_EQ(db.port, 8003);
 }
 
 TEST(HttpServerTest, HttpServerFetchTest) {
