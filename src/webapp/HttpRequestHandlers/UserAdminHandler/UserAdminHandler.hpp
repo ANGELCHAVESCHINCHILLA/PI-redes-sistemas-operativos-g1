@@ -16,6 +16,10 @@ class UserAdminHandler : public HttpRequestHandler {
   ~UserAdminHandler() = default;
 
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
+
+  void callDBToAddUser(HttpRequest& request, HttpResponse& response);
+
+  void callFSToAddUser(HttpRequest& request, HttpResponse& response);
 };
 
 #endif  // USER_ADMIN_HANDLER_HPP_
