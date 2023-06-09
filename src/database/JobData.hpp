@@ -13,6 +13,8 @@ class JobData {
 
   static const std::string INSERT_INTO_QUERY;
 
+  static const std::string SELECT_FROM_QUERY;
+
  private:
   std::string user;
   int vacation_days;
@@ -35,6 +37,7 @@ class JobData {
   // Copy Assignment Operator
   JobData& operator=(const JobData& other) = delete;
 
+ public:
   // Move Constructor
   JobData(JobData&& other) = default;
 
@@ -50,6 +53,10 @@ class JobData {
   int getSalaryEndDate() const;
 
   std::string getInsertIntoQuery() const;
+
+  std::string getUpdateQuery() const;
+
+  static std::string getSelectFromWhereQuery(const std::string& user);
 
   // Inner Class
   class Builder;

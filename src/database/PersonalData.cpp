@@ -68,6 +68,21 @@ std::string PersonalData::getInsertIntoQuery() const {
   return std::move(ss.str());
 }
 
+std::string PersonalData::getUpdateQuery() const {
+  std::stringstream ss;
+
+  ss << "UPDATE PersonalData SET ";
+  ss << "User = '" << this->user << "', ";
+  ss << "EmployeeName = '" << this->employee_name << "', ";
+  ss << "JobName = '" << this->job_name << "', ";
+  ss << "CompanyName = '" << this->company_name << "', ";
+  ss << "Email = '" << this->email << "', ";
+  ss << "PhoneNumber = " << this->phone_number << " ";
+  ss << "WHERE user = '" << this->user << "'";
+
+  return ss.str();
+}
+
 std::string PersonalData::getSelectFromWhereQuery(const std::string& user) {
   std::stringstream ss;
 
