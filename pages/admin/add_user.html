@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bienvenido Usuario</title>
-  <link rel="stylesheet" href=".././styles/styles.css" />
+  <link rel="stylesheet" href="../styles/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet" />
@@ -27,19 +27,19 @@
   <h2>Agregar usuario</h2>
 
   <div class="w3-card" style="margin: auto; width: 50%;">
-    <form class="w3-padding-32">
+    <form id="user_form" class="w3-padding-32">
       <label>Usuario:</label>
-      <input id="add_user_id" class="w3-input w3-border w3-round" type="text" required>
+      <input type="text" id="user_id" class="w3-input w3-border w3-round" required value="111">
       <label>Nombre:</label>
-      <input id="add_user_name" class="w3-input w3-border w3-round" type="text" required>
+      <input type="text" id="user_name" class="w3-input w3-border w3-round" required value="111">
       <label>Nombre del puesto:</label>
-      <input id="add_user_job_name" class="w3-input w3-border w3-round" type="text" required>
+      <input type="text" id="user_job_name" class="w3-input w3-border w3-round" required value="111">
       <label>Email:</label>
-      <input id="add_user_email" class="w3-input w3-border w3-round" type="email" required>
+      <input type="email" id="user_email" class="w3-input w3-border w3-round" required value="111@111.111">
       <label>Número de teléfono:</label>
-      <input id="add_user_phone_number" class="w3-input w3-border w3-round" type="number" required>
+      <input type="number" id="user_phone_number" class="w3-input w3-border w3-round" required value="111">
       <label></label>
-      <select id="add_user_type" class="w3-select" name="option">
+      <select id="user_type" class="w3-select" required>
         <option value="" disabled selected>Selecciona el tipo de usuario</option>
         <option value="1">Empleado</option>
         <option value="2">Supervisor</option>
@@ -47,8 +47,8 @@
         <option value="4">Administrador</option>
         <option value="5">Debugger</option>
       </select>
-      <button class="w3-btn w3-red w3-border w3-round">Cancelar</button>
-      <button id="add_user_send_button" class="w3-btn w3-light-blue w3-border w3-round" style="float: right;">Enviar</button>
+      <button type="button" id="go_back_button" class="w3-btn w3-red w3-border w3-round">Cancelar</button>
+      <button type="button" id="user_send_button" class="w3-btn w3-light-blue w3-border w3-round" style="float: right;">Enviar</button>
     </form>
   </div>
 
@@ -59,7 +59,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"
     integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="scripts/admin.js"></script>
+  <script src="../scripts/admin.js"></script>
 </body>
 
 </html>

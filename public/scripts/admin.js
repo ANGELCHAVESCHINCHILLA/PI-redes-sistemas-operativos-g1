@@ -1,5 +1,7 @@
 //
 
+const COMPANY_NAME = "Guachis";
+
 const MAP = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 const getSalt = (length) => {
@@ -13,20 +15,41 @@ const getSalt = (length) => {
     return salt;
 }
 
+const go_back_button = document.querySelector("#go_back_button");
+
+go_back_button.addEventListener('click', () => {
+    window.history.back();
+});
+
 // Add user
 
-const add_user_id = document.querySelector("#add_user_id");
-const add_user_name = document.querySelector("#add_user_name");
-const add_user_job_name = document.querySelector("#add_user_job_name");
-const add_user_email = document.querySelector("#add_user_email");
-const add_user_phone_number = document.querySelector("#add_user_phone_number");
-const add_user_type = document.querySelector("#add_user_type");
+const user_send_button = document.querySelector("#user_send_button");
 
-const add_user_send_button = document.querySelector("#add_user_send_button");
+user_send_button.addEventListener('click', async () => {
+    const user_id = document.querySelector("#user_id");
+    const user_name = document.querySelector("#user_name");
+    const user_job_name = document.querySelector("#user_job_name");
+    const user_email = document.querySelector("#user_email");
+    const user_phone_number = document.querySelector("#user_phone_number");
+    const user_type = document.querySelector("#user_type");
 
-add_user_send_button.addEventListener('click', () => {
+    const database_json = {
+        user: user_id.value,
+        employee_name: user_name.value,
+        job_name: user_job_name.value,
+        company_name: COMPANY_NAME,
+        email: user_email.value,
+        phone_number: user_phone_number.value,
+    };
 
+    await fetch("/admin/add_user", {
+        method: "POST",
+        body: JSON.stringify(database_json)
+    });
 });
+
+
+// });
 
 // Remove user
 
