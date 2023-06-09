@@ -1,0 +1,24 @@
+{
+    "apps": [
+        "db"
+    ],
+    "port": 8080,
+    "servers": {
+        "web": {
+            "address": "127.0.0.1",
+            "port": 8001
+        },
+        "fs": {
+            "address": "127.0.0.1",
+            "port": 8002
+        },
+        "db": {
+            "address": "127.0.0.1",
+            "port": 8003
+        },
+        "default": {
+            "address": "127.0.0.1",
+            "port": 8000
+        }
+    }
+}
