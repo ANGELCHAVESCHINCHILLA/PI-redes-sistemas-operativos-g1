@@ -20,41 +20,51 @@ Configuration& Configuration::getInstance() {
 }
 
 int Configuration::configure(const std::string& configuration_path) {
-  int error = EXIT_SUCCESS;
+  try {
+    std::ifstream configuration_file(configuration_path);
 
-  std::ifstream configuration_file(configuration_path);
+    Json::Reader reader;
+    Json::Value root;
 
-  if (!configuration_file) {
-    error = EXIT_FAILURE;
+    reader.parse(configuration_file, root);
 
-    std::cerr << "Error when reading a file.\n";
-  }
-
-  Json::Reader reader;
-  Json::Value root;
-
-  if (!error) {
-    if (!reader.parse(configuration_file, root)) {
-      error = EXIT_FAILURE;
-
-      std::cerr << "Can't parse the JSON file.\n";
-    }
-  }
-
-  if (!error) {
     Json::Value apps = root["apps"];
 
-    for (size_t index = 0; index < root["apps"].size(); index++) {
-      this->apps.push_back(root["apps"][(int) index].asString());
+    for (const Json::Value& app : root["apps"]) {
+      this->apps.insert(app.asString());
     }
 
+    // TODO: Remove after it stops being used.
     this->port = root["port"].asInt();
+
+    Json::Value servers = root["servers"];
+
+    for (const Json::String& key : servers.getMemberNames()) {
+      Json::Value server = servers[key];
+
+      std::string address = server["address"].asString();
+      int port = server["port"].asInt();
+
+      ServerConfiguration server_configuration = {
+          .address = address,
+          .port = port,
+      };
+
+      this->servers.insert({key, server_configuration});
+    }
+  } catch (const std::runtime_error& error) {
+    std::cerr << error.what() << "\n";
+
+    return EXIT_FAILURE;
   }
 
-  return error;
+  return EXIT_SUCCESS;
 }
 
 bool Configuration::hasApp(const std::string& app) const {
-  return std::find(this->apps.begin(), this->apps.end(), app) !=
-         this->apps.end();
+  return this->apps.find(app) != this->apps.end();
+}
+
+const ServerConfiguration& Configuration::getServer(const std::string& app) {
+  return this->servers.at(app);
 }
