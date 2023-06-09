@@ -13,6 +13,8 @@ class JobData {
 
   static const std::string INSERT_INTO_QUERY;
 
+  static const std::string SELECT_FROM_QUERY;
+
  private:
   std::string user;
   int vacation_days;
@@ -50,6 +52,8 @@ class JobData {
   int getSalaryEndDate() const;
 
   std::string getInsertIntoQuery() const;
+
+  static std::string getSelectFromWhereQuery(const std::string& user);
 
   // Inner Class
   class Builder;

@@ -58,6 +58,8 @@ class Database {
 
   std::vector<PersonalData> searchPersonalDataByUser(const std::string& user);
 
+  std::vector<JobData> searchJobDataByUser(const std::string& user);
+
  private:
   int createTables();
 };

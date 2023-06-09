@@ -18,6 +18,8 @@ const std::string JobData::CREATE_TABLE_QUERY =
 const std::string JobData::INSERT_INTO_QUERY =
     R"(INSERT INTO JobData (User, VacationDays, GrossSalary, NetSalary, SalaryStartDate, SalaryEndDate) )";
 
+const std::string JobData::SELECT_FROM_QUERY = R"(SELECT * FROM JobData )";
+
 const std::string& JobData::getUser() const {
   return this->user;
 }
@@ -59,6 +61,17 @@ std::string JobData::getInsertIntoQuery() const {
   ss << "', ";
   ss << this->salary_end_date;
   ss << ");";
+
+  return std::move(ss.str());
+}
+
+std::string JobData::getSelectFromWhereQuery(const std::string& user) {
+  std::stringstream ss;
+
+  ss << JobData::SELECT_FROM_QUERY;
+  ss << "WHERE ";
+  ss << "user = '" << user << "'";
+  ss << ";";
 
   return std::move(ss.str());
 }
