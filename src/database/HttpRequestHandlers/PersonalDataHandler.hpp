@@ -15,13 +15,13 @@ class PersonalDataHandler : public DatabaseRequestHandler {
 
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 
-  bool getJobData(HttpRequest& request, HttpResponse& response);
+  bool getData(HttpRequest& request, HttpResponse& response);
 
-  bool addJobData(HttpRequest& request, HttpResponse& response);
+  bool addData(HttpRequest& request, HttpResponse& response);
 
-  bool removeJobData(HttpRequest& request, HttpResponse& response);
+  bool removeData(HttpRequest& request, HttpResponse& response);
 
-  bool editJobData(HttpRequest& request, HttpResponse& response);
+  bool editData(HttpRequest& request, HttpResponse& response);
 };
 
 #endif  // PERSONAL_DATA_HANDLER_HPP_

@@ -21,7 +21,7 @@ class DatabaseAPI {
   // Default destructor
   ~DatabaseAPI();
 
-  Database& database = Database::getInstance("database.bd");
+  Database& database = Database::getInstance("database.sqlite");
 
   /**
    * @brief consults the vacation balance a user has
