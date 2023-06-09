@@ -30,7 +30,7 @@ user_send_button.addEventListener('click', async () => {
     const user_name = document.querySelector("#user_name");
     const user_job_name = document.querySelector("#user_job_name");
     const user_email = document.querySelector("#user_email");
-    const user_phone_number = document.querySelector("#user_phone_number");
+    const user_phone_number = parseInt(document.querySelector("#user_phone_number"));
     const user_type = document.querySelector("#user_type");
 
     const database_json = {

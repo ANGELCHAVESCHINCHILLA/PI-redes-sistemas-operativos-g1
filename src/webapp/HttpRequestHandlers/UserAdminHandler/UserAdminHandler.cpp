@@ -46,7 +46,7 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
             std::to_string(configuration.getServer("db").port);
 
         HttpRequest http_request("POST http://" + db_address + ":" + db_port +
-                                 "/data/personal_data HTTP/1.1\n\n" +
+                                 "/data/personal_data HTTP/1.1\n\n\n" +
                                  request.getBody() + "\n");
 
         auto future = HttpServer::fetch(http_request);
