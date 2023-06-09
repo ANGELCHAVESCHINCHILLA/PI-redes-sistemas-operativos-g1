@@ -37,6 +37,7 @@ class JobData {
   // Copy Assignment Operator
   JobData& operator=(const JobData& other) = delete;
 
+ public:
   // Move Constructor
   JobData(JobData&& other) = default;
 
@@ -52,6 +53,8 @@ class JobData {
   int getSalaryEndDate() const;
 
   std::string getInsertIntoQuery() const;
+
+  std::string getUpdateQuery() const;
 
   static std::string getSelectFromWhereQuery(const std::string& user);
 

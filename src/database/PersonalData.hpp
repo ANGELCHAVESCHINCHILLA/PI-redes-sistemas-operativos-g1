@@ -51,6 +51,8 @@ class PersonalData {
 
   std::string getInsertIntoQuery() const;
 
+  std::string getUpdateQuery() const;
+
   static std::string getSelectFromWhereQuery(const std::string& user);
 
   // Inner Class

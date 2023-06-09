@@ -209,3 +209,23 @@ int Database::removeJobDataByUser(const std::string& user) {
 
   return error;
 }
+
+int Database::editPersonalData(const PersonalData& personal_data) {
+  int error = SQLITE_OK;
+
+  std::string query = personal_data.getUpdateQuery();
+
+  error = this->query(query.c_str());
+
+  return error;
+}
+
+int Database::editJobData(const JobData& job_data) {
+  int error = SQLITE_OK;
+
+  std::string query = job_data.getUpdateQuery();
+
+  error = this->query(query.c_str());
+
+  return error;
+}

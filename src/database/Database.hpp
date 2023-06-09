@@ -62,6 +62,10 @@ class Database {
 
   int removeJobDataByUser(const std::string& user);
 
+  int editPersonalData(const PersonalData& personal_data);
+
+  int editJobData(const JobData& job_data);
+
  private:
   int createTables();
 };
