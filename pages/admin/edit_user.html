@@ -27,28 +27,29 @@
   <h2>Editar usuario</h2>
 
   <div class="w3-card" style="margin: auto; width: 50%;">
-    <form class="w3-padding-32">
+    <form id="user_form" class="w3-padding-32">
       <label>Usuario:</label>
-      <input id="user_id" class="w3-input w3-border w3-round" type="text" required>
+      <input type="text" id="user_id" class="w3-input w3-border w3-round" required>
+      <label>Contraseña:</label>
+      <input type="password" id="user_password" class="w3-input w3-border w3-round" required>
       <label>Nombre:</label>
-      <input id="user_name" class="w3-input w3-border w3-round" type="text" required>
+      <input type="text" id="user_name" class="w3-input w3-border w3-round" required>
       <label>Nombre del puesto:</label>
-      <input id="user_job_name" class="w3-input w3-border w3-round" type="text" required>
+      <input type="text" id="user_job_name" class="w3-input w3-border w3-round" required>
       <label>Email:</label>
-      <input id="user_email" class="w3-input w3-border w3-round" type="email" required>
+      <input type="email" id="user_email" class="w3-input w3-border w3-round" required>
       <label>Número de teléfono:</label>
-      <input id="user_phone_number" class="w3-input w3-border w3-round" type="number" required>
-      <label></label>
-      <select id="user_type" class="w3-select" name="option" required>
-        <option value="" disabled selected>Selecciona el tipo de usuario</option>
-        <option value="1">Empleado</option>
+      <input type="number" id="user_phone_number" class="w3-input w3-border w3-round" required>
+      <label>Tipo de usuario:</label>
+      <select id="user_type" class="w3-select" required>
+        <option value="1" selected>Empleado</option>
         <option value="2">Supervisor</option>
         <option value="3">Gerente</option>
         <option value="4">Administrador</option>
         <option value="5">Debugger</option>
       </select>
       <button type="button" id="go_back_button" class="w3-btn w3-red w3-border w3-round">Cancelar</button>
-      <button type="button" id="user_send_button" class="w3-btn w3-light-blue w3-border w3-round" style="float: right;">Enviar</button>
+      <button type="button" id="edit_user_send_button" class="w3-btn w3-light-blue w3-border w3-round" style="float: right;">Enviar</button>
     </form>
   </div>
 
