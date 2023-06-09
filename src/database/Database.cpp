@@ -189,3 +189,23 @@ std::vector<JobData> Database::searchJobDataByUser(const std::string& user) {
 
   return users;
 }
+
+int Database::removePersonalDataByUser(const std::string& user) {
+  int error = SQLITE_OK;
+
+  std::string query = "DELETE FROM PersonalData WHERE user = '" + user + "'";
+
+  error = this->query(query.c_str());
+
+  return error;
+}
+
+int Database::removeJobDataByUser(const std::string& user) {
+  int error = SQLITE_OK;
+
+  std::string query = "DELETE FROM JobData WHERE user = '" + user + "'";
+
+  error = this->query(query.c_str());
+
+  return error;
+}
