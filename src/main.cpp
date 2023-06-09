@@ -50,16 +50,21 @@ int main(int argc, char** argv) {
 
       if (configuration.hasApp("web")) {
         std::cout << "Running the web app in this server...\n";
+        // Cheat code for now
+        // TODO: Remove in release
+        port = 8001;
         HttpServer::getInstance().appendApp(&webapp_1);
       }
 
       if (configuration.hasApp("fs")) {
         std::cout << "Running the fs app in this server...\n";
+        port = 8002;
         HttpServer::getInstance().appendApp(&webapp_2);
       }
 
       if (configuration.hasApp("db")) {
         std::cout << "Running the db app in this server...\n";
+        port = 8003;
         HttpServer::getInstance().appendApp(&webapp_3);
       }
 

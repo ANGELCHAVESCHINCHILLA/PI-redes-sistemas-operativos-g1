@@ -153,7 +153,8 @@ void URL::parseQueryParameter(const std::string& input) {
   size_t pos = input.find_first_of("=");
 
   if (pos == std::string::npos) {
-    throw std::runtime_error("A query parameter is missing the '=' sign.");
+    // throw std::runtime_error("A query parameter is missing the '=' sign.");
+    return;
   }
 
   std::string key = input.substr(0, pos);
