@@ -42,7 +42,9 @@ bool PersonalDataHandler::getData(
   Json::Value output(Json::objectValue);
 
   try {
-    reader.parse(request.getBody(), input);
+    if (!reader.parse(request.getBody(), input)) {
+      throw std::runtime_error("Can't parse the personal data json.");
+    }
 
     std::string user = input["user"].asString();
 
@@ -72,9 +74,11 @@ bool PersonalDataHandler::getData(
     response.setStatusCode(200);
     response.getBody() << json;
   } catch (const std::runtime_error& error) {
-    std::cerr << error.what() << "\n";
-
     response.setStatusCode(401);
+    std::cerr << error.what() << "\n";
+  } catch (const Json::LogicError& error) {
+    response.setStatusCode(401);
+    std::cerr << error.what() << "\n";
   }
 
   return true;
@@ -89,7 +93,9 @@ bool PersonalDataHandler::addData(
   Json::Value output(Json::objectValue);
 
   try {
-    reader.parse(request.getBody(), input);
+    if (!reader.parse(request.getBody(), input)) {
+      throw std::runtime_error("Can't parse the personal data json.");
+    }
 
     std::string user = input["user"].asString();
     std::string employee_name = input["employee_name"].asString();
@@ -114,6 +120,10 @@ bool PersonalDataHandler::addData(
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
+    std::cerr << error.what() << "\n";
+  } catch (const Json::LogicError& error) {
+    response.setStatusCode(401);
+    std::cerr << error.what() << "\n";
   }
 
   return true;
@@ -128,7 +138,9 @@ bool PersonalDataHandler::removeData(
   Json::Value output(Json::objectValue);
 
   try {
-    reader.parse(request.getBody(), input);
+    if (!reader.parse(request.getBody(), input)) {
+      throw std::runtime_error("Can't parse the personal data json.");
+    }
 
     std::string user = input["user"].asString();
 
@@ -139,6 +151,10 @@ bool PersonalDataHandler::removeData(
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
+    std::cerr << error.what() << "\n";
+  } catch (const Json::LogicError& error) {
+    response.setStatusCode(401);
+    std::cerr << error.what() << "\n";
   }
 
   return true;
@@ -153,7 +169,9 @@ bool PersonalDataHandler::editData(
   Json::Value output(Json::objectValue);
 
   try {
-    reader.parse(request.getBody(), input);
+    if (!reader.parse(request.getBody(), input)) {
+      throw std::runtime_error("Can't parse the personal data json.");
+    }
 
     std::string user = input["user"].asString();
     std::string employee_name = input["employee_name"].asString();
@@ -178,6 +196,10 @@ bool PersonalDataHandler::editData(
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
+    std::cerr << error.what() << "\n";
+  } catch (const Json::LogicError& error) {
+    response.setStatusCode(401);
+    std::cerr << error.what() << "\n";
   }
 
   return true;
