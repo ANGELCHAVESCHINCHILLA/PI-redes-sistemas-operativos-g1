@@ -17,9 +17,10 @@ class UserAdminHandler : public HttpRequestHandler {
 
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 
-  void callDBToAddUser(HttpRequest& request, HttpResponse& response);
+  void callDatabase(HttpRequest& request, HttpResponse& response,
+      const std::string& method, const std::string& path);
 
-  void callFSToAddUser(HttpRequest& request, HttpResponse& response);
+  void addUserInFileSystem(HttpRequest& request, HttpResponse& response);
 };
 
 #endif  // USER_ADMIN_HANDLER_HPP_

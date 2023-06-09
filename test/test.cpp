@@ -31,7 +31,7 @@ TEST(URLTest, URLParseTest) {
 }
 
 TEST(HttpRequestTest, HttpRequestParseTest) {
-  std::string request =
+  std::string string =
       R"(POST https://localhost:3000/path/to/resource?param1=value1&param2=value2#section1 HTTP/1.1
 Host: localhost
 Content-Type: application/json
@@ -42,15 +42,14 @@ Content-Type: application/json
 }
 )";
 
-  HttpRequest http_request(request);
+  HttpRequest request(string);
 
-  ASSERT_EQ(http_request.getMethod(), std::string("POST"));
+  ASSERT_EQ(request.getMethod(), std::string("POST"));
 
-  ASSERT_EQ(http_request.getHeader("Host"), std::string("localhost"));
-  ASSERT_EQ(
-      http_request.getHeader("Content-Type"), std::string("application/json"));
+  ASSERT_EQ(request.getHeader("Host"), std::string("localhost"));
+  ASSERT_EQ(request.getHeader("Content-Type"), std::string("application/json"));
 
-  URL target = http_request.getTarget().copy();
+  URL target = request.getTarget().copy();
 
   ASSERT_EQ(target.getScheme(), std::string("https"));
   ASSERT_EQ(target.getHost(), std::string("localhost"));
@@ -68,7 +67,7 @@ Content-Type: application/json
   Json::Reader reader;
   Json::Value root;
 
-  reader.parse(http_request.getBody(), root);
+  reader.parse(request.getBody(), root);
 
   std::string name = root["name"].asString();
   std::string email = root["email"].asString();
@@ -78,7 +77,7 @@ Content-Type: application/json
 }
 
 TEST(HttpResponseTest, HttpResponseParseTest) {
-  std::string response = R"(HTTP/1.1 200 OK
+  std::string string = R"(HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
@@ -87,17 +86,17 @@ Content-Type: application/json
 }
 )";
 
-  HttpResponse http_response(response);
+  HttpResponse response(string);
 
-  ASSERT_EQ(http_response.getStatusCode(), 200);
-  ASSERT_EQ(http_response.getReasonPhrase(), std::string("OK"));
+  ASSERT_EQ(response.getStatusCode(), 200);
+  ASSERT_EQ(response.getReasonPhrase(), std::string("OK"));
   ASSERT_EQ(
-      http_response.getHeader("Content-Type"), std::string("application/json"));
+      response.getHeader("Content-Type"), std::string("application/json"));
 
   Json::Reader reader;
   Json::Value root;
 
-  reader.parse(http_response.getBody(), root);
+  reader.parse(response.getBody(), root);
 
   std::string message = root["message"].asString();
   std::string status = root["status"].asString();
@@ -140,9 +139,10 @@ TEST(ConfigurationTest, ConfigurationParseTest) {
 }
 
 TEST(HttpServerTest, HttpServerFetchTest) {
-  std::string string = "GET http://httpbin.org:80/get HTTP/1.1\n\n";
+  HttpRequest request;
 
-  HttpRequest request(string);
+  request.setMethod("GET");
+  request.setTarget("http://numbersapi.com:80/42");
 
   auto future = HttpServer::fetch(request);
 
@@ -152,6 +152,8 @@ TEST(HttpServerTest, HttpServerFetchTest) {
 
   ASSERT_EQ(response.getStatusCode(), 200);
   ASSERT_EQ(response.getReasonPhrase(), std::string("OK"));
+
+  std::cout << response.getBody().str() << "\n";
 }
 
 #ifdef TEST
