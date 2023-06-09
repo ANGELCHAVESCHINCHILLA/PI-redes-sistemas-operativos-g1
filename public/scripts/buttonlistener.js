@@ -12,7 +12,7 @@ function addButtonClickListener(buttonId, clickHandler, args) {
   const button = document.getElementById(buttonId);
   if (button) {
     if (args) {
-      button.addEventListener("click", function () {
+      button.addEventListener("click", async () => {
         clickHandler(args);
       });
     } else {

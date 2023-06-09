@@ -34,6 +34,28 @@ if (backbtn) {
     });
 }
 
+function formatDate(numDate) {
+  // numDate = 230523
+
+  // Obtener los componentes de la fecha
+  const year = Math.floor(numDate / 10000);
+  const month = Math.floor((numDate % 10000) / 100);
+  const day = numDate % 100;
+
+  // Crear un objeto Date con los componentes de la fecha
+  const date = new Date(year, month - 1, day);
+
+  // Obtener los componentes de la date formateados con ceros a la izquierda
+  const daysFormat = String(date.getDate()).padStart(2, '0');
+  const montFormat = String(date.getMonth() + 1).padStart(2, '0');
+  const yearFormat = String(date.getFullYear()).slice(2);
+
+  // Crear la cadena de fecha con el formato deseado
+  const dateFormat = `${daysFormat}-${montFormat}-${yearFormat}`;
+
+  return dateFormat
+}
+
 /**
  * Reload the requests. It used to reload requests into a requests container.
  * Used in PAGE_REQUESTS page. It calls populateRequestContainer() and reloadDetailsBtns()
@@ -176,84 +198,88 @@ function reloadDetailsBtns() {
     }
 }
 
-function showBaseSalary() {
-  var username = localStorage.getItem('username');
-  // envia un post al servidor para consulta salario
-  fetch('/consultSalaryByUser', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({username: username})
-  })
-    .then(function (response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          window.location.href = PAGE_PRINCIPAL;
-        }
-    })
-    .then(function (data) {
-      // for debug
-      console.log(data);
-      console.log(data.name);
-      console.log(data.company_name);
-      console.log(data.salaries[0]);  // Gross Salary
-      console.log(data.salaries[1]);  // Net Salary
-      console.log(data.salaries[2]);  // Salary Start Date
-    
-      // Crea la pagina de 
-      let salaryStr = numeroALetras.convertir(data.salaries[0]);
-      let title = "Salario Base";
-      const content = `Su salario base es de: CRC${data.salaries[0]} (${salaryStr})<br><br>
-              [Nombre y cargo del representante de la empresa] <br>
-              Compañía: ${data.company_name}<br>
-              [Fecha de emisión]<br>`;
+/*
+asi se ve el json de respuesta que da el servidor para la parte de salarios
+const json = {
+  "name": "Carlos Montoya",
+  "company_name": "Apple",
+  "salaries": {
+    "salary1": {
+      "gross_salary": 2000,
+      "net_salary": 3000,
+      "salary_start_date": 230323
+    },
+    "salary2": {
+      "gross_salary": 3000,
+      "net_salary": 4000,
+      "salary_start_date": 230523
+    }
+  }
+};
+*/
+async function showBaseSalary() {
+  const username = localStorage.getItem('username');
 
-      createTextBlankPage(title, content);
-    })
-    .catch(function (error) {
-      // Manejar el error en caso de que la solicitud falle
-      console.error('Error al enviar la solicitud:', error);
-    });
+  // Send request to server
+  const response = await fetch(`/consultSalaryByUser?user=${username}`, {
+    method: 'GET'
+  });
+
+  if(!response.ok) {
+    window.location.href = PAGE_PRINCIPAL;
+  }
+
+  // waint the JSON response
+  const salaryInfo = await response.json()
+
+  // Construct page
+  const title = "Información salarial";
+
+  let content = `Nombre: ${salaryInfo.name} <br>
+  Compañía: ${salaryInfo.company_name}<br><br>`;
+
+  let salaryCount = 1;
+
+  for (const salaryKey in salaryInfo.salaries) {
+    if (salaryInfo.salaries.hasOwnProperty(salaryKey)) {
+      const salary = salaryInfo.salaries[salaryKey];
+
+      const salaryStrGross = numeroALetras.convertir(salary.gross_salary);
+      const salaryStrNet = numeroALetras.convertir(salary.net_salary);
+
+      content += `Salario ${salaryCount}<br>
+      Salario base: CRC${salary.gross_salary} (${salaryStrGross})<br>
+      Salario neto: CRC${salary.net_salary} (${salaryStrNet})<br>
+      Fecha de inicio del salario: ${formatDate(salary.salary_start_date)} <br><br>`;
+      salaryCount++;
+    }
+  }
+
+  createTextBlankPage(title, content);
 }
 
-function showVacationsBalance() {
-  var username = localStorage.getItem('username');
-  // envia un post al servidor para consultar balance de vacaciones
-  fetch('/consultVacationBalanceByUser', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({username: username})
-  })
-    .then(function (response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          window.location.href = PAGE_PRINCIPAL;
-        }
-    })
-    .then(function (data) {
-      // conse.log for debug
-      console.log(data);
-      console.log(data.vacationBalance);  // balance de vacaciones
-      
-      // cree le pagina que mostrará el balance de vacaciones
-      let vacationsStr = numeroALetras.convertir(data.vacationBalance);
-      let title = "Saldo de Vacaciones";
-      const content = `Su saldo de vacaciones es de: ${data.vacationBalance} (${vacationsStr}) días.<br><br>
-              [Nombre y cargo del representante de la empresa] <br>
-              [Nombre de la empresa]<br>
-              [Fecha de emisión]<br>`;
+async function showVacationsBalance() {
+  const username = localStorage.getItem('username');
 
-      createTextBlankPage(title, content);
-    })
-    .catch(function (error) {
-      // Manejar el error en caso de que la solicitud falle
-      console.error('Error al enviar la solicitud:', error);
-    });
+  // sent request to server
+  const response = await fetch(`/consultVacationBalanceByUser?user=${username}`, {
+    method: 'GET'
+  });
+
+  if(!response.ok) {
+    window.location.href = PAGE_PRINCIPAL;
+  }
+  // wait the JSON response
+  const vacations = await response.json();
+  // construct the page
+  const title = "Saldo de Vacaciones";
+
+  let vacationsStr = numeroALetras.convertir(vacations.vacationBalance);
+
+  const content = `Su saldo de vacaciones es de: ${vacations.vacationBalance}
+   (${vacationsStr}) días.<br><br>`;
+
+  createTextBlankPage(title, content);
 }
 
 function showExpedientAnotations() {
