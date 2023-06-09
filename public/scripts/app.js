@@ -68,6 +68,36 @@ function reloadRequests() {
 /**
  * Popoulate a request-container with requests divs.
  */
+/*
+{
+  "request1": {
+    "user": "Juan",
+    "ID": 3,
+    "state": 0,
+    "padding": "          ",
+    "information": "Hola, por favor puedo tener mi constancia salarial?",
+    "feedback": "   ",
+    "request_type": "ConstanciaSalarial",
+    "vacation_days": 0,
+    "vacation_start_date": 0,
+    "vacation_end_date": 0,
+    "area": "Cartago"
+  },
+  "request2": {
+    "user": "Juan",
+    "ID": 7,
+    "state": 0,
+    "padding": "          ",
+    "information": "Hola, por favor puedo tener mi 13 dias de vacaciones?",
+    "feedback": "   ",
+    "request_type": "Vacaciones",
+    "vacation_days": 13,
+    "vacation_start_date": 11223,
+    "vacation_end_date": 151223,
+    "area": "Cartago"
+  },
+}
+*/
 function populateRequestContainer() {
     // Get Container
     var requestContainer = document.getElementById("request-container");
@@ -282,55 +312,47 @@ async function showVacationsBalance() {
   createTextBlankPage(title, content);
 }
 
-function showExpedientAnotations() {
-  var username = localStorage.getItem('username');
-  // envia un post al servidor para consultar expediente de anotaciones
-  fetch('/consultAnnotationsByUser', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({username: username})
-  })
-    .then(function (response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          window.location.href = PAGE_PRINCIPAL;
-        }
-    })
-    .then(function (data) {
-      // conse.log for debug
-      console.log(data);
-      console.log(data.name);  // nombre del empleado?
-      console.log(data.company_name);  // nombre de la compañía
-      console.log(data.annotations);  // arreglo de anotaciones
+/*
+{
+  "name": "Miranda Jop",
+  "company_name": "Amazon",
+  "annotations": {
+    "annotation1": "Miranda chocó el carro en el parqueo de la compañía el día 22/3/23",
+    "annotation2": "Miranda se robó una computadora el día 23/3/23",
+  }
+}
+*/
+async function showExpedientAnotations() {
+  const username = localStorage.getItem('username');
 
-      let title = "Anotaciones al expediente";
+  // sent request to server
+  const response = await fetch(`/consultVacationBalanceByUser?user=${username}`, {
+    method: 'GET'
+  });
 
-      let content = ``;
-      // Append each annotation
-      for (let index = 0; index < data.annotations.length; index++) {
-        content += `- ${data.annotations[index]} <br><br>`;
-      }
-      
-      // let content = `- El [fecha], el empleado llegó tarde al trabajo sin previo aviso y sin una justificación válida. Se le ha recordado la política de puntualidad de la empresa y se le ha informado que otra falta similar podría resultar en una medida disciplinaria. <br><br>
-      // - El [fecha], se recibió una queja de un cliente que afirma que el empleado fue poco amable y no pudo solucionar su problema de manera efectiva. Se ha hablado con el empleado y se le ha recordado la importancia de mantener un servicio al cliente de alta calidad. <br><br>
-      // - El [fecha], el empleado tuvo una reunión con su supervisor para discutir su desempeño. Se discutieron áreas en las que el empleado ha mostrado fortalezas y áreas que necesitan mejorar. Se acordó un plan de acción para ayudar al empleado a alcanzar sus objetivos de desempeño. <br><br>
-      // - El [fecha], el empleado recibió un reconocimiento por su excelente desempeño en la finalización de un proyecto importante. Se le agradeció por su dedicación y esfuerzo en la empresa.<br><br>
+  if(!response.ok) {
+    window.location.href = PAGE_PRINCIPAL;
+  }
+  // wait the JSON response
+  const annotations = await response.json();
 
-      // Append other info
-      content += `[Nombre y cargo del representante de la empresa] <br>
-                Empresa: ${data.company_name}<br>
-                [Fecha de emisión]<br>`;
+  let title = "Anotaciones al expediente";
 
-      // Create page
-      createTextBlankPage(title, content);
-    })
-    .catch(function (error) {
-      // Manejar el error en caso de que la solicitud falle
-      console.error('Error al enviar la solicitud:', error);
-    });
+  let content = `Nombre: ${annotations.name}<br>
+  Empresa: ${annotations.company_name}<br><br>`;
+
+  let annotCount = 1;
+  // Recorrer las anotaciones utilizando un bucle for...in
+  for (const annotationKey in annotations.annotations) {
+    if (annotations.annotations.hasOwnProperty(annotationKey)) {
+      const annotation = annotations.annotations[annotationKey];
+      content += `Anotación ${annotCount}: ${annotation}<br>`;
+      annotCount++;
+    }
+  }
+
+  // Create page
+  createTextBlankPage(title, content);
 }
 
 /**
