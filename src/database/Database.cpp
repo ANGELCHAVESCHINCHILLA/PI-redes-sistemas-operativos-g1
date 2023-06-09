@@ -127,11 +127,16 @@ std::vector<PersonalData> Database::searchPersonalDataByUser(
     while (sqlite3_step(statement) == SQLITE_ROW) {
       PersonalData::Builder builder = PersonalData::Builder();
 
-      builder.setUser(reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
-      builder.setEmployeeName(reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
-      builder.setJobName(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
-      builder.setCompanyName(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
-      builder.setEmail(reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));
+      builder.setUser(
+          reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
+      builder.setEmployeeName(
+          reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
+      builder.setJobName(
+          reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
+      builder.setCompanyName(
+          reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+      builder.setEmail(
+          reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));
       builder.setPhoneNumber(sqlite3_column_int(statement, 5));
 
       PersonalData personal_data = builder.build();
@@ -143,4 +148,84 @@ std::vector<PersonalData> Database::searchPersonalDataByUser(
   sqlite3_finalize(statement);
 
   return users;
+}
+
+std::vector<JobData> Database::searchJobDataByUser(const std::string& user) {
+  int error = SQLITE_OK;
+
+  std::vector<JobData> users;
+
+  std::string query = JobData::getSelectFromWhereQuery(user);
+
+  sqlite3_stmt* statement;
+
+  error =
+      sqlite3_prepare(this->reference, query.c_str(), -1, &statement, nullptr);
+
+  if (error != SQLITE_OK) {
+    // TODO: Replace with an exception
+    std::cerr << "Can't search JobData.\n";
+  }
+
+  if (!error) {
+    while (sqlite3_step(statement) == SQLITE_ROW) {
+      JobData::Builder builder = JobData::Builder();
+
+      builder.setUser(
+          reinterpret_cast<const char*>(sqlite3_column_text(statement, 0)));
+      builder.setVacationDays(sqlite3_column_int(statement, 1));
+      builder.setGrossSalary(sqlite3_column_int(statement, 2));
+      builder.setNetSalary(sqlite3_column_int(statement, 3));
+      builder.setSalaryStartDate(sqlite3_column_int(statement, 4));
+      builder.setSalaryEndDate(sqlite3_column_int(statement, 5));
+
+      JobData job_data = builder.build();
+
+      users.push_back(std::move(job_data));
+    }
+  }
+
+  sqlite3_finalize(statement);
+
+  return users;
+}
+
+int Database::removePersonalDataByUser(const std::string& user) {
+  int error = SQLITE_OK;
+
+  std::string query = "DELETE FROM PersonalData WHERE user = '" + user + "'";
+
+  error = this->query(query.c_str());
+
+  return error;
+}
+
+int Database::removeJobDataByUser(const std::string& user) {
+  int error = SQLITE_OK;
+
+  std::string query = "DELETE FROM JobData WHERE user = '" + user + "'";
+
+  error = this->query(query.c_str());
+
+  return error;
+}
+
+int Database::editPersonalData(const PersonalData& personal_data) {
+  int error = SQLITE_OK;
+
+  std::string query = personal_data.getUpdateQuery();
+
+  error = this->query(query.c_str());
+
+  return error;
+}
+
+int Database::editJobData(const JobData& job_data) {
+  int error = SQLITE_OK;
+
+  std::string query = job_data.getUpdateQuery();
+
+  error = this->query(query.c_str());
+
+  return error;
 }

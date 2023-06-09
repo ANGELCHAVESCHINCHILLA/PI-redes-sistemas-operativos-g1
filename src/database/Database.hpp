@@ -15,7 +15,6 @@
 
 class Database {
  private:
-
   /**
    * @brief Default constructor.
    *
@@ -43,7 +42,6 @@ class Database {
   // Move Assignment Operator
   Database& operator=(Database&& other) = delete;
 
-
   static Database& getInstance(const char* absolute_path);
 
   int query(const char* query);
@@ -57,6 +55,16 @@ class Database {
   int addJobData(const JobData& job_data);
 
   std::vector<PersonalData> searchPersonalDataByUser(const std::string& user);
+
+  std::vector<JobData> searchJobDataByUser(const std::string& user);
+
+  int removePersonalDataByUser(const std::string& user);
+
+  int removeJobDataByUser(const std::string& user);
+
+  int editPersonalData(const PersonalData& personal_data);
+
+  int editJobData(const JobData& job_data);
 
  private:
   int createTables();

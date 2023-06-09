@@ -5,9 +5,10 @@
 #ifndef PI_REDES_SISTEMAS_OPERATIVOS_G1_GETPERMISSIONSHANDLER_H
 #define PI_REDES_SISTEMAS_OPERATIVOS_G1_GETPERMISSIONSHANDLER_H
 
-#include "FileSystemequestHandler.hpp"
-#include "iostream"
-#include "string"
+#include "FileSystemRequestHandler.hpp"
+#include <iostream>
+#include <string>
+
 class PermissionsHandler : public FileSystemRequestHandler{
  public:
   /// Constructor

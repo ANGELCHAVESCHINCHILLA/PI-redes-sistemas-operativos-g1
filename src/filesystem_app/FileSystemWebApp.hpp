@@ -9,7 +9,7 @@
 #include "../http/HttpResponse.hpp"
 #include "../url/URL.hpp"
 #include "FileSystemAPI.hpp"
-#include "./HttpRequestHandlers/FileSystemequestHandler.hpp"
+#include "./HttpRequestHandlers/FileSystemRequestHandler.hpp"
 
 class FileSystemWebApp : public HttpApp {
   DISABLE_COPY(FileSystemWebApp);

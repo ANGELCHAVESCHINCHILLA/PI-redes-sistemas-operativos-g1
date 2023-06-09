@@ -40,6 +40,10 @@ class FileSystemAPI {
   int getUserType(const std::string& username);
 
   std::string viewFS();
+
+  bool userExists(const std::string& username);
+
+  std::string getUserSalt(const std::string& username);
 };
 
 #endif  // PI_REDES_SISTEMAS_OPERATIVOS_G1_FILESYSTEMAPI_H
