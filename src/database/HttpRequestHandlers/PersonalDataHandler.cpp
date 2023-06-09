@@ -17,17 +17,17 @@ bool PersonalDataHandler::canHandle(
       }
     }
 
-    // if (request.getMethod() == "DELETE") {
-    //   if (this->removeData(request, response)) {
-    //     return true;
-    //   }
-    // }
+    if (request.getMethod() == "DELETE") {
+      if (this->removeData(request, response)) {
+        return true;
+      }
+    }
 
-    // if (request.getMethod() == "PUT") {
-    //   if (this->editData(request, response)) {
-    //     return true;
-    //   }
-    // }
+    if (request.getMethod() == "PUT") {
+      if (this->editData(request, response)) {
+        return true;
+      }
+    }
   }
 
   return false;
@@ -107,7 +107,9 @@ bool PersonalDataHandler::addData(
       .setPhoneNumber(phone_number)
       .build();
 
-    this->databaseApi->database.addPersonalData(personal_data);
+    if (this->databaseApi->database.addPersonalData(personal_data) != 0) {
+      throw std::runtime_error("Can't add a personal data.");
+    }
 
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
@@ -129,6 +131,10 @@ bool PersonalDataHandler::removeData(
     reader.parse(request.getBody(), input);
 
     std::string user = input["user"].asString();
+
+    if (this->databaseApi->database.removePersonalDataByUser(user) != 0) {
+      throw std::runtime_error("Can't remove a personal data.");
+    }
 
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
@@ -155,6 +161,19 @@ bool PersonalDataHandler::editData(
     std::string company_name = input["company_name"].asString();
     std::string email = input["email"].asString();
     int phone_number = input["phone_number"].asInt();
+
+    PersonalData personal_data = PersonalData::Builder()
+      .setUser(user)
+      .setEmployeeName(employee_name)
+      .setJobName(job_name)
+      .setCompanyName(company_name)
+      .setEmail(email)
+      .setPhoneNumber(phone_number)
+      .build();
+
+    if (this->databaseApi->database.editPersonalData(personal_data) != 0) {
+      throw std::runtime_error("Can't edit a personal data.");
+    }
 
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
