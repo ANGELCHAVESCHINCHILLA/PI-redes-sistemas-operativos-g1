@@ -4,6 +4,9 @@
 
 #include <sstream>
 
+HttpRequest::HttpRequest() {
+}
+
 HttpRequest::HttpRequest(const std::string& input) : input(input) {
   std::string copy = this->input;
 
@@ -11,14 +14,13 @@ HttpRequest::HttpRequest(const std::string& input) : input(input) {
 }
 
 HttpRequest::~HttpRequest() {
-  //
 }
 
 std::string HttpRequest::toString() {
   std::stringstream ss;
 
-  ss << this->method << " " << this->target.getInput() << " " <<
-    this->httpVersion;
+  ss << this->method << " " << this->target.getInput() << " "
+     << this->httpVersion;
 
   for (auto& [key, value] : this->headers) {
     ss << key << ": " << value << "\n";
@@ -34,8 +36,8 @@ std::string HttpRequest::toString() {
 std::string HttpRequest::buildString() {
   std::stringstream ss;
 
-  ss << this->method << " " << this->target.getPath() << " " <<
-    this->httpVersion;
+  ss << this->method << " " << this->target.getPath() << " "
+     << this->httpVersion;
 
   ss << HttpMessage::lineSeparator;
 
@@ -49,6 +51,46 @@ std::string HttpRequest::buildString() {
   ss << this->body;
 
   return ss.str();
+}
+
+void HttpRequest::setMethod(const std::string& method) {
+  this->method = method;
+}
+
+void HttpRequest::setTarget(const std::string& target) {
+  this->target = URL(target);
+}
+
+void HttpRequest::setTarget(const URL& target) {
+  this->target = target.copy();
+}
+
+void HttpRequest::addHeader(const std::string& key, const std::string& value) {
+  this->headers.insert({key, value});
+}
+
+void HttpRequest::setBody(const std::string& body) {
+  this->body = body;
+}
+
+const std::string& HttpRequest::getMethod() const {
+  return this->method;
+}
+
+const URL& HttpRequest::getTarget() const {
+  return this->target;
+}
+
+const std::string& HttpRequest::getBody() const {
+  return this->body;
+}
+
+bool HttpRequest::hasHeader(const std::string& key) const {
+  return this->headers.count(key) > 0;
+}
+
+std::string HttpRequest::getHeader(const std::string& key) const {
+  return this->headers.at(key);
 }
 
 void HttpRequest::parse(std::string& input) {
