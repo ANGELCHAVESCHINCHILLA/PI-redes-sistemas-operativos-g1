@@ -50,16 +50,22 @@ int main(int argc, char** argv) {
 
       if (configuration.hasApp("web")) {
         std::cout << "Running the web app in this server...\n";
+        address = configuration.servers["web"].address;
+        port = configuration.servers["web"].port;
         HttpServer::getInstance().appendApp(&webapp_1);
       }
 
       if (configuration.hasApp("fs")) {
         std::cout << "Running the fs app in this server...\n";
+        address = configuration.servers["fs"].address;
+        port = configuration.servers["fs"].port;
         HttpServer::getInstance().appendApp(&webapp_2);
       }
 
       if (configuration.hasApp("db")) {
         std::cout << "Running the db app in this server...\n";
+        address = configuration.servers["fs"].address;
+        port = configuration.servers["fs"].port;
         HttpServer::getInstance().appendApp(&webapp_3);
       }
 
