@@ -41,26 +41,30 @@ int main(int argc, char** argv) {
       ::signal(SIGTERM, HttpServer::stopServer);
       ::signal(SIGINT, HttpServer::stopServer);
 
-      std::string address = "127.0.0.1";
+      std::string address = configuration.servers["default"].address;
+      int port = configuration.servers["default"].port;
 
       GuachisWebApp webapp_1;
       FileSystemWebApp webapp_2;
       DatabaseWebApp webapp_3;
 
       if (configuration.hasApp("web")) {
+        std::cout << "Running the web app in this server...\n";
         HttpServer::getInstance().appendApp(&webapp_1);
       }
 
       if (configuration.hasApp("fs")) {
+        std::cout << "Running the fs app in this server...\n";
         HttpServer::getInstance().appendApp(&webapp_2);
       }
 
       if (configuration.hasApp("db")) {
+        std::cout << "Running the db app in this server...\n";
         HttpServer::getInstance().appendApp(&webapp_3);
       }
 
       // Start the web server
-      HttpServer::getInstance().start(address, configuration.port);
+      HttpServer::getInstance().start(address, port);
 
       std::cout << "Servidor finalizado";
     } catch (const std::runtime_error& error) {
