@@ -83,17 +83,16 @@ Puede usar los archivos de configuración de prueba ya creados en el directorio 
 Ejemplo:
 
 Terminal 1:
-```
-make run ARGS="test/configuration_web.json"
-```
+
+`make run ARGS="test/configuration_web.json"`
+
 Terminal 2:
-```
-make run ARGS="test/configuration_fs.json"
-```
+
+`make run ARGS="test/configuration_fs.json"`
+
 Terminal 3:
-```
-make run ARGS="test/configuration_db.json"
-```
+
+`make run ARGS="test/configuration_db.json"`
 
 ## En varios dispositivos
 
