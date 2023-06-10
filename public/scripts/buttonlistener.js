@@ -3,6 +3,7 @@ import {
   showExpedientAnotations,
   showVacationsBalance,
   showBaseSalary,
+  // showRequestDetails,
   openRequestForm,
   reloadRequests,
   toBackPage,
@@ -29,6 +30,8 @@ addButtonClickListener("salario-base-btn", showBaseSalary);
 addButtonClickListener("expediente-btn", showExpedientAnotations);
 // Requests button
 addButtonClickListener("estado-soluciones-btn", openSolicitudesPage);
+// // See Details Request button
+// addButtonClickListener("detalles-btn", showRequestDetails);
 
 // Salary Form button
 addButtonClickListener("salarial-btn", openRequestForm, "salarial-btn");

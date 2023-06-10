@@ -34,6 +34,11 @@ if (backbtn) {
     });
 }
 
+/**
+ * Formats a date from num to string
+ * @param {*int} numDate The num in format ddmmyy as a integer, e.g. 230523
+ * @returns The date in format dd-mm-yy as a string, e.g. "23-05-23"
+ */
 function formatDate(numDate) {
   // numDate = 230523
 
@@ -57,12 +62,18 @@ function formatDate(numDate) {
 }
 
 /**
+ * Open PAGE_REQUESTS page
+ */
+function openSolicitudesPage() {
+  window.location.href = PAGE_REQUESTS;
+}
+
+/**
  * Reload the requests. It used to reload requests into a requests container.
  * Used in PAGE_REQUESTS page. It calls populateRequestContainer() and reloadDetailsBtns()
  */
 function reloadRequests() {
-    populateRequestContainer();
-    reloadDetailsBtns();
+  populateRequestContainer();
 }
 
 /**
@@ -98,24 +109,41 @@ function reloadRequests() {
   },
 }
 */
-function populateRequestContainer() {
-    // Get Container
-    var requestContainer = document.getElementById("request-container");
-    /**TODO: Read from filesystem what request have the employee reader.Then, from their
-     * requests, craft the divs and populate them to the container. The actual implemention just
-     * populate three static requests. The actual employee is Marta.
-     */
+async function populateRequestContainer() {
+  const status = ["APROBADO", "REVISION", "RECHAZADO"];
+  const username = localStorage.getItem('username');
 
-    // Populate with Solicitudes' Div
-    requestContainer.appendChild(
-        createSolicitudDiv("Marta", "Constancia Salarial", "APROBADO", 0)
-    );
-    requestContainer.appendChild(
-        createSolicitudDiv("Marta", "Vacaciones", "RECHAZADO", 1)
-    );
-    requestContainer.appendChild(
-        createSolicitudDiv("Marta", "Comprobante de Pago", "REVISION", 2)
-    );
+  // send request to server
+  const response = await fetch(`/consultRequestsByUser?user=${username}`, {
+    method: 'GET'
+  });
+
+  if(!response.ok) {
+    window.location.href = PAGE_PRINCIPAL;
+  }
+  // wait the JSON response
+  const requests = await response.json();
+
+  // Get Container
+  var requestContainer = document.getElementById("request-container");
+  // remove first
+  while (requestContainer.firstChild) {
+    requestContainer.removeChild(requestContainer.firstChild);
+  }
+
+  // Utilizando un bucle for...in
+  for (const requestKey in requests) {
+    if (requests.hasOwnProperty(requestKey)) {
+      const request = requests[requestKey];
+      // Populate with Solicitudes' Div
+      requestContainer.appendChild(
+        createSolicitudDiv(request.user, request.request_type
+          , status[request.state], request.ID)
+      );
+    }
+  }
+
+  reloadDetailsBtns();
 }
 
 /**
@@ -130,102 +158,106 @@ function populateRequestContainer() {
  * @returns
  */
 function createSolicitudDiv(nombre, solicitud, estado, id) {
-    // Create the main div
-    const solicitudDiv = document.createElement("div");
-    solicitudDiv.classList.add("solicitud");
+  console.log(`Request type: ${solicitud}`);
+  console.log(`User: ${nombre}`);
+  console.log(`ID: ${id}`);
+  console.log(`estado: ${estado}`);
+  // Create the main div
+  const solicitudDiv = document.createElement("div");
+  solicitudDiv.classList.add("solicitud");
 
-    const solicitudBody = document.createElement("div");
-    solicitudBody.classList.add("solicitud_body");
-    // Create the title with the name
-    const title = document.createElement("h3");
-    title.textContent = `Solicitud de ${nombre}`;
-    solicitudBody.appendChild(title);
-    // Create the solicitud name
-    const solicitudName = document.createElement("p");
-    solicitudName.textContent = `Nombre de solicitud: ${solicitud}`;
-    solicitudBody.appendChild(solicitudName);
-    // Manage the ID
-    const idField = document.createElement("p");
-    idField.textContent = `ID: ${id}`;
-    solicitudDiv.setAttribute("data-id", id);
-    solicitudBody.appendChild(idField);
+  const solicitudBody = document.createElement("div");
+  solicitudBody.classList.add("solicitud_body");
+  // Create the title with the name
+  const title = document.createElement("h3");
+  title.textContent = `Solicitud de ${nombre}`;
+  solicitudBody.appendChild(title);
+  // Create the solicitud name
+  const solicitudName = document.createElement("p");
+  solicitudName.textContent = `Nombre de solicitud: ${solicitud}`;
+  solicitudBody.appendChild(solicitudName);
+  // Manage the ID
+  // const idField = document.createElement("p");
+  // idField.textContent = `ID: ${id}`;
+  solicitudDiv.setAttribute("data-id", id);
+  // solicitudBody.appendChild(idField);
 
-    // Create the estado element with its color
-    const estadoElement = document.createElement("p");
-    estadoElement.textContent = `Estado: ${estado}`;
-    if (estado === "APROBADO") {
-        estadoElement.classList.add("aprobado");
-    } else if (estado === "REVISION") {
-        estadoElement.classList.add("revision");
-    } else if (estado === "RECHAZADO") {
-        estadoElement.classList.add("rechazado");
-    }
-    solicitudBody.appendChild(estadoElement);
+  // Create the estado element with its color
+  const estadoElement = document.createElement("p");
+  estadoElement.textContent = `Estado: ${estado}`;
+  if (estado === "APROBADO") {
+      estadoElement.classList.add("aprobado");
+  } else if (estado === "REVISION") {
+      estadoElement.classList.add("revision");
+  } else if (estado === "RECHAZADO") {
+      estadoElement.classList.add("rechazado");
+  }
+  solicitudBody.appendChild(estadoElement);
 
-    // Create the button
-    const button = document.createElement("button");
-    button.textContent = "Detalles";
-    button.classList.add("detalles-btn");
-    button.classList.add("submit-btn");
-    solicitudDiv.appendChild(solicitudBody);
-    solicitudDiv.appendChild(button);
+  // Create the button
+  const button = document.createElement("button");
+  button.textContent = "Detalles";
+  button.classList.add("detalles-btn");
+  button.classList.add("submit-btn");
+  solicitudDiv.appendChild(solicitudBody);
+  solicitudDiv.appendChild(button);
 
-    return solicitudDiv;
+  return solicitudDiv;
 }
 
-/**
- * This method *MUST* be into a FileSystemAPI. Is used here just for an example, but NEVER
- * could exists on frontend orient JS file.
- * @param {*} requestId
- * @returns
- */
-function searchRequest(requestId) {
-    // TODO: search in FileSystem by request id the requestInfo
-    // The actual implemention is weird. Just ids from zero to two.
-    // Used to static actual implementation
-    // return requestInfo;
-    let requestInfo = "";
-    console.log(requestId);
-    switch (requestId) {
-        case "0":
-            requestInfo =
-                "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Marta Viquez, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nMarta Viquez";
-            break;
-        case "1":
-            requestInfo =
-                "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Lobo Lopez, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nLobo Lopez";
-
-            break;
-        case "2":
-            requestInfo =
-                "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Jonathan Beltran, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nJonathan Beltran";
-            break;
-        default:
-            "Texto no disponible. Llame a soporte";
-    }
-    console.log(`En request: ${requestId}`);
-    return requestInfo;
-}
 
 /**
  * Add listener event to new details buttons.
- *  TODO: Maybe this method could be more abstract.
+ *
  */
+/*
+{
+  "user": "Juan",
+  "ID": 3,
+  "state": 0,
+  "padding": "          ",
+  "information": "Hola, por favor puedo tener mi constancia salarial?",
+  "feedback": "   ",
+  "request_type": "ConstanciaSalarial",
+  "vacation_days": 0,
+  "vacation_start_date": 0,
+  "vacation_end_date": 0,
+  "area": "Cartago"
+}
+*/
 function reloadDetailsBtns() {
-    const detailsBtns = document.querySelectorAll(".detalles-btn"); // get by class
-    if (detailsBtns) {
-        detailsBtns.forEach(function (btn) {
-            btn.addEventListener("click", function () {
-                let requestDiv = btn.parentNode;
-                let requestId = requestDiv.getAttribute("data-id");
-                // let requestInfo = searchRequest.info;
-                // let requestTitle = searchRequest.title;
-                let requestInfo = searchRequest(requestId);
-                let requestTitle = "Solicitud de Vacaciones";
-                createTextBlankPage(requestTitle, requestInfo);
-            });
+  // const detailsBtns = document.getElementsByClassName(".detalles-btn");
+  const detailsBtns = document.querySelectorAll(".detalles-btn"); // get by class
+  if (detailsBtns) {
+    detailsBtns.forEach(function (btn) {
+      btn.addEventListener("click", async () => {
+        let requestDiv = btn.parentNode;
+        let requestId = requestDiv.getAttribute("data-id");
+
+        // send to server to get the request by ID
+        const response = await fetch(`/consultRequestsByID?id=${requestId}`, {
+          method: 'GET'
         });
-    }
+      
+        if(!response.ok) {
+          window.location.href = PAGE_PRINCIPAL;
+        }
+      
+        // wait the JSON response
+        const request = await response.json();
+        // build request info for be put in page
+        let requestInfo = `Nombre: ${request.user}<br>
+        Area: ${request.area}<br><br>
+        Información: ${request.information}<br><br>`
+        // TODO: si la request es de vacaciones, se debe agregar la informacion
+        requestInfo += `Observación: ${request.feedback}<br>`;
+
+        // The title is the request type, e.g. Constancia Salarial
+        let requestTitle = `${request.request_type}`;
+        createTextBlankPage(requestTitle, requestInfo);
+      });
+    });
+  }
 }
 
 /*
@@ -247,6 +279,9 @@ const json = {
   }
 };
 */
+/**
+ * Show the result of consult salary base
+ */
 async function showBaseSalary() {
   const username = localStorage.getItem('username');
 
@@ -259,7 +294,7 @@ async function showBaseSalary() {
     window.location.href = PAGE_PRINCIPAL;
   }
 
-  // waint the JSON response
+  // wait the JSON response
   const salaryInfo = await response.json()
 
   // Construct page
@@ -288,6 +323,9 @@ async function showBaseSalary() {
   createTextBlankPage(title, content);
 }
 
+/**
+ * Show my vacations balance
+ */
 async function showVacationsBalance() {
   const username = localStorage.getItem('username');
 
@@ -322,6 +360,9 @@ async function showVacationsBalance() {
   }
 }
 */
+/**
+ * Show my annotations to expedient
+ */
 async function showExpedientAnotations() {
   const username = localStorage.getItem('username');
 
@@ -353,13 +394,6 @@ async function showExpedientAnotations() {
 
   // Create page
   createTextBlankPage(title, content);
-}
-
-/**
- * Open PAGE_REQUESTS page
- */
-function openSolicitudesPage() {
-    window.location.href = PAGE_REQUESTS;
 }
 
 /**
@@ -594,7 +628,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.status;
         })
         .then(function (status) {
-            console.log(status)
             if (status === 401) {
                 window.location.href = DEFAUL_PAGE;
             }
