@@ -3,7 +3,8 @@
 #include "QueryHandler.hpp"
 #include <iostream>
 
-#include "../../../net/TcpClient.hpp"
+#include "../../../configuration.hpp"
+#include "../../../http/HttpServer.hpp"
 
 bool testSalary(HttpResponse& response);
 
@@ -11,10 +12,14 @@ bool testVacations(HttpResponse& response);
 
 bool testAnnotations(HttpResponse& response);
 
+bool testStateRequests(HttpResponse& response);
+
+bool testRequestID(HttpResponse& response);
+
 /*
 Un ejemplo de una solicitud que manejaría este Handler es:
 
-POST /consultVacationBalanceByUser HTTP/1.1
+GET /consultVacationBalanceByUser?user=Juan HTTP/1.1
 Host: 127.0.0.1:8080
 Content-Length: 27
 ... mas encabezados que le pone el navegador.....
@@ -36,56 +41,91 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "GET") {
     if (request.getTarget().getPath().find("consult") != std::string::npos) {
       /*
-      Esto es para testear sin conectarse a la base de datos utilizando datos
-      genéricos
-      return testSalary(response);
-
-      return testVacations(response);
-
-      return testAnnotations(response);
+      // Esto es para testear sin conectarse a la base de datos utilizando datos
+      // genéricos
+      if (request.getTarget().getPath().find("consultRequestsByUser") != std::string::npos) {
+        return testStateRequests(response);
+      } else if (request.getTarget().getPath().find("consultRequestsByID") != std::string::npos) {
+        return testRequestID(response);
+      } else if (request.getTarget().getPath().find("consultSalaryByUser") != std::string::npos) {
+        return testSalary(response);
+      } else if (request.getTarget().getPath().find("consultVacationBalanceByUser") != std::string::npos) {
+        return testVacations(response);
+      } else if (request.getTarget().getPath().find("consultAnnotationsByUser") != std::string::npos) {
+        return testAnnotations(response);
+      }
       */
-
-     return testAnnotations(response);
-
-      // create and connect Tcp Client with the Data Base Server
-      std::shared_ptr<TcpClient> client(new TcpClient);
-      Socket& DBSocket = (*client).connect(this->server.data()
-        , this->port.data());
-
-      // Send the HTTP Request
-      int error = DBSocket.send(request.buildString());
-
-      // Receive the HTTP Response from Data Base server.
-      std::string result;
-      if (!error) {
-        // receive the response of the server
-        error = DBSocket.receive(result);
-      } else {
-        throw std::runtime_error(request.getTarget().getPath()
-          + ": Could not be sent to Data Base Server");
+      try {
+        this->callBDToGetQuery(request, response);
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << ".\n";
+        response.setStatusCode(401);
       }
 
-      if (!error) {
-        // Construct the response received as a HttpResponse Object
-        HttpResponse DBResponse(result);
+      // // create and connect Tcp Client with the Data Base Server
+      // std::shared_ptr<TcpClient> client(new TcpClient);
+      // Socket& DBSocket = (*client).connect(this->server.data()
+      //   , this->port.data());
 
-        // parse the response received
-        // TODO: this parse method is not complete yet
-        DBResponse.parseHttpResponse(result);
+      // // Send the HTTP Request
+      // int error = DBSocket.send(request.buildString());
 
-        // If the received response has a succesfull status code
-        if (200 <= DBResponse.getStatusCode() && DBResponse.getStatusCode()
-          < 300) {
-          // TODO: Construir la respuesta que se enviará al cliente.
-        } else {
-          // TODO: ver si se envía algun otro tipo de error o con este es enough
-          this->serveAny(response, 400);
-        }
-      }
-      throw std::runtime_error("Could not receive from Data Base Server");
+      // // Receive the HTTP Response from Data Base server.
+      // std::string result;
+      // if (!error) {
+      //   // receive the response of the server
+      //   error = DBSocket.receive(result);
+      // } else {
+      //   throw std::runtime_error(request.getTarget().getPath()
+      //     + ": Could not be sent to Data Base Server");
+      // }
+
+      // if (!error) {
+      //   // Construct the response received as a HttpResponse Object
+      //   HttpResponse DBResponse(result);
+
+      //   // parse the response received
+      //   // TODO: this parse method is not complete yet
+      //   DBResponse.parseHttpResponse(result);
+
+      //   // If the received response has a succesfull status code
+      //   if (200 <= DBResponse.getStatusCode() && DBResponse.getStatusCode()
+      //     < 300) {
+      //     // TODO: Construir la respuesta que se enviará al cliente.
+      //   } else {
+      //     // TODO: ver si se envía algun otro tipo de error o con este es enough
+      //     this->serveAny(response, 400);
+      //   }
+      // }
+      // throw std::runtime_error("Could not receive from Data Base Server");
     }
   }
   return false;
+}
+
+void QueryHandler::callBDToGetQuery(HttpRequest& request, HttpResponse& response) {
+  Configuration& configuration = Configuration::getInstance();
+
+  std::string db_address = configuration.getServer("db").address;
+  std::string db_port = std::to_string(configuration.getServer("db").port);
+
+  HttpRequest DBRequest;
+
+  DBRequest.setMethod("GET");
+  DBRequest.setTarget("http://" + db_address + ":" + db_port + request.getTarget().getPath());
+  DBRequest.setBody(request.getBody());
+
+  // DBRequest.setHeader("host", db_address + ":" + db_port);
+
+  std::cout << "Request que se enviará a Data Base" << std::endl;
+  std::cout << DBRequest.toString() << std::endl;
+
+  auto future = HttpServer::fetch(DBRequest);
+
+  HttpResponse http_response = future.get();
+
+  response.setStatusCode(http_response.getStatusCode());
+  response.getBody() << http_response.getBody().str();
 }
 
 
@@ -182,3 +222,93 @@ bool testAnnotations(HttpResponse& response) {
 
   return true;
 }
+
+// Eliminar cuando ya database y webapp estén correctamente conectados
+bool testStateRequests(HttpResponse& response) {
+  Json::Value responseJson;
+  
+  // Crear el objeto request1
+  Json::Value request1;
+  request1["user"] = "Juan";
+  request1["ID"] = 3;
+  request1["state"] = 0;
+  request1["padding"] = "          ";
+  request1["information"] = "Hola, por favor puedo tener mi constancia salarial?";
+  request1["feedback"] = "   ";
+  request1["request_type"] = "ConstanciaSalarial";
+  request1["vacation_days"] = 0;
+  request1["vacation_start_date"] = 0;
+  request1["vacation_end_date"] = 0;
+  request1["area"] = "Cartago";
+  
+  // Crear el objeto request2
+  Json::Value request2;
+  request2["user"] = "Juan";
+  request2["ID"] = 7;
+  request2["state"] = 1;
+  request2["padding"] = "          ";
+  request2["information"] = "Hola, por favor puedo tener mis 13 días de vacaciones?";
+  request2["feedback"] = "   ";
+  request2["request_type"] = "Vacaciones";
+  request2["vacation_days"] = 13;
+  request2["vacation_start_date"] = 11223;
+  request2["vacation_end_date"] = 151223;
+  request2["area"] = "Cartago";
+  
+  // Agregar los objetos request1 y request2 al objeto responseJson
+  responseJson["request1"] = request1;
+  responseJson["request2"] = request2;
+
+  Json::StreamWriterBuilder builder;
+  builder["indentation"] = "\t";
+  std::ostringstream jsonStream;
+  std::string jsonString;
+
+  std::unique_ptr<Json::StreamWriter> jsonWriter(builder.newStreamWriter());
+  jsonWriter->write(responseJson, &jsonStream);
+  jsonString = jsonStream.str();
+
+  std::cout << "EL JSON GENERADO FUE:\n"
+  << jsonString << std::endl
+  << std::endl;
+
+  HttpRequestHandler::serveAny(response, 200, "application/json", jsonString);
+
+  return true;
+}
+
+// Eliminar cuando ya database y webapp estén correctamente conectados
+bool testRequestID(HttpResponse& response) {
+  // Crear el objeto responseJson
+  Json::Value responseJson;
+  responseJson["user"] = "Juan";
+  responseJson["ID"] = 3;
+  responseJson["state"] = 0;
+  responseJson["padding"] = "          ";
+  responseJson["information"] = "Hola, por favor puedo tener mi constancia salarial?";
+  responseJson["feedback"] = "   ";
+  responseJson["request_type"] = "ConstanciaSalarial";
+  responseJson["vacation_days"] = 0;
+  responseJson["vacation_start_date"] = 0;
+  responseJson["vacation_end_date"] = 0;
+  responseJson["area"] = "Cartago";
+
+  Json::StreamWriterBuilder builder;
+  builder["indentation"] = "\t";
+  std::ostringstream jsonStream;
+  std::string jsonString;
+
+  std::unique_ptr<Json::StreamWriter> jsonWriter(builder.newStreamWriter());
+  jsonWriter->write(responseJson, &jsonStream);
+  jsonString = jsonStream.str();
+
+  std::cout << "EL JSON GENERADO FUE:\n"
+  << jsonString << std::endl
+  << std::endl;
+
+  HttpRequestHandler::serveAny(response, 200, "application/json", jsonString);
+
+  return true;
+}
+
+

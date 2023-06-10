@@ -47,6 +47,8 @@ class QueryHandler : public HttpRequestHandler {
    */
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 
+  void callBDToGetQuery(HttpRequest& request, HttpResponse& response);
+
   inline void setServer(const std::string& server);
 
   inline void setPort(const std::string& port);
