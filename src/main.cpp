@@ -64,8 +64,8 @@ int main(int argc, char** argv) {
 
       if (configuration.hasApp("db")) {
         std::cout << "Running the db app in this server...\n";
-        address = configuration.servers["fs"].address;
-        port = configuration.servers["fs"].port;
+        address = configuration.servers["db"].address;
+        port = configuration.servers["db"].port;
         HttpServer::getInstance().appendApp(&webapp_3);
       }
 
