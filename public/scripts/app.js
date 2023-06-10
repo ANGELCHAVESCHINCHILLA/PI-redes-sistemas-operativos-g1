@@ -367,7 +367,7 @@ async function showExpedientAnotations() {
   const username = localStorage.getItem('username');
 
   // sent request to server
-  const response = await fetch(`/consultVacationBalanceByUser?user=${username}`, {
+  const response = await fetch(`/consultAnnotationsByUser?user=${username}`, {
     method: 'GET'
   });
 
