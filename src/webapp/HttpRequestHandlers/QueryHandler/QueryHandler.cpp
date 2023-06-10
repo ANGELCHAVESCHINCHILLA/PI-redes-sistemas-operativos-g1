@@ -21,17 +21,12 @@ Un ejemplo de una solicitud que manejaría este Handler es:
 
 GET /consultVacationBalanceByUser?user=Juan HTTP/1.1
 Host: 127.0.0.1:8080
-Content-Length: 27
 ... mas encabezados que le pone el navegador.....
-Content-Type: application/json
 Referer: http://127.0.0.1:8080/index.html
 
-
-{"username":"Juan Alberto"}
-
-Juan Alberto sería el username que consulta por el balance de vacaciones
+Juan sería el username que consulta por el balance de vacaciones
 Esta solicitud se envía tal y como viene a la base de datos, por lo que la base
-de datos debe trabajarlo como POST y que el username venga en el body tipo JSON.
+de datos debe trabajarlo como GET y que el username venga como un Query.
 */
 
 bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
@@ -56,76 +51,44 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       }
       */
       try {
-        this->callBDToGetQuery(request, response);
+        // send request to and receive response from data base server
+        return this->callBDToGetQuery(request, response);
       } catch (const std::runtime_error& error) {
         std::cerr << error.what() << ".\n";
         response.setStatusCode(401);
       }
-
-      // // create and connect Tcp Client with the Data Base Server
-      // std::shared_ptr<TcpClient> client(new TcpClient);
-      // Socket& DBSocket = (*client).connect(this->server.data()
-      //   , this->port.data());
-
-      // // Send the HTTP Request
-      // int error = DBSocket.send(request.buildString());
-
-      // // Receive the HTTP Response from Data Base server.
-      // std::string result;
-      // if (!error) {
-      //   // receive the response of the server
-      //   error = DBSocket.receive(result);
-      // } else {
-      //   throw std::runtime_error(request.getTarget().getPath()
-      //     + ": Could not be sent to Data Base Server");
-      // }
-
-      // if (!error) {
-      //   // Construct the response received as a HttpResponse Object
-      //   HttpResponse DBResponse(result);
-
-      //   // parse the response received
-      //   // TODO: this parse method is not complete yet
-      //   DBResponse.parseHttpResponse(result);
-
-      //   // If the received response has a succesfull status code
-      //   if (200 <= DBResponse.getStatusCode() && DBResponse.getStatusCode()
-      //     < 300) {
-      //     // TODO: Construir la respuesta que se enviará al cliente.
-      //   } else {
-      //     // TODO: ver si se envía algun otro tipo de error o con este es enough
-      //     this->serveAny(response, 400);
-      //   }
-      // }
-      // throw std::runtime_error("Could not receive from Data Base Server");
     }
   }
   return false;
 }
 
-void QueryHandler::callBDToGetQuery(HttpRequest& request, HttpResponse& response) {
+bool QueryHandler::callBDToGetQuery(HttpRequest& request, HttpResponse& response) {
   Configuration& configuration = Configuration::getInstance();
-
+  // IP adress of data base server
   std::string db_address = configuration.getServer("db").address;
+  // port in which data base server is listenning
   std::string db_port = std::to_string(configuration.getServer("db").port);
-
+  // request to be send to data base server
   HttpRequest DBRequest;
-
+  // Construct request with our needs
   DBRequest.setMethod("GET");
-  DBRequest.setTarget("http://" + db_address + ":" + db_port + request.getTarget().getPath());
+  DBRequest.setTarget("http://" + db_address + ":" + db_port + request.getTarget().getInput());
   DBRequest.setBody(request.getBody());
 
-  // DBRequest.setHeader("host", db_address + ":" + db_port);
+  // std::cout << "Request que se enviará a Data Base" << std::endl;
+  // std::cout << DBRequest.toString() << std::endl;
 
-  std::cout << "Request que se enviará a Data Base" << std::endl;
-  std::cout << DBRequest.toString() << std::endl;
-
+  // Send request to data base and store its result in future
   auto future = HttpServer::fetch(DBRequest);
 
-  HttpResponse http_response = future.get();
+  // Get data received and create a HttResponse
+  HttpResponse DBResponse = future.get();
 
-  response.setStatusCode(http_response.getStatusCode());
-  response.getBody() << http_response.getBody().str();
+  // Build our DBReponse
+  response.setStatusCode(DBResponse.getStatusCode());
+  response.getBody() << DBResponse.getBody().str();
+  response.setHeader("Content-Type", "application/json");
+  return response.buildResponse();
 }
 
 

@@ -13,30 +13,12 @@
  */
 class QueryHandler : public HttpRequestHandler {
  protected:
-  /**
-  * @brief The database server.
-  * 
-  */
-  std::string server;
-
-  /**
-   * @brief Port in which database server is listenning
-   * 
-   */
-  std::string port;
 
  public:
   DISABLE_COPY(QueryHandler);
 
   QueryHandler() = default;
 
-  /**
-   * @brief Construct a new Query Handler object
-   * 
-   * @param server The Data Base server
-   * @param port Port in which Data Base server is listenning
-   */
-  QueryHandler(const std::string& server, const std::string& port);
   /**
    * @brief 
    * 
@@ -47,11 +29,7 @@ class QueryHandler : public HttpRequestHandler {
    */
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 
-  void callBDToGetQuery(HttpRequest& request, HttpResponse& response);
-
-  inline void setServer(const std::string& server);
-
-  inline void setPort(const std::string& port);
+  bool callBDToGetQuery(HttpRequest& request, HttpResponse& response);
 };
 
 
