@@ -59,6 +59,16 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       }
     }
   }
+  // if (request.getMethod() == "POST") {
+  //   if (request.getTarget().getPath().find("Request") != std::string::npos) {
+  //     try {
+  //       return this->callBDToGetQuery(request, response);
+  //     } catch (const std::runtime_error& error) {
+  //       std::cerr << error.what() << ".\n";
+  //       response.setStatusCode(401);
+  //     }
+  //   }
+  // }
   return false;
 }
 
