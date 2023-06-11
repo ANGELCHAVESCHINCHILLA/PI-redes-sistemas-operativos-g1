@@ -14,7 +14,8 @@ AddUserHandler::AddUserHandler(FileSystemAPI* fileSystemApi)
 
 bool AddUserHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "POST" &&
-      request.getTarget().getPath() == "/adduser") {
+      (request.getTarget().getPath() == "/adduser" ||
+          request.getTarget().getPath() == "/auth/user")) {
     Log::getInstance().write(
         Log::INFO, "AddUserRequestHandled", request.getTarget().getPath());
     const std::string& body = request.getBody();
