@@ -9,10 +9,10 @@
 
 #include <string>
 
-#define DIRECTORY_COUNT 8
+#define DIRECTORY_COUNT 64
 #define DIRECTORY_UNDEFINED -1
 
-#define FAT_COUNT 8
+#define FAT_COUNT 64
 #define FAT_UNDEFINED -1
 #define FAT_RESERVED -2
 #define FAT_EOF -3
