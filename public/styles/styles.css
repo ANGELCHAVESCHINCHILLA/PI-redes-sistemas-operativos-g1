@@ -521,10 +521,32 @@ button.index-btn {
   border-radius: 10px;
   transition: background-color 0.3s ease-in-out;
   width: 100vh;
+  height: 20vh;
+  margin-top: 30px;
 }
 
 button.index-btn:hover {
   background-color: #6ea9e7;
   color: #f2f2f2;
   font-weight: 1000;
+}
+
+#gerente-btns {
+  padding: 30px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
 }

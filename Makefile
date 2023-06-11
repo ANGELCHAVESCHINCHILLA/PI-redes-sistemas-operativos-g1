@@ -7,7 +7,7 @@ PROJECT_ID = proyecto_integrador
 
 # Options
 
-ARGS = configuration.json
+ARGS =configuration.json
 DEFINITIONS = 
 DEPENDENCIES = openssl libssl-dev sqlite3 libsqlite3-dev libjsoncpp-dev libgtest-dev
 LIBRARIES = crypto sqlite3 jsoncpp gtest gtest_main

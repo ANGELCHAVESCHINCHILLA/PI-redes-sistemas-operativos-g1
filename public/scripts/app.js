@@ -177,134 +177,134 @@ function reloadDetailsBtns() {
 }
 
 function showBaseSalary() {
-  var username = localStorage.getItem('username');
-  // envia un post al servidor para consulta salario
-  fetch('/consultSalaryByUser', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({username: username})
-  })
-    .then(function (response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          window.location.href = PAGE_PRINCIPAL;
-        }
+    var username = localStorage.getItem('username');
+    // envia un post al servidor para consulta salario
+    fetch('/consultSalaryByUser', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username: username})
     })
-    .then(function (data) {
-      // for debug
-      console.log(data);
-      console.log(data.name);
-      console.log(data.company_name);
-      console.log(data.salaries[0]);  // Gross Salary
-      console.log(data.salaries[1]);  // Net Salary
-      console.log(data.salaries[2]);  // Salary Start Date
-    
-      // Crea la pagina de 
-      let salaryStr = numeroALetras.convertir(data.salaries[0]);
-      let title = "Salario Base";
-      const content = `Su salario base es de: CRC${data.salaries[0]} (${salaryStr})<br><br>
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                window.location.href = PAGE_PRINCIPAL;
+            }
+        })
+        .then(function (data) {
+            // for debug
+            console.log(data);
+            console.log(data.name);
+            console.log(data.company_name);
+            console.log(data.salaries[0]);  // Gross Salary
+            console.log(data.salaries[1]);  // Net Salary
+            console.log(data.salaries[2]);  // Salary Start Date
+
+            // Crea la pagina de
+            let salaryStr = numeroALetras.convertir(data.salaries[0]);
+            let title = "Salario Base";
+            const content = `Su salario base es de: CRC${data.salaries[0]} (${salaryStr})<br><br>
               [Nombre y cargo del representante de la empresa] <br>
               Compañía: ${data.company_name}<br>
               [Fecha de emisión]<br>`;
 
-      createTextBlankPage(title, content);
-    })
-    .catch(function (error) {
-      // Manejar el error en caso de que la solicitud falle
-      console.error('Error al enviar la solicitud:', error);
-    });
+            createTextBlankPage(title, content);
+        })
+        .catch(function (error) {
+            // Manejar el error en caso de que la solicitud falle
+            console.error('Error al enviar la solicitud:', error);
+        });
 }
 
 function showVacationsBalance() {
-  var username = localStorage.getItem('username');
-  // envia un post al servidor para consultar balance de vacaciones
-  fetch('/consultVacationBalanceByUser', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({username: username})
-  })
-    .then(function (response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          window.location.href = PAGE_PRINCIPAL;
-        }
+    var username = localStorage.getItem('username');
+    // envia un post al servidor para consultar balance de vacaciones
+    fetch('/consultVacationBalanceByUser', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username: username})
     })
-    .then(function (data) {
-      // conse.log for debug
-      console.log(data);
-      console.log(data.vacationBalance);  // balance de vacaciones
-      
-      // cree le pagina que mostrará el balance de vacaciones
-      let vacationsStr = numeroALetras.convertir(data.vacationBalance);
-      let title = "Saldo de Vacaciones";
-      const content = `Su saldo de vacaciones es de: ${data.vacationBalance} (${vacationsStr}) días.<br><br>
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                window.location.href = PAGE_PRINCIPAL;
+            }
+        })
+        .then(function (data) {
+            // conse.log for debug
+            console.log(data);
+            console.log(data.vacationBalance);  // balance de vacaciones
+
+            // cree le pagina que mostrará el balance de vacaciones
+            let vacationsStr = numeroALetras.convertir(data.vacationBalance);
+            let title = "Saldo de Vacaciones";
+            const content = `Su saldo de vacaciones es de: ${data.vacationBalance} (${vacationsStr}) días.<br><br>
               [Nombre y cargo del representante de la empresa] <br>
               [Nombre de la empresa]<br>
               [Fecha de emisión]<br>`;
 
-      createTextBlankPage(title, content);
-    })
-    .catch(function (error) {
-      // Manejar el error en caso de que la solicitud falle
-      console.error('Error al enviar la solicitud:', error);
-    });
+            createTextBlankPage(title, content);
+        })
+        .catch(function (error) {
+            // Manejar el error en caso de que la solicitud falle
+            console.error('Error al enviar la solicitud:', error);
+        });
 }
 
 function showExpedientAnotations() {
-  var username = localStorage.getItem('username');
-  // envia un post al servidor para consultar expediente de anotaciones
-  fetch('/consultAnnotationsByUser', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({username: username})
-  })
-    .then(function (response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          window.location.href = PAGE_PRINCIPAL;
-        }
+    var username = localStorage.getItem('username');
+    // envia un post al servidor para consultar expediente de anotaciones
+    fetch('/consultAnnotationsByUser', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username: username})
     })
-    .then(function (data) {
-      // conse.log for debug
-      console.log(data);
-      console.log(data.name);  // nombre del empleado?
-      console.log(data.company_name);  // nombre de la compañía
-      console.log(data.annotations);  // arreglo de anotaciones
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                window.location.href = PAGE_PRINCIPAL;
+            }
+        })
+        .then(function (data) {
+            // conse.log for debug
+            console.log(data);
+            console.log(data.name);  // nombre del empleado?
+            console.log(data.company_name);  // nombre de la compañía
+            console.log(data.annotations);  // arreglo de anotaciones
 
-      let title = "Anotaciones al expediente";
+            let title = "Anotaciones al expediente";
 
-      let content = ``;
-      // Append each annotation
-      for (let index = 0; index < data.annotations.length; index++) {
-        content += `- ${data.annotations[index]} <br><br>`;
-      }
-      
-      // let content = `- El [fecha], el empleado llegó tarde al trabajo sin previo aviso y sin una justificación válida. Se le ha recordado la política de puntualidad de la empresa y se le ha informado que otra falta similar podría resultar en una medida disciplinaria. <br><br>
-      // - El [fecha], se recibió una queja de un cliente que afirma que el empleado fue poco amable y no pudo solucionar su problema de manera efectiva. Se ha hablado con el empleado y se le ha recordado la importancia de mantener un servicio al cliente de alta calidad. <br><br>
-      // - El [fecha], el empleado tuvo una reunión con su supervisor para discutir su desempeño. Se discutieron áreas en las que el empleado ha mostrado fortalezas y áreas que necesitan mejorar. Se acordó un plan de acción para ayudar al empleado a alcanzar sus objetivos de desempeño. <br><br>
-      // - El [fecha], el empleado recibió un reconocimiento por su excelente desempeño en la finalización de un proyecto importante. Se le agradeció por su dedicación y esfuerzo en la empresa.<br><br>
+            let content = ``;
+            // Append each annotation
+            for (let index = 0; index < data.annotations.length; index++) {
+                content += `- ${data.annotations[index]} <br><br>`;
+            }
 
-      // Append other info
-      content += `[Nombre y cargo del representante de la empresa] <br>
+            // let content = `- El [fecha], el empleado llegó tarde al trabajo sin previo aviso y sin una justificación válida. Se le ha recordado la política de puntualidad de la empresa y se le ha informado que otra falta similar podría resultar en una medida disciplinaria. <br><br>
+            // - El [fecha], se recibió una queja de un cliente que afirma que el empleado fue poco amable y no pudo solucionar su problema de manera efectiva. Se ha hablado con el empleado y se le ha recordado la importancia de mantener un servicio al cliente de alta calidad. <br><br>
+            // - El [fecha], el empleado tuvo una reunión con su supervisor para discutir su desempeño. Se discutieron áreas en las que el empleado ha mostrado fortalezas y áreas que necesitan mejorar. Se acordó un plan de acción para ayudar al empleado a alcanzar sus objetivos de desempeño. <br><br>
+            // - El [fecha], el empleado recibió un reconocimiento por su excelente desempeño en la finalización de un proyecto importante. Se le agradeció por su dedicación y esfuerzo en la empresa.<br><br>
+
+            // Append other info
+            content += `[Nombre y cargo del representante de la empresa] <br>
                 Empresa: ${data.company_name}<br>
                 [Fecha de emisión]<br>`;
 
-      // Create page
-      createTextBlankPage(title, content);
-    })
-    .catch(function (error) {
-      // Manejar el error en caso de que la solicitud falle
-      console.error('Error al enviar la solicitud:', error);
-    });
+            // Create page
+            createTextBlankPage(title, content);
+        })
+        .catch(function (error) {
+            // Manejar el error en caso de que la solicitud falle
+            console.error('Error al enviar la solicitud:', error);
+        });
 }
 
 /**
@@ -532,7 +532,16 @@ function cancelar() {
     /** Nothing for now ;) */
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
+    checkLogin();
+    if (window.location.pathname == '/index.html') {
+        populateIndexButtons(2);
+    }
+
+    console.log(window.location.pathname);
+});
+
+function checkLogin() {
     var data = localStorage.getItem('logged');
 
     fetch('/validate', {
@@ -551,11 +560,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.href = DEFAUL_PAGE;
             }
         })
-            .catch(function (error) {
-                // Manejar el error en caso de que la solicitud falle
-                console.error('Error al enviar la solicitud:', error);
-            });
-});
+        .catch(function (error) {
+            // Manejar el error en caso de que la solicitud falle
+            console.error('Error al enviar la solicitud:', error);
+        });
+}
+
+
+function populateIndexButtons(permissions) {
+    if (permissions > 1) {
+        const divContainer = document.getElementById("gerente-btns")
+        addGerenteButtons(divContainer);
+    }
+}
+
+function addGerenteButtons(divcontainer) {
+    const solicitudesBtn = document.createElement('button');
+    const anotacionesBtn = document.createElement('button');
+    const header = document.createElement('h2');
+    header.textContent = "Opciones de Gerente";
+    solicitudesBtn.textContent = "REVISAR SOLICITUDES";
+    anotacionesBtn.textContent = "CREAR ANOTACIÓN";
+    solicitudesBtn.type = 'submit';
+    anotacionesBtn.type = 'submit';
+    solicitudesBtn.classList.add("index-btn");
+    anotacionesBtn.classList.add("index-btn");
+    divcontainer.appendChild(header);
+    divcontainer.appendChild(solicitudesBtn);
+    divcontainer.appendChild(anotacionesBtn);
+}
 
 
 export {
