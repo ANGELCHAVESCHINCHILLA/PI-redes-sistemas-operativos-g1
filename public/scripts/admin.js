@@ -28,7 +28,27 @@ const getHash = (password, salt) => {
 const go_back_button = document.querySelector("#go_back_button");
 
 go_back_button.addEventListener('click', () => {
-    window.history.back();
+    location.href = '/admin';
+});
+
+const user_form = document.querySelector("#user_form");
+
+// Messages
+
+const feedback_message = document.querySelector("#feedback_message");
+const close_feedback_message = document.querySelector("#close_feedback_message");
+
+close_feedback_message.addEventListener('click', () => {
+    feedback_message.style.display = 'none';
+
+    location.href = '/admin';
+});
+
+const error_message = document.querySelector("#error_message");
+const close_error_message = document.querySelector("#close_error_message");
+
+close_error_message.addEventListener('click', () => {
+    error_message.style.display = 'none';
 });
 
 // Add user
@@ -36,7 +56,9 @@ go_back_button.addEventListener('click', () => {
 const add_user_send_button = document.querySelector("#add_user_send_button");
 
 if (add_user_send_button !== null) {
-    add_user_send_button.addEventListener('click', async () => {
+    user_form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
         const user_id = document.querySelector("#user_id");
         const user_password = document.querySelector("#user_password");
         const user_name = document.querySelector("#user_name");
@@ -54,60 +76,72 @@ if (add_user_send_button !== null) {
             phone_number: parseInt(user_phone_number.value),
         };
 
-        await fetch("/admin/add_user/data", {
+        let response = await fetch("/admin/add_user/data", {
             method: "POST",
             body: JSON.stringify(database_json)
         });
 
-        const salt = getSalt(15);
+        if (response.status === 200) {
+            const salt = getSalt(15);
 
-        const fs_json = {
-            "username": user_id.value,
-            "salt": salt,
-            "password": getHash(user_password, salt),
-            "type": parseInt(user_type.value)
-        };
+            const fs_json = {
+                "username": user_id.value,
+                "salt": salt,
+                "password": getHash(user_password, salt),
+                "type": parseInt(user_type.value)
+            };
 
-        await fetch("/admin/add_user/auth", {
-            method: "POST",
-            body: JSON.stringify(fs_json)
-        });
+            response = await fetch("/admin/add_user/auth", {
+                method: "POST",
+                body: JSON.stringify(fs_json)
+            });
+        }
 
-        location.href = "/admin";
+        if (response.status === 200) {
+            feedback_message.style.display = 'block';
+        } else {
+            error_message.style.display = 'block';
+        }
     });
 }
-
 
 // Remove user
 
 const remove_user_send_button = document.querySelector("#remove_user_send_button");
 
 if (remove_user_send_button !== null) {
-    remove_user_send_button.addEventListener('click', async () => {
+    user_form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
         const user_id = document.querySelector("#user_id");
 
         const database_json = {
             user: user_id.value,
         };
 
-        await fetch("/admin/remove_user/data", {
+        let response = await fetch("/admin/remove_user/data", {
             method: "POST",
             body: JSON.stringify(database_json)
         });
 
         // REMOVING USERS IS NOT IMPLEMENTED IN THE FILE SYSTEM
 
-        location.href = "/admin";
+        if (response.status === 200) {
+            feedback_message.style.display = 'block';
+        } else {
+            error_message.style.display = 'block';
+        }
     });
 }
-
 
 // Edit user
 
 const edit_user_send_button = document.querySelector("#edit_user_send_button");
 
-if (edit_user_send_button != null) {
-    edit_user_send_button.addEventListener('click', async () => {
+if (edit_user_send_button !== null) {
+    user_form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
         const user_id = document.querySelector("#user_id");
         const user_password = document.querySelector("#user_password");
         const user_name = document.querySelector("#user_name");
@@ -125,13 +159,17 @@ if (edit_user_send_button != null) {
             phone_number: parseInt(user_phone_number.value),
         };
 
-        await fetch("/admin/edit_user/data", {
+        let response = await fetch("/admin/edit_user/data", {
             method: "POST",
             body: JSON.stringify(database_json)
         });
 
         // EDITING USERS IS NOT IMPLEMENTED IN THE FILE SYSTEM
 
-        location.href = "/admin";
+        if (response.status === 200) {
+            feedback_message.style.display = 'block';
+        } else {
+            error_message.style.display = 'block';
+        }
     });
 }
