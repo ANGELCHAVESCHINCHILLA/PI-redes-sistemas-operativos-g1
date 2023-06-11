@@ -16,7 +16,7 @@ const DEFAUL_PAGE = 'http://127.0.0.1:8080/';
 // common html head used. Used for quick html pages creation
 const HTML_HEAD = `<title>Información de solicitud</title>
                       <meta charset="UTF-8">
-                      <link rel="stylesheet" href=".././styles/styles.css">
+                      <link rel="stylesheet" href="../styles/form_solicitar_vacaciones.css">
                       <link rel="preconnect" href="https://fonts.googleapis.com">
                       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
@@ -454,8 +454,9 @@ function createFormPage(title, form) {
           </div>
           <div id="page-blank-container">
             <h2>${title}</h2>
-            <button id="regresar" onclick="window.close()"></button>
+            <button id="regresar">Regresar</button>
             <div id="form-container"></div>
+            <button id="enviar">Enviar solicitud</button>
           </div>
         </div>
         <footer style="bottom: 0px">
@@ -468,8 +469,55 @@ function createFormPage(title, form) {
 `);
     const textContainer = newPage.document.getElementById("form-container");
     textContainer.appendChild(form);
-    // textContainer.innerHTML = form;
+    newPage.document.getElementById("enviar").addEventListener("click", makeRequest.bind(null, form, title));
     return newPage;
+}
+
+/*
+{
+  "user": "CamiloSua",
+  "request_type": "Vacation",
+  "information": "Deseo pedir vacaciones por favor",
+  "area": "San Jose",
+  "vacation_days": 14,
+  "vacation_start_date": 10623,
+  "vacation_end_date": 150623
+}
+*/
+
+async function makeRequest(form, reqType) {
+  let formJson = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {});
+  console.log(formJson);
+  let body = {
+    user: formJson.user,
+    request_type: reqType,
+    information: formJson.information,
+    // TODO: get area from local storage, this below is just a dummy value
+    area: "San Jose",
+    vacation_days: formJson.vacationDays ?? 0,
+    vacation_start_date: formJson.vacationStartDate ?? 0,
+    vacation_end_date: formJson.vacationEndDate ?? 0
+  }
+
+  fetch('/makeRequest', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+  .then(function (response) {
+    return response.status;
+  })
+  .then(function (status) {
+    if (status === 401) {
+      window.location.href = DEFAUL_PAGE;
+    }
+  })
+  .catch(function (error) {
+      // Manejar el error en caso de que la solicitud falle
+      alert('Error al enviar la solicitud:', error);
+  });
 }
 
 function createAcceptDenyPage(title, content) {
@@ -523,58 +571,48 @@ function openSalaryConstanceForm() {
     let title = "Constancia de Salarios";
     let form = new FormBuilder();
     // TODO: get employee name via backend
-    let employeeName = "Marta Gonzalez Beltrán";
+    let user = localStorage.getItem('username');
     form
-        .addReadOnlyText("empleado", "Empleado:", employeeName)
-        .addTextField("motivo", "Motivo de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false)
-        .addSubmitlButton("enviar", "Enviar")
-        .addCancelButton("cancelar", "Cancelar");
+        .addReadOnlyText("user", "Usuario:", user)
+        .addTextField("information", "Información de la solicitud:", true)
     createFormPage(title, form.build());
 }
 
 function openEmploymentCertificateForm() {
     let title = "Constancia laboral";
     let form = new FormBuilder();
-    // TODO: get employee name via backend
-    let employeeName = "Marta Gonzalez Beltrán";
+    // TODO: get employee name via localStorage
+    let user = localStorage.getItem('username');
     form
-        .addReadOnlyText("empleado", "Empleado:", employeeName)
-        .addTextField("motivo", "Motivo de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false)
-        .addSubmitlButton("enviar", "Enviar")
-        .addCancelButton("cancelar", "Cancelar");
+        .addReadOnlyText("user", "Usuario:", user)
+        .addTextField("information", "Información de la solicitud:", true)
+        .addTextField("informacion-adicional", "Información Adicional:", false);
     createFormPage(title, form.build());
 }
 
 function openVacationsForm() {
     let title = "Solicitud de Vacaciones";
     let form = new FormBuilder();
-    // TODO: get employee name via backend
-    let employeeName = "Marta Gonzalez Beltrán";
+    // TODO: get employee name via localStorage
+    let user = localStorage.getItem('username');
     form
-        .addReadOnlyText("empleado", "Empleado:", employeeName)
+        .addReadOnlyText("user", "Usuario:", user)
+        .addTextField("information", "Información de la solicitud:", true)
         .addNumericField("dias-vacaciones", "Especifique la cantidad de días", true)
         .addDateField("inicio-vacaciones", "Fecha de inicio de las vacaciones")
-        .addDateField("final-vacaciones", "Fecha final de las vacaciones")
-        .addTextField("motivo", "Motivo de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false)
-        .addSubmitlButton("enviar", "Enviar")
-        .addCancelButton("cancelar", "Cancelar");
+        .addDateField("final-vacaciones", "Fecha final de las vacaciones");
     createFormPage(title, form.build());
 }
 
 function openPaymentProofForm() {
     let title = "Constancia de Pago";
     let form = new FormBuilder();
-    // TODO: get employee name via backend
-    let employeeName = "Marta Gonzalez Beltrán";
+    // TODO: get employee name via localStorage
+    let user = localStorage.getItem('username');
     form
-        .addReadOnlyText("empleado", "Empleado:", employeeName)
-        .addTextField("motivo", "Motivo de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false)
-        .addSubmitlButton("enviar", "Enviar")
-        .addCancelButton("cancelar", "Cancelar");
+        .addReadOnlyText("user", "Usuario:", user)
+        .addTextField("information", "Información de la solicitud:", true)
+        .addTextField("informacion-adicional", "Información Adicional:", false);
     createFormPage(title, form.build());
 }
 
