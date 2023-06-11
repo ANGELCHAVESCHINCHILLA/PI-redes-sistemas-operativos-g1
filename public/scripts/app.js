@@ -487,7 +487,7 @@ function createFormPage(title, form) {
 
 async function makeRequest(form, reqType) {
   let formJson = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {});
-  console.log(formJson);
+  
   let body = {
     user: formJson.user,
     request_type: reqType,
@@ -498,8 +498,9 @@ async function makeRequest(form, reqType) {
     vacation_start_date: formJson.vacationStartDate ?? 0,
     vacation_end_date: formJson.vacationEndDate ?? 0
   }
+  console.log(body);
 
-  fetch('/makeRequest', {
+  fetch('makeRequest', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -507,6 +508,7 @@ async function makeRequest(form, reqType) {
     body: JSON.stringify(body)
   })
   .then(function (response) {
+    console.log(response.status);
     return response.status;
   })
   .then(function (status) {
@@ -571,7 +573,7 @@ function openSalaryConstanceForm() {
     let title = "Constancia de Salarios";
     let form = new FormBuilder();
     // TODO: get employee name via backend
-    let user = localStorage.getItem('username');
+    let user = "AngelSua";
     form
         .addReadOnlyText("user", "Usuario:", user)
         .addTextField("information", "Información de la solicitud:", true)
