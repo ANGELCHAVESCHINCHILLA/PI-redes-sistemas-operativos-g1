@@ -16,7 +16,7 @@ const DEFAUL_PAGE = 'http://127.0.0.1:8080/';
 // common html head used. Used for quick html pages creation
 const HTML_HEAD = `<title>Información de solicitud</title>
                       <meta charset="UTF-8">
-                      <link rel="stylesheet" href="../styles/form_solicitar_vacaciones.css">
+                      <link rel="stylesheet" href="../styles/styles.css">
                       <link rel="preconnect" href="https://fonts.googleapis.com">
                       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
@@ -454,9 +454,9 @@ function createFormPage(title, form) {
           </div>
           <div id="page-blank-container">
             <h2>${title}</h2>
-            <button id="regresar">Regresar</button>
+            <button id="regresar" onclick="window.close()"></button>
             <div id="form-container"></div>
-            <button id="enviar">Enviar solicitud</button>
+            <button class="submit-btn" id="enviar" style="margin-top: 25px" >Enviar solicitud</button>
           </div>
         </div>
         <footer style="bottom: 0px">
@@ -469,8 +469,38 @@ function createFormPage(title, form) {
 `);
     const textContainer = newPage.document.getElementById("form-container");
     textContainer.appendChild(form);
-    newPage.document.getElementById("enviar").addEventListener("click", makeRequest.bind(null, form, title));
+    newPage.document.getElementById("enviar").addEventListener("click", makeRequest.bind(null, form, title, newPage));
     return newPage;
+}
+
+function renderRequestSuccess(page) {
+  page.document.body.innerHTML = `<!DOCTYPE html>
+  <html>
+    <head>
+      ${HTML_HEAD}
+      <title>Solicitud Realizada</title>
+    </head>
+    <body id="consultas">
+      <div id="holder">
+        <div id="body">
+          <div class="w3-container w3-light-blue">
+            <h1>Solicitud realizada</h1>
+          </div>
+          <div id="page-blank-container">
+            <h2>Solicitud Realizada</h2>
+            <button id="regresar" onclick="window.close()"></button>
+            <div id="container">Tu solicitud ha sido realizada con exito.</div>
+            <button class="submit-btn" style="margin-top: 25px" onclick="window.close()">Regresar</button>
+          </div>
+        </div>
+        <footer style="bottom: 0px">
+          Sistema de Gestión de Recursos Humanos
+        </footer>
+      </div>
+    </body>
+
+  </html>
+  `;
 }
 
 /*
@@ -485,18 +515,43 @@ function createFormPage(title, form) {
 }
 */
 
-async function makeRequest(form, reqType) {
+async function makeRequest(form, reqType, page) {
   let formJson = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {});
+  console.log(formJson);
   
+  if (!formJson.information) {
+    page.close();
+    alert("Error al enviar solicitud: Debe llenar el campo de motivo de solicitud");
+    return;
+  }
+
+  if (reqType === "Solicitud de Vacaciones") {
+    if (!formJson.vacationDays) {
+      page.close();
+      alert("Error al enviar solicitud: Debe llenar el campo de cantidad de dias");
+      return;
+    }
+    if (!formJson.vacationStartDate) {
+      page.close();
+      alert("Error al enviar solicitud: Debe llenar el campo de fecha de inicio de vacaciones");
+      return;
+    }
+    if (!formJson.vacationEndDate) {
+      page.close();
+      alert("Error al enviar solicitud: Debe llenar el campo de fecha de final de vacaciones");
+      return;
+    }
+  }
+
   let body = {
     user: formJson.user,
     request_type: reqType,
     information: formJson.information,
     // TODO: get area from local storage, this below is just a dummy value
     area: "San Jose",
-    vacation_days: formJson.vacationDays ?? 0,
-    vacation_start_date: formJson.vacationStartDate ?? 0,
-    vacation_end_date: formJson.vacationEndDate ?? 0
+    vacation_days: formJson.vacationDays ? +formJson.vacationDays.replaceAll('-', '') : 0,
+    vacation_start_date: formJson.vacationStartDate ? +formJson.vacationStartDate.replaceAll('-', '') : 0,
+    vacation_end_date: formJson.vacationEndDate ? +formJson.vacationEndDate.replaceAll('-', '') : 0
   }
   console.log(body);
 
@@ -512,6 +567,9 @@ async function makeRequest(form, reqType) {
     return response.status;
   })
   .then(function (status) {
+    if (status === 200) {
+      renderRequestSuccess(page);
+    }
     if (status === 401) {
       window.location.href = DEFAUL_PAGE;
     }
@@ -572,49 +630,43 @@ function createUserRegistrationPage() {
 function openSalaryConstanceForm() {
     let title = "Constancia de Salarios";
     let form = new FormBuilder();
-    // TODO: get employee name via backend
-    let user = "AngelSua";
+    let user = localStorage.getItem('username');
     form
         .addReadOnlyText("user", "Usuario:", user)
-        .addTextField("information", "Información de la solicitud:", true)
+        .addTextField("information", "Motivo de la solicitud:", true)
     createFormPage(title, form.build());
 }
 
 function openEmploymentCertificateForm() {
     let title = "Constancia laboral";
     let form = new FormBuilder();
-    // TODO: get employee name via localStorage
     let user = localStorage.getItem('username');
     form
         .addReadOnlyText("user", "Usuario:", user)
-        .addTextField("information", "Información de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false);
+        .addTextField("information", "Motivo de la solicitud:", true);
     createFormPage(title, form.build());
 }
 
 function openVacationsForm() {
     let title = "Solicitud de Vacaciones";
     let form = new FormBuilder();
-    // TODO: get employee name via localStorage
     let user = localStorage.getItem('username');
     form
         .addReadOnlyText("user", "Usuario:", user)
-        .addTextField("information", "Información de la solicitud:", true)
-        .addNumericField("dias-vacaciones", "Especifique la cantidad de días", true)
-        .addDateField("inicio-vacaciones", "Fecha de inicio de las vacaciones")
-        .addDateField("final-vacaciones", "Fecha final de las vacaciones");
+        .addTextField("information", "Motivo de la solicitud:", true)
+        .addNumericField("vacationDays", "Especifique la cantidad de días", true)
+        .addDateField("vacationStartDate", "Fecha de inicio de las vacaciones")
+        .addDateField("vacationEndDate", "Fecha final de las vacaciones");
     createFormPage(title, form.build());
 }
 
 function openPaymentProofForm() {
     let title = "Constancia de Pago";
     let form = new FormBuilder();
-    // TODO: get employee name via localStorage
     let user = localStorage.getItem('username');
     form
         .addReadOnlyText("user", "Usuario:", user)
-        .addTextField("information", "Información de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false);
+        .addTextField("information", "Motivo de la solicitud:", true);
     createFormPage(title, form.build());
 }
 
