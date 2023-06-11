@@ -12,16 +12,28 @@
 #include "../common/Log.hpp"
 
 #define USERNAME_LENGTH 10
-#define HASH_LENGTH 16
-#define SALT_LENGTH 16
+#define HASH_LENGTH 15
+#define SALT_LENGTH 15
 
 FileSystemAPI::FileSystemAPI() : authenticator(&this->fs) {
   this->readFromFile(this->users_file);
 }
 
 
-bool FileSystemAPI::addUser(std::string username, const std::string& hashed_password, int role) {
+bool FileSystemAPI::addUser(std::string username,
+  const std::string& hashed_password, const std::string& salt, int role) {
   if (username.length() > USERNAME_LENGTH) {
+    Log::getInstance().write(Log::MessageType::ERROR, "FileSystemAPI", "Invalid username length.");
+    return false;
+  }
+
+  if (hashed_password.length() > HASH_LENGTH) {
+    Log::getInstance().write(Log::MessageType::ERROR, "FileSystemAPI", "Invalid hash length.");
+    return false;
+  }
+
+  if (salt.length() > SALT_LENGTH) {
+    Log::getInstance().write(Log::MessageType::ERROR, "FileSystemAPI", "Invalid salt length.");
     return false;
   }
 
@@ -29,6 +41,7 @@ bool FileSystemAPI::addUser(std::string username, const std::string& hashed_pass
 
   this->writeString(users_file, username);
   this->writeString(users_file, hashed_password);
+  this->writeString(users_file, salt);
   this->writeString(users_file, std::to_string(role));
 
   this->writeToFile("usuarios.dat");

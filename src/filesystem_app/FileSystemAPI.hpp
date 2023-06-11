@@ -1,11 +1,11 @@
+//
+
 #ifndef PI_REDES_SISTEMAS_OPERATIVOS_G1_FILESYSTEMAPI_H
 #define PI_REDES_SISTEMAS_OPERATIVOS_G1_FILESYSTEMAPI_H
 #include <functional>
 #include <string>
 
 #include "../../././src/authenticator.hpp"
-
-
 
 class FileSystemAPI {
  public:
@@ -33,7 +33,8 @@ class FileSystemAPI {
       const std::function<bool(std::string&)>& predicate);
 
  public:
-  bool addUser(std::string username, const std::string& hashkey, int role);
+  bool addUser(std::string username, const std::string& hashkey,
+    const std::string& salt, int role);
 
   bool authenticateUser(const std::string& username, const std::string& hashkey);
 

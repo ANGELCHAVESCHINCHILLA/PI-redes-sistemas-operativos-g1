@@ -33,11 +33,12 @@ class AddUserHandler : public FileSystemRequestHandler {
         // Get values
         std::string username = requestBody["username"].asString();
         std::string password = requestBody["password"].asString();
+        std::string salt = requestBody["salt"].asString();
         int type = requestBody["type"].asInt();
 
         // Auth by API
         bool isAdded =
-            this->fileSystemApi->addUser(username, password, type);
+            this->fileSystemApi->addUser(username, password, salt, type);
 
         statusCode = isAdded ? 200 : 400;
         responseBody = isAdded ? "Successfully" : "Failed";
