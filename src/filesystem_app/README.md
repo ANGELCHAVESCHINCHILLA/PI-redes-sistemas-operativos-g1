@@ -3,14 +3,53 @@
 Consider all URL on this list going to have *'localhost'* as address and *8080* as port, but it
 could change depending on where server is hosted.
 
-## Request List:
+## Requests
 
-### Login
-**RequestType: POST**
+### Add User
 
-URL: http://localhost:8080/login
+#### Request
 
-Body: Simple text in format
+* Method: POST
+* URL: /auth/user or /adduser
+* Body:
+```json
+{
+  "username": "AngelSuare",
+  "password": "YdntnTQSY4nmWkM",
+  "salt": "G9cB0Lh16HEp862",
+  "type": 5
+}
+```
+
+#### Response:
+
+* If successful: 200
+* If unsuccessful: 400
+
+---
+
+### Permissions and User Type
+
+#### Request
+
+* Method: GET
+* URL: /permissions?username=AngelSuare
+
+#### Response:
+
+* If successful: The user type, an integer from 1 to 5
+* Body: `0`
+* If unsuccessful: `-1`
+
+---
+
+### Authenticate User
+
+#### Request
+
+* Method: POST
+* URL: /auth or /login
+* Body:
 ```json
 {
   "username": "AngelSuare",
@@ -18,38 +57,10 @@ Body: Simple text in format
 }
 ```
 
-Response: 'Successfully' in body with CodeStatus with value 200 if authenticated successfully. 
-'Failed' and CodeStatus 400 if not.
+#### Response:
 
----
-
-### AddUser
-**RequestType: POST**
-
-URL: http://localhost:8080/adduser
-
-Body: Simple text in format
-```json
-{
-  "username": "Testing123",
-  "password": "NStt6+CwRVxk1gVCQGr0m33zUZ",
-  "type": 5
-}
-```
-
-Response: Successfully in body with CodeStatus with value 200 if user added successfully.
-Failed and CodeStatus 400 if not.
-
----
-
-### Permissions/Type
-**RequestType: GET**
-
-URL: http://localhost:8080/permissions?username='username'
-
-Replace literal 'username' for real user username, as AngelSuare. Username must not going with quotes
-
-Response: An integer larger or equal than 0 if successfully. -1 if not. The integer in the response is the user type.
+* If successful: 200
+* If unsuccessful: 400
 
 ---
 
@@ -75,4 +86,44 @@ Response: An integer larger or equal than 0 if successfully. -1 if not. The inte
   "salt": "wPbzAL6WVGJEzUh5"
 }
 ```
+* If unsuccessful: 401
+
+---
+
+### Remove User
+
+#### Request
+
+* Method: DELETE
+* URL: /auth/user
+* Body:
+```json
+{
+  "username": "AngelSuare"
+}
+```
+
+#### Response:
+
+* If successful: 200
+* If unsuccessful: 401
+
+---
+
+### Edit User
+
+#### Request
+
+* Method: PUT
+* URL: /auth/user
+* Body:
+```json
+{
+  "username": "AngelSuare"
+}
+```
+
+#### Response:
+
+* If successful: 200
 * If unsuccessful: 401
