@@ -9,6 +9,8 @@
 
 #include "FileSystemRequestHandler.hpp"
 
+#include "../../common/Log.hpp"
+
 class AuthHandler : public FileSystemRequestHandler {
  public:
   explicit AuthHandler(FileSystemAPI* fileSystemApi) :

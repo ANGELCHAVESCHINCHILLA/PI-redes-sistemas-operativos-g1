@@ -46,6 +46,7 @@ close_feedback_message.addEventListener('click', () => {
 
 const error_message = document.querySelector("#error_message");
 const close_error_message = document.querySelector("#close_error_message");
+const error_message_content = document.querySelector("#error_message_content");
 
 close_error_message.addEventListener('click', () => {
     error_message.style.display = 'none';
@@ -67,6 +68,15 @@ if (add_user_send_button !== null) {
         const user_phone_number = document.querySelector("#user_phone_number");
         const user_type = document.querySelector("#user_type");
 
+        const salt = getSalt(15);
+
+        const fs_json = {
+            "username": user_id.value,
+            "salt": salt,
+            "password": getHash(user_password, salt),
+            "type": parseInt(user_type.value)
+        };
+
         const database_json = {
             user: user_id.value,
             employee_name: user_name.value,
@@ -76,31 +86,21 @@ if (add_user_send_button !== null) {
             phone_number: parseInt(user_phone_number.value),
         };
 
-        let response = await fetch("/admin/add_user/data", {
+        const fs_response = await fetch("/admin/add_user/auth", {
+            method: "POST",
+            body: JSON.stringify(fs_json)
+        });
+
+        const db_response = await fetch("/admin/add_user/data", {
             method: "POST",
             body: JSON.stringify(database_json)
         });
 
-        if (response.status === 200) {
-            const salt = getSalt(15);
-
-            const fs_json = {
-                "username": user_id.value,
-                "salt": salt,
-                "password": getHash(user_password, salt),
-                "type": parseInt(user_type.value)
-            };
-
-            response = await fetch("/admin/add_user/auth", {
-                method: "POST",
-                body: JSON.stringify(fs_json)
-            });
-        }
-
-        if (response.status === 200) {
+        if (fs_response.status === 200 && db_response.status === 200) {
             feedback_message.style.display = 'block';
         } else {
             error_message.style.display = 'block';
+            error_message_content.textContent = 'El usuario ya existe.';
         }
     });
 }
@@ -130,6 +130,7 @@ if (remove_user_send_button !== null) {
             feedback_message.style.display = 'block';
         } else {
             error_message.style.display = 'block';
+            error_message_content.textContent = 'El usuario no existe.';
         }
     });
 }
@@ -170,6 +171,7 @@ if (edit_user_send_button !== null) {
             feedback_message.style.display = 'block';
         } else {
             error_message.style.display = 'block';
+            error_message_content.textContent = 'El usuario no existe.';
         }
     });
 }

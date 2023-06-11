@@ -33,13 +33,14 @@ bool AddUserHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       std::string salt = requestBody["salt"].asString();
       int type = requestBody["type"].asInt();
 
-      // Auth by API
-      bool isAdded =
-          this->fileSystemApi->addUser(username, password, salt, type);
-
-      statusCode = isAdded ? 200 : 400;
-      responseBody = isAdded ? "Successfully" : "Failed";
-
+      if (!this->fileSystemApi->userExists(username) &&
+          this->fileSystemApi->addUser(username, password, salt, type)) {
+        statusCode = 200;
+        responseBody = "Successfully";
+      } else {
+        statusCode = 400;
+        responseBody = "Failed";
+      }
     } else {
       statusCode = 400;
       responseBody = "JSON ERROR";

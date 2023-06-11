@@ -9,6 +9,8 @@
 #include <iostream>
 #include <string>
 
+#include "../../common/Log.hpp"
+
 class PermissionsHandler : public FileSystemRequestHandler{
  public:
   /// Constructor
