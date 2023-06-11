@@ -357,7 +357,7 @@ function createTextBlankPage(title, content) {
  * @param {*} form content to be showed in div 'text-container'
  */
 function createFormPage(title, form) {
-    let newPage = window.open();
+    const newPage = window.open();
     newPage.document.write(`<!DOCTYPE html>
   <html>
     <head>
@@ -570,24 +570,41 @@ function checkLogin() {
 function populateIndexButtons(permissions) {
     if (permissions > 1) {
         const divContainer = document.getElementById("gerente-btns")
-        addGerenteButtons(divContainer);
+        addSupervisorButtons(divContainer);
     }
 }
 
-function addGerenteButtons(divcontainer) {
+function addSupervisorButtons(divcontainer) {
     const solicitudesBtn = document.createElement('button');
     const anotacionesBtn = document.createElement('button');
     const header = document.createElement('h2');
+
     header.textContent = "Opciones de Gerente";
     solicitudesBtn.textContent = "REVISAR SOLICITUDES";
     anotacionesBtn.textContent = "CREAR ANOTACIÓN";
+
     solicitudesBtn.type = 'submit';
     anotacionesBtn.type = 'submit';
+
     solicitudesBtn.classList.add("index-btn");
     anotacionesBtn.classList.add("index-btn");
+
+    solicitudesBtn.id = 'supervisor-solicitudes';
+    anotacionesBtn.id = 'supervisor-anotaciones';
+
     divcontainer.appendChild(header);
     divcontainer.appendChild(solicitudesBtn);
     divcontainer.appendChild(anotacionesBtn);
+}
+function openMakeAnnotationsPage() {
+    console.log("test")
+    const form = new FormBuilder()
+        .addTextField("nombre","Nombre del empleado/a",true)
+        .addTextField("anotacion", "Anotación", true)
+        .addSubmitlButton("enviar", "Enviar")
+        .build();
+    createFormPage("Crear anotación a empleado", form);
+
 }
 
 
@@ -599,4 +616,5 @@ export {
     openRequestForm,
     reloadRequests,
     toBackPage,
+    openMakeAnnotationsPage
 };
