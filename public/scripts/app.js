@@ -581,7 +581,7 @@ function addSupervisorButtons(divcontainer) {
     const anotacionesBtn = document.createElement('button');
     const header = document.createElement('h2');
 
-    header.textContent = "Opciones de Gerente";
+    header.textContent = "Opciones de Supervisor";
     solicitudesBtn.textContent = "REVISAR SOLICITUDES";
     anotacionesBtn.textContent = "CREAR ANOTACIÓN";
 
