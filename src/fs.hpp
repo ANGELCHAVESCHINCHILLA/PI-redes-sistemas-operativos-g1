@@ -253,8 +253,6 @@ class FS {
    * @return int code error, if successfully or not.
    */
   int changePermissionsToEntry(std::string name, char* newPermissions);
- public:
-  bool validateUser(const std::string& userName, const std::string& hashKey);
 };
 
 #endif  // FS_HPP_

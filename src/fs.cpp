@@ -50,7 +50,7 @@ FS::FS() {
   ::memset(this->fat, FAT_UNDEFINED, FAT_COUNT * sizeof(int));
 
   // Initialize the unit to empty
-  ::memset(this->unit, (char)BLOCK_EOF, FAT_COUNT * BLOCK_SIZE);
+  ::memset(this->unit, (char) BLOCK_EOF, FAT_COUNT * BLOCK_SIZE);
 }
 
 FS::~FS() {
@@ -190,46 +190,12 @@ int FS::getFileSize(const std::string& filename) {
 }
 
 char FS::read(std::string fileName, size_t position, char* permissions) {
-  (void)permissions;
-  int error = Error::OK;
-  int directory_index = this->searchFile(fileName);
-  if (directory_index == DIRECTORY_UNDEFINED) {
-    error = Error::FILE_NOT_FOUND;
+  char* address = this->readAddress(fileName, position);
+
+  if (address != nullptr) {
+    return *address;
   }
 
-  if (!error) {
-    // validate if position is out of bounds or not
-    error = static_cast<size_t>(this->getFileSize(fileName)) >= position
-            ? Error::OK : Error::NOT_OK;
-
-    if (!error) {
-      // start block of the file
-      const int start_block = this->directory[directory_index].startBlock;
-      // The amount of blocks to traverse to reach the desired character
-      const int block_number = position / static_cast<int>(BLOCK_SIZE);
-      // Number of positions to go through in the block to reach the desired
-      // character
-      const int char_number = position - block_number * BLOCK_SIZE;
-
-      // Find the block in which the character is stored
-      int fat_index = start_block;
-      int block_count = 0;
-      while (block_count < block_number) {
-        fat_index = this->fat[fat_index];
-        ++block_count;
-      }
-
-      // Find the char in the block
-      int char_index = 0;
-      while (this->unit[fat_index * BLOCK_SIZE + char_index] != BLOCK_EOF &&
-             char_index < char_number) {
-        ++char_index;
-      }
-
-      const char result = this->unit[fat_index * BLOCK_SIZE + char_index];
-      return result;
-    }
-  }
   return '\0';
 }
 
@@ -244,7 +210,8 @@ char* FS::readAddress(std::string file_name, size_t position) {
   if (!error) {
     // validate if position is out of bounds or not
     error = static_cast<size_t>(this->getFileSize(file_name)) >= position
-            ? Error::OK : Error::NOT_OK;
+                ? Error::OK
+                : Error::NOT_OK;
 
     if (!error) {
       // start block of the file
@@ -275,53 +242,6 @@ char* FS::readAddress(std::string file_name, size_t position) {
   }
 
   return nullptr;
-}
-
-bool FS::validateUser(const std::string& userName, const std::string& hashKey) {
-  // int error = Error::OK;
-  bool is_valid = false;
-  // open users file
-  std::string usersFile = "usuarios.csv";
-  int directory_index = this->searchFile(usersFile);
-  if (directory_index == DIRECTORY_UNDEFINED) {
-    // error = Error::FILE_NOT_FOUND;
-    std::cout << "Directory not found" << std::endl;
-  }
-
-  if (directory_index != DIRECTORY_UNDEFINED) {
-    size_t index = 0;
-    // validate name
-    while (index < static_cast<size_t>(this->getFileSize(usersFile))
-          && !is_valid) {
-      is_valid = true;
-      char current_char = '\0';
-      size_t user_index = 0;
-      while (current_char != ',') {
-        current_char = this->read(usersFile, index, nullptr);
-        if (current_char != userName[user_index] && current_char != ',') {
-          is_valid = false;
-        }
-        index++;
-        user_index++;
-      }
-      // validate hashkey
-      if (!is_valid) {
-        index += 29;
-      } else {
-        size_t hash_index = 0;
-        for (size_t i = index; i < index + 27; ++i) {
-          current_char = this->read(usersFile, i, nullptr);
-          if (current_char != hashKey[hash_index]) {
-            is_valid = false;
-          }
-          hash_index++;
-        }
-        if (!is_valid) index++;
-      }
-    }
-  }
-
-  return is_valid;
 }
 
 int FS::remove(std::string name) {
@@ -524,7 +444,7 @@ int FS::changePermissionsToEntry(std::string name, char* newPermissions) {
     error = Error::FILE_NOT_FOUND;
   }
   // If not error, so the entry exists
-  if(!error) {
+  if (!error) {
     // change permissions
     this->directory[directory_index].changePermissions(newPermissions);
   }
