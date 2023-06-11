@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anotar al expediente</title>
+    <link rel="stylesheet" href=".././styles/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+<button id="regresar"></button>
+<h2>Anotar al expediente</h2>
+<form id="annotation-form" class="form-container">
+    <label for="username">Nombre de usuario:</label>
+    <input type="text" id="username" name="username"><br>
+
+    <label for="annotation">Anotación:</label>
+    <input class="form-field" type="text" id="annotation" name="anotacion"><br>
+
+    <div class="btn-form-container">
+        <button type="submit" id="send-annotation">Enviar</button>
+        <button type="submit" id="cancel" class="cancel-btn">Cancelar</button>
+    </div>
+
+</form>
+<script src="../.././scripts/supervisory.js" ></script>
+<script type="module" src="../.././scripts/buttonlistener.js" ></script>
+</body>
+</html>

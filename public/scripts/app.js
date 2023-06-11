@@ -11,7 +11,8 @@ const PAGE_PRINCIPAL = "index.html";
 const PAGE_LOGIN = "login.html";
 // requests page
 const PAGE_REQUESTS = "solicitudes.html";
-const DEFAUL_PAGE = 'http://127.0.0.1:8080/';
+const DEFAUL_PAGE = 'http://127.0.0.1:8001/';
+const ADD_ANNOTATION = "supervisory/add_annotation_html";
 
 // common html head used. Used for quick html pages creation
 const HTML_HEAD = `<title>Información de solicitud</title>
@@ -380,6 +381,7 @@ function createFormPage(title, form) {
           Sistema de Gestión de Recursos Humanos
         </footer>
       </div>
+      <script src=".././scripts/buttonlistener.js"> </script>
     </body>
 
   </html>
@@ -569,7 +571,7 @@ function checkLogin() {
 
 function populateIndexButtons(permissions) {
     if (permissions > 1) {
-        const divContainer = document.getElementById("gerente-btns")
+        const divContainer = document.getElementById("supervisory-btns")
         addSupervisorButtons(divContainer);
     }
 }
@@ -592,19 +594,15 @@ function addSupervisorButtons(divcontainer) {
     solicitudesBtn.id = 'supervisor-solicitudes';
     anotacionesBtn.id = 'supervisor-anotaciones';
 
+    // solicitudesBtn.addEventListener("click");
+    anotacionesBtn.addEventListener("click", openMakeAnnotationsPage);
+
     divcontainer.appendChild(header);
     divcontainer.appendChild(solicitudesBtn);
     divcontainer.appendChild(anotacionesBtn);
 }
 function openMakeAnnotationsPage() {
-    console.log("test")
-    const form = new FormBuilder()
-        .addTextField("nombre","Nombre del empleado/a",true)
-        .addTextField("anotacion", "Anotación", true)
-        .addSubmitlButton("enviar", "Enviar")
-        .build();
-    createFormPage("Crear anotación a empleado", form);
-
+    window.location.href = "/add_annotation";
 }
 
 
@@ -616,5 +614,5 @@ export {
     openRequestForm,
     reloadRequests,
     toBackPage,
-    openMakeAnnotationsPage
+    openMakeAnnotationsPage,
 };

@@ -5,7 +5,7 @@ import {
   showBaseSalary,
   openRequestForm,
   reloadRequests,
-  toBackPage, openMakeAnnotationsPage,
+  toBackPage,
 } from ".././scripts/app.js";
 
 function addButtonClickListener(buttonId, clickHandler, args) {
@@ -46,4 +46,6 @@ addButtonClickListener("reload-requests", reloadRequests);
 // Back button
 addButtonClickListener("regresar", toBackPage);
 
-addButtonClickListener('supervisor-anotaciones', openMakeAnnotationsPage);
+addButtonClickListener("cancel", toBackPage);
+
+
