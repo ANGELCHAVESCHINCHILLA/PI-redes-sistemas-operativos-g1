@@ -29,7 +29,7 @@ class QueryHandler : public HttpRequestHandler {
    */
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 
-  bool callBDToGetQuery(HttpRequest& request, HttpResponse& response);
+  bool callBDToGetQuery(HttpRequest& request, HttpResponse& response, const std::string& method);
 };
 
 

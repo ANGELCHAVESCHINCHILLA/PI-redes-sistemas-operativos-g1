@@ -52,27 +52,27 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       */
       try {
         // send request to and receive response from data base server
-        return this->callBDToGetQuery(request, response);
+        return this->callBDToGetQuery(request, response, "GET");
       } catch (const std::runtime_error& error) {
         std::cerr << error.what() << ".\n";
         response.setStatusCode(401);
       }
     }
   }
-  // if (request.getMethod() == "POST") {
-  //   if (request.getTarget().getPath().find("Request") != std::string::npos) {
-  //     try {
-  //       return this->callBDToGetQuery(request, response);
-  //     } catch (const std::runtime_error& error) {
-  //       std::cerr << error.what() << ".\n";
-  //       response.setStatusCode(401);
-  //     }
-  //   }
-  // }
+  if (request.getMethod() == "POST") {
+    if (request.getTarget().getPath().find("Request") != std::string::npos) {
+      try {
+        return this->callBDToGetQuery(request, response, "POST");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << ".\n";
+        response.setStatusCode(401);
+      }
+    }
+  }
   return false;
 }
 
-bool QueryHandler::callBDToGetQuery(HttpRequest& request, HttpResponse& response) {
+bool QueryHandler::callBDToGetQuery(HttpRequest& request, HttpResponse& response, const std::string& method) {
   Configuration& configuration = Configuration::getInstance();
   // IP adress of data base server
   std::string db_address = configuration.getServer("db").address;
@@ -81,7 +81,7 @@ bool QueryHandler::callBDToGetQuery(HttpRequest& request, HttpResponse& response
   // request to be send to data base server
   HttpRequest DBRequest;
   // Construct request with our needs
-  DBRequest.setMethod("GET");
+  DBRequest.setMethod(method);
   DBRequest.setTarget("http://" + db_address + ":" + db_port + request.getTarget().getInput());
   DBRequest.setBody(request.getBody());
 
