@@ -36,6 +36,11 @@ class FileSystemAPI {
   bool addUser(std::string username, const std::string& hashkey,
     const std::string& salt, int role);
 
+  bool removeUser(std::string username);
+
+  bool editUser(std::string username, const std::string& hashkey,
+    const std::string& salt, int role);
+
   bool authenticateUser(const std::string& username, const std::string& hashkey);
 
   int getUserType(const std::string& username);
