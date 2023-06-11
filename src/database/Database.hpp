@@ -12,6 +12,7 @@
 #include "HRRequest.hpp"
 #include "JobData.hpp"
 #include "PersonalData.hpp"
+#include "../common/Log.hpp"
 
 class Database {
  private:

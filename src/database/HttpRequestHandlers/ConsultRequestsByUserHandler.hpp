@@ -82,9 +82,11 @@ class ConsultRequestsByUserHandler : public DatabaseRequestHandler {
           requestsAsJSON << "}";
           statusCode = 200;
           responseBody << requestsAsJSON.str();
+          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
         } else {
           statusCode = 400;
           responseBody << INVALID_USER;
+          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_USER);
         }
         
         // build the response
@@ -95,6 +97,7 @@ class ConsultRequestsByUserHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
+        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
       }
       response.buildResponse();
       

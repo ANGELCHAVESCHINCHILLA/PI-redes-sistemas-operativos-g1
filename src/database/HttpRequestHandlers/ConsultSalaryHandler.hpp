@@ -54,9 +54,11 @@ class ConsultSalaryHandler : public DatabaseRequestHandler {
           salaryAsJSON << "} }";
           statusCode = 200;
           responseBody << salaryAsJSON.str();
+          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
         } else {
           statusCode = 400;
           responseBody << INVALID_USER;
+          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_USER);
         }
         // build the response
         response.setStatusCode(statusCode);
@@ -66,6 +68,7 @@ class ConsultSalaryHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
+        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
       }
       response.buildResponse();
       
