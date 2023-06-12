@@ -72,7 +72,7 @@ if (add_user_send_button !== null) {
 
         const fs_json = {
             username: user_id.value,
-            password: getHash(user_password, salt),
+            password: getHash(user_password.value, salt),
             salt: salt,
             type: parseInt(user_type.value)
         };
