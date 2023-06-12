@@ -73,6 +73,7 @@ bool PersonalDataHandler::getData(
 
     response.setStatusCode(200);
     response.getBody() << json;
+    Log::getInstance().write(Log::DEBUG, "PersonalDataHandler", "Get Data: Successful");
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
     Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
@@ -118,6 +119,7 @@ bool PersonalDataHandler::addData(
     }
 
     response.setStatusCode(200);
+    Log::getInstance().write(Log::DEBUG, "PersonalDataHandler", "Add Data: Successful");
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
     Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
@@ -149,6 +151,7 @@ bool PersonalDataHandler::removeData(
     }
 
     response.setStatusCode(200);
+    Log::getInstance().write(Log::DEBUG, "PersonalDataHandler", "Remove Data: Successful");
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
     Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
@@ -194,6 +197,7 @@ bool PersonalDataHandler::editData(
     }
 
     response.setStatusCode(200);
+    Log::getInstance().write(Log::DEBUG, "PersonalDataHandler", "Edit Data: Successful");
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
     Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());

@@ -46,7 +46,7 @@ void Log::stop() {
 void Log::write(Log::MessageType type, const std::string& category,
     const std::string& text) {
   this->mutex.lock();
-  std::string log = "[" + getActualTime() + "] [" + MESSAGE_TYPE_TEXT[type] + "]\t" + category + ":\t" + text;
+  std::string log = "[" + getActualTime() + "] [" + MESSAGE_TYPE_TEXT[type] + "]\t" + category + "\t\t" + text;
   this->output << log << std::endl;
   if(this->file.is_open()) {
     this->file << log << std::endl;

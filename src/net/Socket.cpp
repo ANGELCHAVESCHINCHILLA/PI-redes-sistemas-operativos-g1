@@ -58,7 +58,7 @@ struct SharedSocket {
     this->fileDescriptor = ::socket(AF_INET, SOCK_STREAM, 0);
 
     if (this->fileDescriptor == -1) {
-      Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+      Log::getInstance().write(Log::ERROR, "Socket",
         "Can't create the socket");
 
       error = SocketError::CANT_CREATE_SOCKET;
@@ -74,7 +74,7 @@ struct SharedSocket {
             , address->ai_protocol);
 
     if (this->fileDescriptor == -1) {
-      Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+      Log::getInstance().write(Log::ERROR, "Socket",
         "Can't create the socket");
 
       error = SocketError::CANT_CREATE_SOCKET;
@@ -97,7 +97,7 @@ struct SharedSocket {
                   , sizeof(this->addr));
 
     if (error == -1) {
-      Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+      Log::getInstance().write(Log::ERROR, "Socket",
         "Can't bind the socket");
 
       error = SocketError::CANT_BIND_SOCKET;
@@ -112,7 +112,7 @@ struct SharedSocket {
     error = ::bind(this->fileDescriptor, address->ai_addr, address->ai_addrlen);
 
     if (error == -1) {
-      Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+      Log::getInstance().write(Log::ERROR, "Socket",
         "Can't bind the socket");
 
       error = SocketError::CANT_BIND_SOCKET;
@@ -127,7 +127,7 @@ struct SharedSocket {
     error = ::listen(this->fileDescriptor, SOMAXCONN);
 
     if (error == -1) {
-      Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+      Log::getInstance().write(Log::ERROR, "Socket",
         "Can't listen to the socket");
 
       error = SocketError::CANT_LISTEN_SOCKET;
@@ -146,7 +146,7 @@ struct SharedSocket {
               , &addrlen);
 
     if (fd == -1) {
-      Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+      Log::getInstance().write(Log::ERROR, "Socket",
         "Can't accept the connection to the socket");
 
       error = SocketError::CANT_ACCEPT_SOCKET;
@@ -173,7 +173,7 @@ struct SharedSocket {
             , sizeof(this->addr));
 
     if (error == -1) {
-      Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+      Log::getInstance().write(Log::ERROR, "Socket",
         "Can't connect to the socket");
 
       error = SocketError::CANT_CONNECT_SOCKET;
@@ -204,7 +204,7 @@ struct SharedSocket {
       size_t bytes = ::send(this->fileDescriptor, buffer + sent, length - sent, 0);
 
       if (bytes == (size_t) -1) {
-        Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+        Log::getInstance().write(Log::ERROR, "Socket",
           "Can't send the data");
 
         error = SocketError::CANT_SEND_DATA;
@@ -225,7 +225,7 @@ struct SharedSocket {
     size_t bytes = ::recv(this->fileDescriptor, buffer, BUFFER_SIZE - 1, 0);
 
     if (bytes == (size_t) -1) {
-      Log::getInstance().write(Log::MessageType::ERROR, "Socket",
+      Log::getInstance().write(Log::ERROR, "Socket",
         "Can't receive the data");
 
       error = SocketError::CANT_RECEIVE_DATA;

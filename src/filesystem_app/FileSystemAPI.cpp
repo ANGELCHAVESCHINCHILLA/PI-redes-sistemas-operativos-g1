@@ -32,19 +32,19 @@ bool FileSystemAPI::addUser(std::string username, const std::string& hash,
     const std::string& salt, int type) {
   if (username.length() > USERNAME_LENGTH) {
     Log::getInstance().write(
-        Log::MessageType::ERROR, "FileSystemAPI", "Invalid username length.");
+        Log::ERROR, "FileSystemAPI", "Invalid username length.");
     return false;
   }
 
   if (hash.length() > HASH_LENGTH) {
     Log::getInstance().write(
-        Log::MessageType::ERROR, "FileSystemAPI", "Invalid hash length.");
+        Log::ERROR, "FileSystemAPI", "Invalid hash length.");
     return false;
   }
 
   if (salt.length() > SALT_LENGTH) {
     Log::getInstance().write(
-        Log::MessageType::ERROR, "FileSystemAPI", "Invalid salt length.");
+        Log::ERROR, "FileSystemAPI", "Invalid salt length.");
     return false;
   }
 

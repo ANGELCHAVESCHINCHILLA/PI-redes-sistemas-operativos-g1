@@ -20,7 +20,7 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
         // fetch user from request url
         std::string user = request.getTarget().getQuery().find("user")->second;
         // print user
-        Log::getInstance().write(Log::MessageType::DEBUG,
+        Log::getInstance().write(Log::DEBUG,
           "ConsultAnnotationsHandler", "User: " + user);
 
         // insert user into api to get the annotations data
@@ -45,11 +45,11 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
           annotationsAsJSON << "} }";
           statusCode = 200;
           responseBody << annotationsAsJSON.str();
-          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
+          Log::getInstance().write(Log::INFO, "ConsultAnnotationsHandler", "Request checked correctly");
         } else {
           statusCode = 400;
           responseBody << INVALID_USER;
-          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_USER);
+          Log::getInstance().write(Log::ERROR, "ConsultAnnotationsHandler", INVALID_USER);
         }
         // build the response
         response.setStatusCode(statusCode);
@@ -58,7 +58,7 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
-        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
+        Log::getInstance().write(Log::ERROR, "ConsultAnnotationsHandler", URL_ERROR);
       }
       response.buildResponse();
       return true;

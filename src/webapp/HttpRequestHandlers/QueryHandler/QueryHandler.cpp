@@ -53,9 +53,10 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       */
       try {
         // send request to and receive response from data base server
+        Log::getInstance().write(Log::DEBUG, "QueryHandler", "Query Handler call to the database");
         return this->callBDToGetQuery(request, response, "GET");
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::DEBUG, "QueryHandler", error.what());
+        Log::getInstance().write(Log::DEBUG, "QueryHandler", error.what());
         response.setStatusCode(401);
       }
     }
@@ -65,7 +66,7 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       try {
         return this->callBDToGetQuery(request, response, "POST");
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::DEBUG, "QueryHandler", error.what());
+        Log::getInstance().write(Log::DEBUG, "QueryHandler", error.what());
         response.setStatusCode(401);
       }
     }

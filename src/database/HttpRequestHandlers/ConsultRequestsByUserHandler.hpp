@@ -19,8 +19,8 @@ class ConsultRequestsByUserHandler : public DatabaseRequestHandler {
       try {
         // fetch user from request url
         std::string user = request.getTarget().getQuery().find("user")->second;
-        Log::getInstance().write(Log::MessageType::DEBUG,
-          "DatabaseRequestHandler", "User: " + user);
+        Log::getInstance().write(Log::DEBUG,
+          "ConsultRequestsByUserHandler", "User: " + user);
 
         // insert user into api to get the salary data
         std::vector<std::vector<std::string>> requestsData = this->databaseApi->consultRequestsMadeByUser(user);
@@ -85,11 +85,11 @@ class ConsultRequestsByUserHandler : public DatabaseRequestHandler {
           requestsAsJSON << "}";
           statusCode = 200;
           responseBody << requestsAsJSON.str();
-          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
+          Log::getInstance().write(Log::INFO, "ConsultRequestsByUserHandler", "Request checked correctly");
         } else {
           statusCode = 400;
           responseBody << INVALID_USER;
-          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_USER);
+          Log::getInstance().write(Log::ERROR, "ConsultRequestsByUserHandler", INVALID_USER);
         }
         
         // build the response
@@ -99,7 +99,7 @@ class ConsultRequestsByUserHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
-        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
+        Log::getInstance().write(Log::ERROR, "ConsultRequestsByUserHandler", URL_ERROR);
       }
       response.buildResponse();
       

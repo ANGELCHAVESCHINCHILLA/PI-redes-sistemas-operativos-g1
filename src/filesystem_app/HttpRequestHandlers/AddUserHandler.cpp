@@ -17,7 +17,7 @@ bool AddUserHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       (request.getTarget().getPath() == "/adduser" ||
           request.getTarget().getPath() == "/auth/user")) {
     Log::getInstance().write(
-        Log::INFO, "AddUserRequestHandled", request.getTarget().getPath());
+        Log::INFO, "AddUserHandler", request.getTarget().getPath());
     const std::string& body = request.getBody();
     Json::Value requestBody;
     Json::Reader reader;
@@ -46,7 +46,7 @@ bool AddUserHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       statusCode = 400;
       responseBody = "JSON ERROR";
       Log::getInstance().write(
-          Log::ERROR, "AddUserRequest", "JSON Parsing Error");
+          Log::ERROR, "AddUserHandler", "JSON Parsing Error");
     }
     response.setHeader("Content-Type", "text/plain");
     response.setStatusCode(statusCode);
@@ -55,7 +55,7 @@ bool AddUserHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     response.buildResponse();
     // Send
     Log::getInstance().write(
-        Log::INFO, "ResponseSend", "Response Sent with body:" + responseBody);
+        Log::INFO, "AddUserHandler", "Response Sent with body:" + responseBody);
     return true;
   }
   return false;

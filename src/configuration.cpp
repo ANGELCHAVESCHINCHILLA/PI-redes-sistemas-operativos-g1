@@ -36,9 +36,6 @@ int Configuration::configure(const std::string& configuration_path) {
       this->apps.insert(app.asString());
     }
 
-    // TODO: Remove after it stops being used.
-    this->port = root["port"].asInt();
-
     Json::Value servers = root["servers"];
 
     for (const Json::String& key : servers.getMemberNames()) {

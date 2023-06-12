@@ -20,7 +20,7 @@ class AuthHandler : public FileSystemRequestHandler {
         (request.getTarget().getPath() == "/login" ||
             request.getTarget().getPath() == "/auth")) {
       Log::getInstance().write(
-          Log::INFO, "AuthUserRequestHandled", request.getTarget().getPath());
+          Log::INFO, "AuthHandler", request.getTarget().getPath());
       const std::string& body = request.getBody();
       Json::Value requestBody;
       Json::Reader reader;
@@ -43,7 +43,7 @@ class AuthHandler : public FileSystemRequestHandler {
         statusCode = 400;
         responseBody = "JSON ERROR";
         Log::getInstance().write(
-            Log::ERROR, "AuthUserRequest", "JSON Parsing Error");
+            Log::ERROR, "AuthHandler", "JSON Parsing Error");
       }
 
       response.setHeader("Content-Type", "text/plain");
@@ -53,7 +53,7 @@ class AuthHandler : public FileSystemRequestHandler {
       response.buildResponse();
       // Send response
       Log::getInstance().write(
-          Log::INFO, "ResponseSend", "Response Sent with body:" + responseBody);
+          Log::INFO, "AuthHandler", "Response Sent with body:" + responseBody);
       return true;
     }
     return false;

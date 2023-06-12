@@ -44,21 +44,21 @@ class CheckRequestHandler : public DatabaseRequestHandler {
             // check for errors while adding data
             statusCode = couldCheckRequest ? 200 : 400;
             responseBody = couldCheckRequest ? POST_SUCCESS : POST_FAIL;
-            Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
+            Log::getInstance().write(Log::INFO, "CheckRequestHandler", "Request checked correctly");
           } else {
             statusCode = 400;
             responseBody = INVALID_ID;
-            Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_ID);
+            Log::getInstance().write(Log::ERROR, "CheckRequestHandler", INVALID_ID);
           }
         } catch(const Json::LogicError& err) {
           statusCode = 400;
           responseBody = JSON_VALUES_ERROR;
-          Log::getInstance().write(Log::ERROR, "DatabaseFail", JSON_VALUES_ERROR);
+          Log::getInstance().write(Log::ERROR, "CheckRequestHandler", JSON_VALUES_ERROR);
         }
       } else {
         statusCode = 400;
         responseBody = JSON_FORMAT_ERROR;
-        Log::getInstance().write(Log::ERROR, "DatabaseFail", JSON_FORMAT_ERROR);
+        Log::getInstance().write(Log::ERROR, "CheckRequestHandler", JSON_FORMAT_ERROR);
       }
 
       // build the response

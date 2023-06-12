@@ -19,9 +19,6 @@ class Configuration {
   std::set<std::string> apps;
   std::map<std::string, ServerConfiguration> servers;
 
-  // TODO: Remove after it stops being used.
-  int port;
-
  private:
   // Constructor
   Configuration();

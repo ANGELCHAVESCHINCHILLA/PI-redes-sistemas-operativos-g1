@@ -45,14 +45,14 @@ class MakeRequestHandler : public DatabaseRequestHandler {
           statusCode = couldMakeRequest ? 200 : 400;
           responseBody = couldMakeRequest ? POST_SUCCESS : POST_FAIL;
           if (couldMakeRequest) {
-            Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
+            Log::getInstance().write(Log::INFO, "MakeRequestHandler", "Request checked correctly");
           } else {
-            Log::getInstance().write(Log::ERROR, "DatabaseFail", POST_FAIL);
+            Log::getInstance().write(Log::ERROR, "MakeRequestHandler", POST_FAIL);
           }
         } catch (const Json::LogicError& err) {
           statusCode = 400;
           responseBody = JSON_VALUES_ERROR;
-          Log::getInstance().write(Log::ERROR, "DatabaseFail", JSON_VALUES_ERROR);
+          Log::getInstance().write(Log::ERROR, "MakeRequestHandler", JSON_VALUES_ERROR);
         }
       } else {
         statusCode = 400;

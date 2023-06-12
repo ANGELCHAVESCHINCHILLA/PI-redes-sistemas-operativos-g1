@@ -33,14 +33,15 @@ bool RemoveUserHandler::canHandle(
       }
 
       response.setStatusCode(200);
+      Log::getInstance().write(Log::DEBUG, "RemoveUserHandler", "Remove User: Successful");
     } catch (const std::runtime_error& error) {
       Log::getInstance().write(
-          Log::MessageType::WARNING, "RemoveUserHandler", error.what());
+          Log::WARNING, "RemoveUserHandler", error.what());
       response.setStatusCode(401);
       response.getBody() << error.what();
     } catch (const Json::LogicError& error) {
       Log::getInstance().write(
-          Log::MessageType::WARNING, "RemoveUserHandler", error.what());
+          Log::WARNING, "RemoveUserHandler", error.what());
       response.setStatusCode(401);
       response.getBody() << error.what();
     }

@@ -28,6 +28,7 @@ int HttpServer::appendApp(HttpApp* application) {
 }
 
 void HttpServer::stopServer(int signal) {
+  std::cout << "\n";
   Log::getInstance().write(Log::INFO, "HttpServer", "Server closing");
   Log::getInstance().stop();
   HttpServer::getInstance().stop();
@@ -57,7 +58,7 @@ int HttpServer::start(const std::string& address, int port) {
 
   if (!error) {
     error = this->server_socket.listen();
-    Log::getInstance().write(Log::MessageType::DEBUG, "HttpServer",
+    Log::getInstance().write(Log::INFO, "HttpServer",
       "Server running at http://" + address + ":" + std::to_string(port));
   }
 
@@ -77,7 +78,7 @@ void HttpServer::handleClientConnection(
   HttpRequest http_request(request);
   HttpResponse http_response(response);
 
-  Log::getInstance().write(Log::MessageType::DEBUG, "HttpServer",
+  Log::getInstance().write(Log::DEBUG, "HttpServer",
     "HTTP Request: " + http_request.getMethod() + " " +
     http_request.getTarget().getPath());
 

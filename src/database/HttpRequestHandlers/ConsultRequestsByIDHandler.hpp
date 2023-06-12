@@ -20,7 +20,7 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
         // fetch id from request url
         std::string id = request.getTarget().getQuery().find("id")->second;
         // print id
-        Log::getInstance().write(Log::MessageType::DEBUG, "ConsultRequestsByIDHandler", "ID: " + id);
+        Log::getInstance().write(Log::DEBUG, "ConsultRequestsByIDHandler", "ID: " + id);
 
         // insert id into api to get the annotations data
         std::vector<std::string> requestsData = this->databaseApi->getRequestByID(std::stoi(id));
@@ -78,11 +78,11 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
           }
           statusCode = 200;
           responseBody << requestsAsJSON.str();
-          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
+          Log::getInstance().write(Log::INFO, "ConsultRequestsByIDHandler", "Request checked correctly");
         } else {
           statusCode = 400;
           responseBody << INVALID_ID;
-          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_ID);
+          Log::getInstance().write(Log::ERROR, "ConsultRequestsByIDHandler", INVALID_ID);
         }
         
         // build the response
@@ -92,12 +92,12 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
-        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
+        Log::getInstance().write(Log::ERROR, "ConsultRequestsByIDHandler", URL_ERROR);
       } catch(const std::invalid_argument& err) {
         // build the response
         response.setStatusCode(400);
         response.getBody() << PARAM_NOT_INTEGER;
-        Log::getInstance().write(Log::ERROR, "DatabaseFail", PARAM_NOT_INTEGER);
+        Log::getInstance().write(Log::ERROR, "ConsultRequestsByIDHandler", PARAM_NOT_INTEGER);
       }
       response.buildResponse();
       return true;

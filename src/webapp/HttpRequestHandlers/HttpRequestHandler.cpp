@@ -55,10 +55,12 @@ bool HttpRequestHandler::servePage(const HttpRequest& request, HttpResponse& res
     const std::string& path) {
   (void) request;
 
-  // TODO: Why declare this variable?
-  bool fileOpen = HttpRequestHandler::readFile(response.getBody()
-                  , "pages/" + path);
-  (void) fileOpen;
+  bool fileOpen = HttpRequestHandler::readFile(response.getBody(),
+    "pages/" + path);
+
+  if (!fileOpen) {
+    return false;
+  }
 
   response.setStatusCode(200);
   response.setHeader("Content-Type", "text/html; charset=utf8");
@@ -81,7 +83,7 @@ bool HttpRequestHandler::readFile(std::ostream& output
   std::ifstream file(path);
 
   if (!file) {
-    Log::getInstance().write(Log::MessageType::DEBUG, "HttpRequestHandler",
+    Log::getInstance().write(Log::DEBUG, "HttpRequestHandler",
       "Can't read path: " + path.string() + ".");
     return false;
   }

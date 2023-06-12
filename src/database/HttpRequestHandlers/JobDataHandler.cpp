@@ -2,6 +2,8 @@
 
 #include "JobDataHandler.hpp"
 
+#include "../../common/Log.hpp"
+
 bool JobDataHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getTarget().getPath() == "/data/job_data") {
     if (request.getMethod() == "GET") {

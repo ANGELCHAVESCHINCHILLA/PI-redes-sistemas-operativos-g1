@@ -36,7 +36,7 @@ int TcpServer::acceptConnections () {
       // Receive data from client
       error = client_socket.receive(request);
     } else {
-      throw std::runtime_error("could not accept client connection");      
+      throw std::runtime_error("Can't accept client connection");
     }
 
     if (!error) {

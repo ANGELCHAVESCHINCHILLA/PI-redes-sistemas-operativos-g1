@@ -5,6 +5,8 @@
 #include <jsoncpp/json/json.h>
 #include <iostream>
 
+#include "../../common/Log.hpp"
+
 SaltHandler::SaltHandler(FileSystemAPI* api) : FileSystemRequestHandler(api) {
 }
 
@@ -29,6 +31,7 @@ bool SaltHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
       if (salt.empty()) {
         response.setStatusCode(401);
+        Log::getInstance().write(Log::WARNING, "SaltHandler", "Get Salt: Fail");
       } else {
         Json::StreamWriterBuilder writer;
 
@@ -40,6 +43,7 @@ bool SaltHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
         response.setStatusCode(200);
         response.getBody() << json;
+        Log::getInstance().write(Log::DEBUG, "SaltHandler", "Get Salt: Successful");
       }
 
       return true;

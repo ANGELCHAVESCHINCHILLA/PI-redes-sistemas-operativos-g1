@@ -41,9 +41,10 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     // Add user in the database
     if (request.getTarget().getPath() == "/admin/add_user/data") {
       try {
+        Log::getInstance().write(Log::DEBUG, "UserAdminHandler", "Call database to add a user");
         this->callDatabase(request, response, "POST", "/data/personal_data");
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
+        Log::getInstance().write(Log::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -53,9 +54,10 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     // Add a user in the file system
     if (request.getTarget().getPath() == "/admin/add_user/auth") {
       try {
+        Log::getInstance().write(Log::DEBUG, "UserAdminHandler", "Call file system to add a user");
         this->callFileSystem(request, response, "POST", "/auth/user");
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
+        Log::getInstance().write(Log::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -65,9 +67,10 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     // Edit a user in the database
     if (request.getTarget().getPath() == "/admin/edit_user/data") {
       try {
+        Log::getInstance().write(Log::DEBUG, "UserAdminHandler", "Call database to edit a user");
         this->callDatabase(request, response, "PUT", "/data/personal_data");
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
+        Log::getInstance().write(Log::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -77,9 +80,10 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     // Edit a user in the file system
     if (request.getTarget().getPath() == "/admin/edit_user/auth") {
       try {
+        Log::getInstance().write(Log::DEBUG, "UserAdminHandler", "Call file system to edit a user");
         this->callFileSystem(request, response, "PUT", "/auth/user");
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
+        Log::getInstance().write(Log::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -89,9 +93,10 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     // Remove a user in the database
     if (request.getTarget().getPath() == "/admin/remove_user/data") {
       try {
+        Log::getInstance().write(Log::DEBUG, "UserAdminHandler", "Call database to remove a user");
         this->callDatabase(request, response, "DELETE", "/data/personal_data");
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
+        Log::getInstance().write(Log::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -101,9 +106,10 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     // Remove a user in the file system
     if (request.getTarget().getPath() == "/admin/remove_user/auth") {
       try {
+        Log::getInstance().write(Log::DEBUG, "UserAdminHandler", "Call file system to remove a user");
         this->callFileSystem(request, response, "DELETE", "/auth/user");
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
+        Log::getInstance().write(Log::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 

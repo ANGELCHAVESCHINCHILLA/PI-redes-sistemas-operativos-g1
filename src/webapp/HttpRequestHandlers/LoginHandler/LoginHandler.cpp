@@ -12,13 +12,13 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "POST") {
     if (request.getTarget().getPath() == "/login") {
-      // TODO: QUitar este return cuando ya la constrasea venga encriptada.
-      // return this->serveAny(response, 200);
       try {
         // send request to and receive response from data base server
-        this->callToFs(request, response, "POST", "application/json");
+        if (this->callToFs(request, response, "POST", "application/json")) {
+          Log::getInstance().write(Log::DEBUG, "LoginHandler", "Login: Successful");
+        }
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::DEBUG, "LoginHandler", error.what());
+        Log::getInstance().write(Log::DEBUG, "LoginHandler", error.what());
         response.setStatusCode(401);
       }
       return true;
@@ -28,9 +28,11 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     if (request.getTarget().getPath().rfind("/permissions") == 0) {
       try {
         // send request to and receive response from data base server
-        this->callToFs(request, response, "GET", "text/plain");
+        if (this->callToFs(request, response, "GET", "text/plain")) {
+          Log::getInstance().write(Log::DEBUG, "LoginHandler", "Permissions: Successful");
+        }
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::DEBUG, "LoginHandler", error.what());
+        Log::getInstance().write(Log::DEBUG, "LoginHandler", error.what());
         response.setStatusCode(401);
       }
       return true;
@@ -40,11 +42,12 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "GET") {
     if (request.getTarget().getPath().rfind("/auth/salt") == 0) {
       try {
-        Log::getInstance().write(Log::MessageType::INFO, "LoginHandler", "Getting salt from the fs.");
         // send request to and receive response from data base server
-        this->callToFs(request, response, "GET", "application/json");
+        if (this->callToFs(request, response, "GET", "application/json")) {
+          Log::getInstance().write(Log::DEBUG, "LoginHandler", "Get Salt: Successful");
+        }
       } catch (const std::runtime_error& error) {
-        Log::getInstance().write(Log::MessageType::DEBUG, "LoginHandler", error.what());
+        Log::getInstance().write(Log::DEBUG, "LoginHandler", error.what());
         response.setStatusCode(401);
       }
       return true;

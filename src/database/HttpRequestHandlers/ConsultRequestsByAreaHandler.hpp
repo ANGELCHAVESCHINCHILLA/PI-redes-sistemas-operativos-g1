@@ -20,8 +20,8 @@ class ConsultRequestsByAreaHandler : public DatabaseRequestHandler {
         // fetch area from request url
         std::string area = request.getTarget().getQuery().find("area")->second;
         // print area
-        Log::getInstance().write(Log::MessageType::DEBUG,
-          "ConsultRequestByAreaHandler", "Area: " + area);
+        Log::getInstance().write(Log::DEBUG,
+          "ConsultRequestsByAreaHandler", "Area: " + area);
         
         // insert area into api to get the salary data
         std::vector<std::vector<std::string>> requestsData = this->databaseApi->getRequestsMadeByArea(area);
@@ -83,11 +83,11 @@ class ConsultRequestsByAreaHandler : public DatabaseRequestHandler {
           requestsAsJSON << "}";
           statusCode = 200;
           responseBody << requestsAsJSON.str();
-          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
+          Log::getInstance().write(Log::INFO, "ConsultRequestsByAreaHandler", "Request checked correctly");
         } else {
           statusCode = 400;
           responseBody << INVALID_AREA;
-          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_AREA);
+          Log::getInstance().write(Log::ERROR, "ConsultRequestsByAreaHandler", INVALID_AREA);
         }
         
         // build the response
@@ -97,7 +97,7 @@ class ConsultRequestsByAreaHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
-        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
+        Log::getInstance().write(Log::ERROR, "ConsultRequestsByAreaHandler", URL_ERROR);
       }
       response.buildResponse();
       

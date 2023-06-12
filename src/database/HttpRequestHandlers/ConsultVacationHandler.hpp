@@ -20,7 +20,7 @@ class ConsultVacationHandler : public DatabaseRequestHandler {
         // fetch user from request url
         std::string user = request.getTarget().getQuery().find("user")->second;
         // print user
-        Log::getInstance().write(Log::MessageType::DEBUG,
+        Log::getInstance().write(Log::DEBUG,
           "ConsultVacationHandler", "User: " + user);
 
         // insert user into api to get the vacation balance
@@ -31,11 +31,11 @@ class ConsultVacationHandler : public DatabaseRequestHandler {
         if (vacationBalance == "user not found") {
           statusCode = 400;
           responseBody << INVALID_USER;
-          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_USER);
+          Log::getInstance().write(Log::ERROR, "ConsultVacationHandler", INVALID_USER);
         } else {
           statusCode = 200;
           responseBody << "{ \"vacationBalance\": " << std::stoi(vacationBalance) << "}";
-          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
+          Log::getInstance().write(Log::INFO, "ConsultVacationHandler", "Request checked correctly");
         }
         // build the response
         response.setStatusCode(statusCode);
@@ -44,7 +44,7 @@ class ConsultVacationHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
-        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
+        Log::getInstance().write(Log::ERROR, "ConsultVacationHandler", URL_ERROR);
       }
       response.buildResponse();
       

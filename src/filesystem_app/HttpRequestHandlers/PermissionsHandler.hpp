@@ -27,7 +27,7 @@ class PermissionsHandler : public FileSystemRequestHandler{
       response.setStatusCode(200);
       response.getBody() << type;
       response.buildResponse();
-      Log::getInstance().write(Log::INFO, "ResponseSend", "Response sent: " + std::to_string(type));
+      Log::getInstance().write(Log::INFO, "PermissionsHandler", "Response sent: " + std::to_string(type));
       return true;
     }
     return false;

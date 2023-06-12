@@ -9,7 +9,6 @@
 
 #include "common.hpp"
 
-// TODO(jhc): Provide examples
 /// Singleton thread-safe log manager
 class Log {
   DISABLE_COPY(Log);

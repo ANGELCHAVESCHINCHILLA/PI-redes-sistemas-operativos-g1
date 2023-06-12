@@ -35,14 +35,15 @@ bool EditUserHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       }
 
       response.setStatusCode(200);
+      Log::getInstance().write(Log::DEBUG, "EditUserHandler", "Edit User: Successful");
     } catch (const std::runtime_error& error) {
       Log::getInstance().write(
-          Log::MessageType::WARNING, "EditUserHandler", error.what());
+          Log::WARNING, "EditUserHandler", error.what());
       response.setStatusCode(401);
       response.getBody() << error.what();
     } catch (const Json::LogicError& error) {
       Log::getInstance().write(
-          Log::MessageType::WARNING, "EditUserHandler", error.what());
+          Log::WARNING, "EditUserHandler", error.what());
       response.setStatusCode(401);
       response.getBody() << error.what();
     }
