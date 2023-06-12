@@ -106,6 +106,19 @@ input[type="password"] {
   background-repeat: no-repeat;
   background-position: right center;
 }
+.form-field {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-position: right center;
+}
 
 #username {
   background-image: url(".././assets/images/person.png");
@@ -409,6 +422,7 @@ div#page-blank-container {
   align-items: center;
   justify-content: center;
   padding: 20vh;
+  gap: 20px;
 }
 
 
@@ -429,7 +443,7 @@ button[type="submit"] {
   background: rgba(0, 120, 240, 0.1);
   border: 1px solid #0078F0;
   border-radius: 10px;
-  max-width: 200px;
+  width: 200px;
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -454,7 +468,7 @@ button[type="cancel"] {
   font-style: normal;
   font-weight: 5000;
   color: #ff5b5b;
-  max-width: 200px;
+  width: 200px;
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -475,6 +489,8 @@ form.form-container {
   padding: 40px;
   border-radius: 5px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  width: 50vw;
+  margin: auto;
 }
 form button {
   margin-top: 30px ;
@@ -532,7 +548,7 @@ button.index-btn:hover {
   font-weight: 1000;
 }
 
-#gerente-btns {
+#supervisory-btns {
   padding: 30px;
   display: flex;
   flex-flow: column;
@@ -542,7 +558,13 @@ button.index-btn:hover {
   margin-top: 50px;
   margin-bottom: 50px;
 }
-
+.btn-form-container {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
 footer {
   position: fixed;
   left: 0;

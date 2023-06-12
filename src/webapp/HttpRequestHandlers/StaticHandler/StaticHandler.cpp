@@ -35,7 +35,18 @@ bool StaticHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         return true;
       }
     }
-
+    if (request.getTarget().getPath().rfind("/add_annotation", 0) == 0) {
+      if (this->servePage(
+              request, response, "supervisory/add_annotation.html")) {
+        return true;
+      }
+    }
+    if (request.getTarget().getPath().rfind("/supervisory_queries", 0) == 0) {
+      if (this->servePage(
+              request, response, "supervisory/supervisory_queries.html")) {
+        return true;
+      }
+    }
     if (this->serveStatic(request, response)) {
       return true;
     }

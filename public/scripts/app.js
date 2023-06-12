@@ -11,7 +11,8 @@ const PAGE_PRINCIPAL = "index.html";
 const PAGE_LOGIN = "login.html";
 // requests page
 const PAGE_REQUESTS = "solicitudes.html";
-const DEFAUL_PAGE = 'http://127.0.0.1:8080/';
+const DEFAUL_PAGE = 'http://127.0.0.1:8001/';
+const ADD_ANNOTATION = "supervisory/add_annotation_html";
 
 // common html head used. Used for quick html pages creation
 const HTML_HEAD = `<title>Información de solicitud</title>
@@ -357,7 +358,7 @@ function createTextBlankPage(title, content) {
  * @param {*} form content to be showed in div 'text-container'
  */
 function createFormPage(title, form) {
-    let newPage = window.open();
+    const newPage = window.open();
     newPage.document.write(`<!DOCTYPE html>
   <html>
     <head>
@@ -380,6 +381,7 @@ function createFormPage(title, form) {
           Sistema de Gestión de Recursos Humanos
         </footer>
       </div>
+      <script src=".././scripts/buttonlistener.js"> </script>
     </body>
 
   </html>
@@ -388,37 +390,6 @@ function createFormPage(title, form) {
     textContainer.appendChild(form);
     // textContainer.innerHTML = form;
     return newPage;
-}
-
-function createAcceptDenyPage(title, content) {
-    let newPage = window.open();
-    newPage.document.write(`<!DOCTYPE html>
-  <html>
-    <head>
-      ${HTML_HEAD}
-      <title>${title}</title>
-    </head>
-    <body id="consultas">
-      <div id="holder">
-        <div id="body">
-          <div class="w3-container w3-light-blue">
-            <h1>Consulta</h1>
-          </div>
-          <div id="page-blank-container">
-            <h2>${title}</h2>
-            <button id="regresar" onclick="window.close()"></button>
-            <div id="text-container"> ${content} </div>
-            <button class="submit-btn deny-btn">DENEGAR</button>
-            <button class="submit-btn accept-btn">APROBAR</button>
-          </div>
-        </div>
-        <footer style="bottom: 0px">
-          Sistema de Gestión de Recursos Humanos
-        </footer>
-      </div>
-    </body>
-  </html>
-  `);
 }
 
 function createUserRegistrationPage() {
@@ -569,25 +540,42 @@ function checkLogin() {
 
 function populateIndexButtons(permissions) {
     if (permissions > 1) {
-        const divContainer = document.getElementById("gerente-btns")
-        addGerenteButtons(divContainer);
+        const divContainer = document.getElementById("supervisory-btns")
+        addSupervisorButtons(divContainer);
     }
 }
 
-function addGerenteButtons(divcontainer) {
+function addSupervisorButtons(divcontainer) {
     const solicitudesBtn = document.createElement('button');
     const anotacionesBtn = document.createElement('button');
     const header = document.createElement('h2');
-    header.textContent = "Opciones de Gerente";
+
+    header.textContent = "Opciones de Supervisor";
     solicitudesBtn.textContent = "REVISAR SOLICITUDES";
     anotacionesBtn.textContent = "CREAR ANOTACIÓN";
+
     solicitudesBtn.type = 'submit';
     anotacionesBtn.type = 'submit';
+
     solicitudesBtn.classList.add("index-btn");
     anotacionesBtn.classList.add("index-btn");
+
+    solicitudesBtn.id = 'supervisor-solicitudes';
+    anotacionesBtn.id = 'supervisor-anotaciones';
+
+    solicitudesBtn.addEventListener("click", openSupervisoryQueriesPage);
+    anotacionesBtn.addEventListener("click", openMakeAnnotationsPage);
+
     divcontainer.appendChild(header);
     divcontainer.appendChild(solicitudesBtn);
     divcontainer.appendChild(anotacionesBtn);
+}
+function openMakeAnnotationsPage() {
+    window.location.href = "/add_annotation";
+}
+
+function openSupervisoryQueriesPage() {
+    window.location.href = "/supervisory_queries";
 }
 
 
@@ -599,4 +587,5 @@ export {
     openRequestForm,
     reloadRequests,
     toBackPage,
+    openMakeAnnotationsPage,
 };

@@ -18,6 +18,8 @@ function addButtonClickListener(buttonId, clickHandler, args) {
     } else {
       button.addEventListener("click", clickHandler);
     }
+  } else {
+    console.log(buttonId);
   }
 }
 
@@ -43,3 +45,7 @@ addButtonClickListener("vacaciones-btn", openRequestForm, "vacaciones-btn");
 addButtonClickListener("reload-requests", reloadRequests);
 // Back button
 addButtonClickListener("regresar", toBackPage);
+
+addButtonClickListener("cancel", toBackPage);
+
+
