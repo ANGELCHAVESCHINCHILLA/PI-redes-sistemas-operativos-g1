@@ -23,6 +23,7 @@ class Log {
   };
   /// The respective texts for the message types
   static const char* const MESSAGE_TYPE_TEXT[];
+  static const char* const MESSAGE_TYPE_COLOR[];
 
  private:
   /// All write operations are mutually exclusive

@@ -1,3 +1,5 @@
+//
+
 #include "Log.hpp"
 
 #include <cassert>
@@ -5,12 +7,25 @@
 
 #include "Util.hpp"
 
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE "\033[34m"
+
 /// The respective texts for the message types
 const char* const Log::MESSAGE_TYPE_TEXT[] = {
     "Debug",
     "Info",
     "Warning",
     "Error",
+};
+
+const char* const Log::MESSAGE_TYPE_COLOR[] = {
+    BLUE,
+    GREEN,
+    YELLOW,
+    RED,
 };
 
 Log& Log::getInstance() {
@@ -46,12 +61,22 @@ void Log::stop() {
 void Log::write(Log::MessageType type, const std::string& category,
     const std::string& text) {
   this->mutex.lock();
-  std::string log = "[" + getActualTime() + "] [" + MESSAGE_TYPE_TEXT[type] + "]\t" + category + "\t\t" + text;
-  this->output << log << std::endl;
+
+  std::string time = getActualTime();
+
+  std::string console_log = "[" + time + "] " + MESSAGE_TYPE_COLOR[type] +
+    "[" + MESSAGE_TYPE_TEXT[type] + "]" + RESET + "\t" + category + "\t\t" + text;
+  std::string file_log = "[" + time + "] [" + MESSAGE_TYPE_TEXT[type] +
+    "]\t" + category + "\t\t" + text;
+
+  this->output << console_log << std::endl;
+
   if(this->file.is_open()) {
-    this->file << log << std::endl;
+    this->file << file_log << std::endl;
   }
+
   bool error = !this->output;
+
   this->mutex.unlock();
 
   if (error) {
