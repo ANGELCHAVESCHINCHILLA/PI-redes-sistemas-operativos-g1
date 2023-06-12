@@ -311,7 +311,7 @@ async function showBaseSalary() {
   const title = "Información salarial";
 
   let content = `Nombre: ${salaryInfo.name} <br>
-  Compañía: ${salaryInfo.company_name}<br><br>`;
+  Área: ${salaryInfo.company_name}<br><br>`;
 
   let salaryCount = 1;
 
@@ -323,8 +323,8 @@ async function showBaseSalary() {
       const salaryStrNet = numeroALetras.convertir(salary.net_salary);
 
       content += `Salario ${salaryCount}<br>
-      Salario base: CRC${salary.gross_salary} (${salaryStrGross})<br>
-      Salario neto: CRC${salary.net_salary} (${salaryStrNet})<br>
+      Salario base: ${salary.gross_salary.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} (${salaryStrGross})<br>
+      Salario neto: ${salary.net_salary.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} (${salaryStrNet})<br>
       Fecha de inicio del salario: ${formatDate(salary.salary_start_date)} <br><br>`;
       salaryCount++;
     }
@@ -391,7 +391,7 @@ async function showExpedientAnotations() {
   let title = "Anotaciones al expediente";
 
   let content = `Nombre: ${annotations.name}<br>
-  Empresa: ${annotations.company_name}<br><br>`;
+  Área: ${annotations.company_name}<br><br>`;
 
   let annotCount = 1;
   // Recorrer las anotaciones utilizando un bucle for...in
