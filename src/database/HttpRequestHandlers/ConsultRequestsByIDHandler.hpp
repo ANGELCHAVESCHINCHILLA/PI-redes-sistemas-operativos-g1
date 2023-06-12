@@ -21,11 +21,9 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
         std::string id = request.getTarget().getQuery().find("id")->second;
         // print id
         Log::getInstance().write(Log::DEBUG, "ConsultRequestsByIDHandler", "ID: " + id);
-
         // insert id into api to get the annotations data
         std::vector<std::string> requestsData = this->databaseApi->getRequestByID(std::stoi(id));
         // pack all data into a json format string
-
         int statusCode;
         std::stringstream responseBody;
         if (!requestsData.empty()) {
@@ -33,6 +31,7 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
           requestsAsJSON << "{";
           for (int i = 0; i < requestsData.size(); ++i) {
             std::string jsonEntry;
+
             switch(i) {
               case 0:
                 jsonEntry = "user";
@@ -98,6 +97,10 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
         response.setStatusCode(400);
         response.getBody() << PARAM_NOT_INTEGER;
         Log::getInstance().write(Log::ERROR, "ConsultRequestsByIDHandler", PARAM_NOT_INTEGER);
+      } catch (const  std::logic_error error) {
+        std::cout << error.what() << std::endl;
+      } catch (const std::runtime_error error) {
+        std::cout << error.what() << std::endl;
       }
       response.buildResponse();
       return true;
