@@ -20,7 +20,8 @@ class UserAdminHandler : public HttpRequestHandler {
   void callDatabase(HttpRequest& request, HttpResponse& response,
       const std::string& method, const std::string& path);
 
-  void addUserInFileSystem(HttpRequest& request, HttpResponse& response);
+  void callFileSystem(HttpRequest& request, HttpResponse& response,
+      const std::string& method, const std::string& path);
 };
 
 #endif  // USER_ADMIN_HANDLER_HPP_

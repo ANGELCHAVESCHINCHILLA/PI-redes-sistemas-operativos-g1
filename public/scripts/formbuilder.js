@@ -72,8 +72,8 @@ export class FormBuilder {
     return this;
   }
 
-  addSubmitlButton(name, label) {
-    this.fields.push(new SubmitButton(name, label));
+  addSubmitlButton(name, label, button_id) {
+    this.fields.push(new SubmitButton(name, label, button_id));
     return this;
   }
 
@@ -325,15 +325,17 @@ class CancelButton {
 }
 
 class SubmitButton {
-  constructor(name, label) {
+  constructor(name, label, button_id) {
     this.name = name;
     this.label = label;
+    this.button_id = button_id;
   }
   render() {
     const button = document.createElement("button");
-    button.className = "submit-btn";
-    button.type = "submit";
+    // button.className = "submit-btn";
+    // button.type = "submit";
     button.textContent = this.label;
+    button.id = this.button_id;
     return button;
   }
 }

@@ -9,6 +9,7 @@
 GuachisWebApp::GuachisWebApp() {
   this->requestHandlers.push_back(new UserAdminHandler());
   this->requestHandlers.push_back(new StaticHandler());
+  this->requestHandlers.push_back(new UserAdminHandler());
   this->requestHandlers.push_back(new LoginHandler());
   this->requestHandlers.push_back(new QueryHandler());
   this->requestHandlers.push_back(new ValidateHandler());

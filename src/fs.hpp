@@ -9,10 +9,10 @@
 
 #include <string>
 
-#define DIRECTORY_COUNT 8
+#define DIRECTORY_COUNT 64
 #define DIRECTORY_UNDEFINED -1
 
-#define FAT_COUNT 8
+#define FAT_COUNT 64
 #define FAT_UNDEFINED -1
 #define FAT_RESERVED -2
 #define FAT_EOF -3
@@ -253,8 +253,6 @@ class FS {
    * @return int code error, if successfully or not.
    */
   int changePermissionsToEntry(std::string name, char* newPermissions);
- public:
-  bool validateUser(const std::string& userName, const std::string& hashKey);
 };
 
 #endif  // FS_HPP_

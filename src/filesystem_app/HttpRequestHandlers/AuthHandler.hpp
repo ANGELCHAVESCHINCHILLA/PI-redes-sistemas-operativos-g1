@@ -7,16 +7,20 @@
 
 #include <jsoncpp/json/json.h>
 
+#include "../../common/Log.hpp"
 #include "FileSystemRequestHandler.hpp"
 
 class AuthHandler : public FileSystemRequestHandler {
  public:
-  explicit AuthHandler(FileSystemAPI* fileSystemApi) :
-        FileSystemRequestHandler(fileSystemApi) {};
+  explicit AuthHandler(FileSystemAPI* fileSystemApi)
+      : FileSystemRequestHandler(fileSystemApi){};
 
   bool canHandle(HttpRequest& request, HttpResponse& response) override {
-    if (request.getMethod() == "POST" && request.getTarget().getPath() == "/login") {
-      Log::getInstance().write(Log::INFO, "AuthUserRequestHandled", request.getTarget().getPath());
+    if (request.getMethod() == "POST" &&
+        (request.getTarget().getPath() == "/login" ||
+            request.getTarget().getPath() == "/auth")) {
+      Log::getInstance().write(
+          Log::INFO, "AuthUserRequestHandled", request.getTarget().getPath());
       const std::string& body = request.getBody();
       Json::Value requestBody;
       Json::Reader reader;
@@ -30,14 +34,16 @@ class AuthHandler : public FileSystemRequestHandler {
         std::string username = requestBody["username"].asString();
         std::string password = requestBody["password"].asString();
         // Auth via API
-        bool isAuthenticated = this->fileSystemApi->authenticateUser(username, password);
+        bool isAuthenticated =
+            this->fileSystemApi->authenticateUser(username, password);
 
         statusCode = isAuthenticated ? 200 : 400;
         responseBody = isAuthenticated ? "Successfully" : "Failed";
       } else {
         statusCode = 400;
         responseBody = "JSON ERROR";
-        Log::getInstance().write(Log::ERROR, "AuthUserRequest", "JSON Parsing Error");
+        Log::getInstance().write(
+            Log::ERROR, "AuthUserRequest", "JSON Parsing Error");
       }
 
       response.setHeader("Content-Type", "text/plain");
@@ -52,8 +58,6 @@ class AuthHandler : public FileSystemRequestHandler {
     }
     return false;
   }
-
 };
-
 
 #endif  // PI_REDES_SISTEMAS_OPERATIVOS_G1_AUTHHANDLER_H

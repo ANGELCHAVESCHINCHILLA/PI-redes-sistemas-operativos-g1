@@ -52,7 +52,31 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     // Add a user in the file system
     if (request.getTarget().getPath() == "/admin/add_user/auth") {
       try {
-        this->addUserInFileSystem(request, response);
+        this->callFileSystem(request, response, "POST", "/auth/user");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << "\n";
+        response.setStatusCode(401);
+      }
+
+      return true;
+    }
+
+    // Edit a user in the database
+    if (request.getTarget().getPath() == "/admin/edit_user/data") {
+      try {
+        this->callDatabase(request, response, "PUT", "/data/personal_data");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << "\n";
+        response.setStatusCode(401);
+      }
+
+      return true;
+    }
+
+    // Edit a user in the file system
+    if (request.getTarget().getPath() == "/admin/edit_user/auth") {
+      try {
+        this->callFileSystem(request, response, "PUT", "/auth/user");
       } catch (const std::runtime_error& error) {
         std::cerr << error.what() << "\n";
         response.setStatusCode(401);
@@ -73,10 +97,10 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       return true;
     }
 
-    // Edit a user in the database
-    if (request.getTarget().getPath() == "/admin/edit_user/data") {
+    // Remove a user in the file system
+    if (request.getTarget().getPath() == "/admin/remove_user/auth") {
       try {
-        this->callDatabase(request, response, "PUT", "/data/personal_data");
+        this->callFileSystem(request, response, "DELETE", "/auth/user");
       } catch (const std::runtime_error& error) {
         std::cerr << error.what() << "\n";
         response.setStatusCode(401);
@@ -97,33 +121,36 @@ void UserAdminHandler::callDatabase(HttpRequest& request,
   std::string db_address = configuration.getServer("db").address;
   std::string db_port = std::to_string(configuration.getServer("db").port);
 
-  HttpRequest http_request;
+  HttpRequest db_request;
 
-  http_request.setMethod(method);
-  http_request.setTarget("http://" + db_address + ":" + db_port + path);
-  http_request.setBody(request.getBody());
+  db_request.setMethod(method);
+  db_request.setTarget("http://" + db_address + ":" + db_port + path);
+  db_request.setBody(request.getBody());
 
-  auto future = HttpServer::fetch(http_request);
+  auto future = HttpServer::fetch(db_request);
 
-  HttpResponse http_response = future.get();
+  HttpResponse db_response = future.get();
 
-  response.setStatusCode(http_response.getStatusCode());
+  response.setStatusCode(db_response.getStatusCode());
 }
 
-void UserAdminHandler::addUserInFileSystem(
-    HttpRequest& request, HttpResponse& response) {
+void UserAdminHandler::callFileSystem(HttpRequest& request,
+    HttpResponse& response, const std::string& method,
+    const std::string& path) {
   Configuration& configuration = Configuration::getInstance();
 
   std::string fs_address = configuration.getServer("fs").address;
   std::string fs_port = std::to_string(configuration.getServer("fs").port);
 
-  HttpRequest http_request("POST http://" + fs_address + ":" + fs_port +
-                           "/adduser HTTP/1.1\n\n\n" + request.getBody() +
-                           "\n");
+  HttpRequest fs_request;
 
-  auto future = HttpServer::fetch(http_request);
+  fs_request.setMethod(method);
+  fs_request.setTarget("http://" + fs_address + ":" + fs_port + path);
+  fs_request.setBody(request.getBody());
 
-  HttpResponse http_response = future.get();
+  auto future = HttpServer::fetch(fs_request);
 
-  response.setStatusCode(http_response.getStatusCode());
+  HttpResponse fs_response = future.get();
+
+  response.setStatusCode(fs_response.getStatusCode());
 }

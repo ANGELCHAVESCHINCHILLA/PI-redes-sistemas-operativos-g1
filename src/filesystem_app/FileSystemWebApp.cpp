@@ -4,11 +4,13 @@
 
 #include <iostream>
 
-#include "./HttpRequestHandlers/AddUserHandler.hpp"
-#include "./HttpRequestHandlers/AuthHandler.hpp"
-#include "./HttpRequestHandlers/PermissionsHandler.hpp"
-#include "./HttpRequestHandlers/SaltHandler.hpp"
 #include "../common/Log.hpp"
+#include "HttpRequestHandlers/AddUserHandler.hpp"
+#include "HttpRequestHandlers/AuthHandler.hpp"
+#include "HttpRequestHandlers/EditUserHandler.hpp"
+#include "HttpRequestHandlers/PermissionsHandler.hpp"
+#include "HttpRequestHandlers/RemoveUserHandler.hpp"
+#include "HttpRequestHandlers/SaltHandler.hpp"
 
 FileSystemWebApp::FileSystemWebApp() {
   this->fileSystemApi = new FileSystemAPI();
@@ -24,6 +26,8 @@ void FileSystemWebApp::initHandlers() {
   this->requestHandlers.push_back(new AddUserHandler(this->fileSystemApi));
   this->requestHandlers.push_back(new PermissionsHandler(this->fileSystemApi));
   this->requestHandlers.push_back(new SaltHandler(this->fileSystemApi));
+  this->requestHandlers.push_back(new RemoveUserHandler(this->fileSystemApi));
+  this->requestHandlers.push_back(new EditUserHandler(this->fileSystemApi));
 }
 
 bool FileSystemWebApp::start() {
@@ -31,7 +35,8 @@ bool FileSystemWebApp::start() {
 }
 
 bool FileSystemWebApp::run(HttpRequest& request, HttpResponse& response) {
-  Log::getInstance().write(Log::INFO, "RequestReceived", request.getTarget().getPath());
+  Log::getInstance().write(
+      Log::INFO, "RequestReceived", request.getTarget().getPath());
   for (auto& handler : this->requestHandlers) {
     if (handler->canHandle(request, response)) {
       return true;
@@ -41,7 +46,6 @@ bool FileSystemWebApp::run(HttpRequest& request, HttpResponse& response) {
   // TODO: remove this get after debugging stage
   if (request.getMethod() == "GET" &&
       request.getTarget().getPath() == "/viewfs") {
-
     response.setHeader("Content-Type", "text/plain");
     response.setStatusCode(200);
     response.getBody() << this->fileSystemApi->viewFS();

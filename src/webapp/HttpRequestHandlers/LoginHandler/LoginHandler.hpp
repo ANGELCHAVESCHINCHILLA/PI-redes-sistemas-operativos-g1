@@ -30,25 +30,11 @@ class LoginHandler : public HttpRequestHandler {
    */
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 
-  bool callFSToLogin(HttpRequest& request, HttpResponse& response);
-
-  /**
-   * @brief true if the user is valid
-   * 
-   * @param request 
-   * @param user 
-   * @return true 
-   * @return false 
-   */
-  bool isValidUser(HttpRequest& request, UserSession& user);
-
-  inline void setServer(const std::string& server);
-
-  inline void setPort(const std::string& port);
+  bool callToFs(HttpRequest& request, HttpResponse& response
+  , const std::string& method, const std::string& contentType);
 
   bool serveAuthFailed(HttpRequest& httpRequest,
                                     HttpResponse& httpResponse);
-
 };
 
 #endif  // LOGIN_HANDLER

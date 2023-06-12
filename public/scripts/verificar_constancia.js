@@ -1,41 +1,38 @@
 document.addEventListener('DOMContentLoaded', function () {
     var buscarBtn = document.getElementById('buscarBtn');
     buscarBtn.addEventListener('click', buscarConstancia);
-
-    function makeFetch(constanciaId) {
-        fetch('/getConst', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ constanciaId: constanciaId })
-        })
-            .then(function(response) {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    throw new Error('Error en la respuesta del servidor');
-                    return null;
-                }
-            })
-    }
-    function formatInfo(info) {
-        // TODO: finish this according info receiving from the fetch
-        let formattedText;
-        return formattedText;
-    }
-    function buscarConstancia() {
-        var constanciaId = document.getElementById('constanciaId').value;
-        var newWindow = window.open('');
-        newWindow.document.write(constanciaId); // remove this when below TODO is ready
-        // TODO: when DB API rest is up, change this to work
-        /*
-        let info = makeFetch(constanciaId);
-        if (info) {
-            formatInfo(info)
-            newWindow.document.write(constanciaId);
-        }
-
-         */
-    }
 });
+
+async function buscarConstancia() {
+    const constanciaId = document.getElementById('constanciaId').value;
+    // var newWindow = window.open('');
+    // Make fetch
+    const url = `/consultRequestsByID?id=${constanciaId}`;
+    // const params = {id: constanciaId};
+    // url.search = new URLSearchParams(params).toString();
+    console.log(url);
+    await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }).then(async response => {
+        console.log("Status: " + response.status)
+        if (response.status == 200) {
+            let newWindow = window.open('');
+            let pageHTML = formatResponseInfo(response.json());
+            newWindow.write(pageHTML);
+        } else {
+            const errorText = await response.text();
+            document.write(errorText);
+        }
+    }).catch(error => {
+        console.log(error);
+    })
+
+}
+
+function formatResponseInfo(responseJSON) {
+    let page = "PlaceHolde Info";
+    return page;
+}

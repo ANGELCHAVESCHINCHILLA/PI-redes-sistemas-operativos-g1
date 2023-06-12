@@ -12,30 +12,58 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "POST") {
     if (request.getTarget().getPath() == "/login") {
       // TODO: QUitar este return cuando ya la constrasea venga encriptada.
-      return true;
+      // return this->serveAny(response, 200);
       try {
         // send request to and receive response from data base server
-        return this->callFSToLogin(request, response);
+        this->callToFs(request, response, "POST", "application/json");
       } catch (const std::runtime_error& error) {
         std::cerr << error.what() << ".\n";
         response.setStatusCode(401);
       }
+      return true;
+    }
+  }
+  if (request.getMethod() == "GET") {
+    if (request.getTarget().getPath().rfind("/permissions") == 0) {
+      try {
+        // send request to and receive response from data base server
+        this->callToFs(request, response, "GET", "text/plain");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << ".\n";
+        response.setStatusCode(401);
+      }
+      return true;
+    }
+  }
+
+  if (request.getMethod() == "GET") {
+    if (request.getTarget().getPath().rfind("/auth/salt") == 0) {
+      try {
+        std::cout << "Login Handler se encargará" << std::endl;
+        // send request to and receive response from data base server
+        this->callToFs(request, response, "GET", "application/json");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << ".\n";
+        response.setStatusCode(401);
+      }
+      return true;
     }
   }
   return false;
 }
 
-bool LoginHandler::callFSToLogin(HttpRequest& request, HttpResponse& response) {
-  Configuration& configuration = Configuration::getInstance();
+bool LoginHandler::callToFs(HttpRequest& request, HttpResponse& response
+  , const std::string& method, const std::string& contentType) {
+    Configuration& configuration = Configuration::getInstance();
   // IP adress of file system server
-  std::string db_address = configuration.getServer("fs").address;
+  std::string FSAddress = configuration.getServer("fs").address;
   // port in which file system server is listenning
-  std::string db_port = std::to_string(configuration.getServer("fs").port);
+  std::string FSPort = std::to_string(configuration.getServer("fs").port);
   // request to be send to file system server
   HttpRequest FSRequest;
   // Construct request with our needs
-  FSRequest.setMethod("POST");
-  FSRequest.setTarget("http://" + db_address + ":" + db_port + request.getTarget().getInput());
+  FSRequest.setMethod(method);
+  FSRequest.setTarget("http://" + FSAddress + ":" + FSPort + request.getTarget().getInput());
   FSRequest.setBody(request.getBody());
 
   // std::cout << "Request que se enviará a file system" << std::endl;
@@ -50,7 +78,7 @@ bool LoginHandler::callFSToLogin(HttpRequest& request, HttpResponse& response) {
   // Build our FSResponse
   response.setStatusCode(FSResponse.getStatusCode());
   response.getBody() << FSResponse.getBody().str();
-  response.setHeader("Content-Type", "application/json");
+  response.setHeader("Content-Type", contentType);
   return response.buildResponse();
 }
 

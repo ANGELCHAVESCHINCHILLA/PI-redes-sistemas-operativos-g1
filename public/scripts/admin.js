@@ -28,7 +28,28 @@ const getHash = (password, salt) => {
 const go_back_button = document.querySelector("#go_back_button");
 
 go_back_button.addEventListener('click', () => {
-    window.history.back();
+    location.href = '/admin';
+});
+
+const user_form = document.querySelector("#user_form");
+
+// Messages
+
+const feedback_message = document.querySelector("#feedback_message");
+const close_feedback_message = document.querySelector("#close_feedback_message");
+
+close_feedback_message.addEventListener('click', () => {
+    feedback_message.style.display = 'none';
+
+    location.href = '/admin';
+});
+
+const error_message = document.querySelector("#error_message");
+const close_error_message = document.querySelector("#close_error_message");
+const error_message_content = document.querySelector("#error_message_content");
+
+close_error_message.addEventListener('click', () => {
+    error_message.style.display = 'none';
 });
 
 // Add user
@@ -36,7 +57,9 @@ go_back_button.addEventListener('click', () => {
 const add_user_send_button = document.querySelector("#add_user_send_button");
 
 if (add_user_send_button !== null) {
-    add_user_send_button.addEventListener('click', async () => {
+    user_form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
         const user_id = document.querySelector("#user_id");
         const user_password = document.querySelector("#user_password");
         const user_name = document.querySelector("#user_name");
@@ -45,7 +68,16 @@ if (add_user_send_button !== null) {
         const user_phone_number = document.querySelector("#user_phone_number");
         const user_type = document.querySelector("#user_type");
 
-        const database_json = {
+        const salt = getSalt(15);
+
+        const fs_json = {
+            username: user_id.value,
+            password: getHash(user_password.value, salt),
+            salt: salt,
+            type: parseInt(user_type.value)
+        };
+
+        const db_json = {
             user: user_id.value,
             employee_name: user_name.value,
             job_name: user_job_name.value,
@@ -54,60 +86,73 @@ if (add_user_send_button !== null) {
             phone_number: parseInt(user_phone_number.value),
         };
 
-        await fetch("/admin/add_user/data", {
-            method: "POST",
-            body: JSON.stringify(database_json)
-        });
-
-        const salt = getSalt(15);
-
-        const fs_json = {
-            "username": user_id.value,
-            "salt": salt,
-            "password": getHash(user_password, salt),
-            "type": parseInt(user_type.value)
-        };
-
-        await fetch("/admin/add_user/auth", {
+        const fs_response = await fetch("/admin/add_user/auth", {
             method: "POST",
             body: JSON.stringify(fs_json)
         });
 
-        location.href = "/admin";
+        const db_response = await fetch("/admin/add_user/data", {
+            method: "POST",
+            body: JSON.stringify(db_json)
+        });
+
+        if (fs_response.status === 200 && db_response.status === 200) {
+            feedback_message.style.display = 'block';
+        } else {
+            error_message.style.display = 'block';
+            error_message_content.textContent = 'El usuario ya existe.';
+        }
     });
 }
-
 
 // Remove user
 
 const remove_user_send_button = document.querySelector("#remove_user_send_button");
 
 if (remove_user_send_button !== null) {
-    remove_user_send_button.addEventListener('click', async () => {
+    user_form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
         const user_id = document.querySelector("#user_id");
 
-        const database_json = {
+        const db_json = {
             user: user_id.value,
         };
 
-        await fetch("/admin/remove_user/data", {
+        const fs_json = {
+            username: user_id.value,
+        };
+
+        const fs_response = await fetch('/admin/remove_user/auth', {
+            method: 'POST',
+            body: JSON.stringify(fs_json)
+        })
+
+        const db_response = await fetch("/admin/remove_user/data", {
             method: "POST",
-            body: JSON.stringify(database_json)
+            body: JSON.stringify(db_json)
         });
 
-        // REMOVING USERS IS NOT IMPLEMENTED IN THE FILE SYSTEM
+        console.log(fs_response.status);
+        console.log(db_response.status);
 
-        location.href = "/admin";
+        if (fs_response.status === 200 && db_response.status === 200) {
+            feedback_message.style.display = 'block';
+        } else {
+            error_message.style.display = 'block';
+            error_message_content.textContent = 'El usuario no existe.';
+        }
     });
 }
-
 
 // Edit user
 
 const edit_user_send_button = document.querySelector("#edit_user_send_button");
 
-if (edit_user_send_button != null) {
-    edit_user_send_button.addEventListener('click', async () => {
+if (edit_user_send_button !== null) {
+    user_form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
         const user_id = document.querySelector("#user_id");
         const user_password = document.querySelector("#user_password");
         const user_name = document.querySelector("#user_name");
@@ -116,7 +161,16 @@ if (edit_user_send_button != null) {
         const user_phone_number = document.querySelector("#user_phone_number");
         const user_type = document.querySelector("#user_type");
 
-        const database_json = {
+        const salt = getSalt(15);
+
+        const fs_json = {
+            username: user_id.value,
+            password: getHash(user_password, salt),
+            salt: salt,
+            type: parseInt(user_type.value)
+        };
+
+        const db_json = {
             user: user_id.value,
             employee_name: user_name.value,
             job_name: user_job_name.value,
@@ -125,13 +179,24 @@ if (edit_user_send_button != null) {
             phone_number: parseInt(user_phone_number.value),
         };
 
-        await fetch("/admin/edit_user/data", {
-            method: "POST",
-            body: JSON.stringify(database_json)
+        const fs_response = await fetch('/admin/edit_user/auth', {
+            method: 'POST',
+            body: JSON.stringify(fs_json)
         });
 
-        // EDITING USERS IS NOT IMPLEMENTED IN THE FILE SYSTEM
+        const db_response = await fetch("/admin/edit_user/data", {
+            method: "POST",
+            body: JSON.stringify(db_json)
+        });
 
-        location.href = "/admin";
+        console.log(fs_response.status);
+        console.log(db_response.status);
+
+        if (fs_response.status === 200 && db_response.status === 200) {
+            feedback_message.style.display = 'block';
+        } else {
+            error_message.style.display = 'block';
+            error_message_content.textContent = 'El usuario no existe.';
+        }
     });
 }

@@ -1,0 +1,36 @@
+/**/
+
+.botones {
+    gap: 0;
+}
+
+.botones button {
+    width: 80%;
+    height: auto;
+    margin: 10px;
+    padding: 10px;
+}
+
+.botones button a {
+    text-decoration: none;
+}
+
+input[type="password"] {
+    background-image: none;
+}
+
+input {
+    margin-bottom: 10px !important;
+}
+
+form {
+    margin-bottom: 40px !important;
+}
+
+button[type="cancel"] {
+    display: inline-block;
+}
+
+button[type="submit"] {
+    display: inline-block;
+}

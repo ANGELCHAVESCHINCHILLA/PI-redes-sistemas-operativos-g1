@@ -73,7 +73,8 @@ footer {
   font-family: var(--fuente-public-sans);
   background-color: #ccc;
   height: 5vh;
-  position: absolute;
+  position: fixed;
+  bottom: 0;
   width: 100vw;
 }
 
@@ -102,6 +103,19 @@ input[type="password"] {
   margin-bottom: 20px;
   box-sizing: border-box;
   background-image: url(".././assets/images/eye.png");
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+.form-field {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+  box-sizing: border-box;
   background-repeat: no-repeat;
   background-position: right center;
 }
@@ -408,6 +422,7 @@ div#page-blank-container {
   align-items: center;
   justify-content: center;
   padding: 20vh;
+  gap: 20px;
 }
 
 
@@ -428,7 +443,7 @@ button[type="submit"] {
   background: rgba(0, 120, 240, 0.1);
   border: 1px solid #0078F0;
   border-radius: 10px;
-  max-width: 200px;
+  width: 200px;
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -453,7 +468,7 @@ button[type="cancel"] {
   font-style: normal;
   font-weight: 5000;
   color: #ff5b5b;
-  max-width: 200px;
+  width: 200px;
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -474,6 +489,8 @@ form.form-container {
   padding: 40px;
   border-radius: 5px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  width: 50vw;
+  margin: auto;
 }
 form button {
   margin-top: 30px ;
@@ -521,10 +538,38 @@ button.index-btn {
   border-radius: 10px;
   transition: background-color 0.3s ease-in-out;
   width: 100vh;
+  height: 20vh;
+  margin-top: 30px;
 }
 
 button.index-btn:hover {
   background-color: #6ea9e7;
   color: #f2f2f2;
   font-weight: 1000;
+}
+
+#supervisory-btns {
+  padding: 30px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.btn-form-container {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
 }

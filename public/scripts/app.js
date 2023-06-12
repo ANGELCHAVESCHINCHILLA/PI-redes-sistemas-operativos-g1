@@ -11,7 +11,8 @@ const PAGE_PRINCIPAL = "index.html";
 const PAGE_LOGIN = "login.html";
 // requests page
 const PAGE_REQUESTS = "solicitudes.html";
-const DEFAUL_PAGE = 'http://127.0.0.1:8080/';
+const DEFAUL_PAGE = 'http://127.0.0.1:8001/';
+const ADD_ANNOTATION = "supervisory/add_annotation_html";
 
 // common html head used. Used for quick html pages creation
 const HTML_HEAD = `<title>Información de solicitud</title>
@@ -439,7 +440,7 @@ function createTextBlankPage(title, content) {
  * @param {*} form content to be showed in div 'text-container'
  */
 function createFormPage(title, form) {
-    let newPage = window.open();
+    const newPage = window.open();
     newPage.document.write(`<!DOCTYPE html>
   <html>
     <head>
@@ -463,6 +464,7 @@ function createFormPage(title, form) {
           Sistema de Gestión de Recursos Humanos
         </footer>
       </div>
+      <script src=".././scripts/buttonlistener.js"> </script>
     </body>
 
   </html>
@@ -706,7 +708,21 @@ function cancelar() {
     /** Nothing for now ;) */
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
+    checkLogin();
+    if (window.location.pathname == '/index.html') {
+        const permissions = localStorage.getItem('permissions');
+        if (permissions) {
+            populateIndexButtons(parseInt(permissions));
+        } else {
+            window.location.href = DEFAUL_PAGE;
+        }
+    }
+
+    console.log(window.location.pathname);
+});
+
+function checkLogin() {
     var data = localStorage.getItem('logged');
 
     fetch('/validate', {
@@ -724,11 +740,52 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.href = DEFAUL_PAGE;
             }
         })
-            .catch(function (error) {
-                // Manejar el error en caso de que la solicitud falle
-                console.error('Error al enviar la solicitud:', error);
-            });
-});
+        .catch(function (error) {
+            // Manejar el error en caso de que la solicitud falle
+            console.error('Error al enviar la solicitud:', error);
+        });
+}
+
+
+function populateIndexButtons(permissions) {
+    if (permissions > 1) {
+        const divContainer = document.getElementById("supervisory-btns")
+        addSupervisorButtons(divContainer);
+    }
+}
+
+function addSupervisorButtons(divcontainer) {
+    const solicitudesBtn = document.createElement('button');
+    const anotacionesBtn = document.createElement('button');
+    const header = document.createElement('h2');
+
+    header.textContent = "Opciones de Supervisor";
+    solicitudesBtn.textContent = "REVISAR SOLICITUDES";
+    anotacionesBtn.textContent = "CREAR ANOTACIÓN";
+
+    solicitudesBtn.type = 'submit';
+    anotacionesBtn.type = 'submit';
+
+    solicitudesBtn.classList.add("index-btn");
+    anotacionesBtn.classList.add("index-btn");
+
+    solicitudesBtn.id = 'supervisor-solicitudes';
+    anotacionesBtn.id = 'supervisor-anotaciones';
+
+    solicitudesBtn.addEventListener("click", openSupervisoryQueriesPage);
+    anotacionesBtn.addEventListener("click", openMakeAnnotationsPage);
+
+    divcontainer.appendChild(header);
+    divcontainer.appendChild(solicitudesBtn);
+    divcontainer.appendChild(anotacionesBtn);
+}
+function openMakeAnnotationsPage() {
+    window.location.href = "/add_annotation";
+}
+
+function openSupervisoryQueriesPage() {
+    window.location.href = "/supervisory_queries";
+}
 
 
 export {
@@ -739,4 +796,5 @@ export {
     openRequestForm,
     reloadRequests,
     toBackPage,
+    openMakeAnnotationsPage,
 };

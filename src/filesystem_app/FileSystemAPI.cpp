@@ -4,68 +4,110 @@
 
 #include "FileSystemAPI.hpp"
 
+#include <string.h>
+
 #include <fstream>
 #include <iostream>
 #include <string>
 
-#include "../common/Util.hpp"
 #include "../common/Log.hpp"
+#include "../common/Util.hpp"
 
 #define USERNAME_LENGTH 10
-#define HASH_LENGTH 16
-#define SALT_LENGTH 16
+#define HASH_LENGTH 15
+#define SALT_LENGTH 15
+#define TYPE_LENGTH 1
+#define USER_BYTES (USERNAME_LENGTH + HASH_LENGTH + SALT_LENGTH + TYPE_LENGTH)
+
+#define USERNAME_OFFSET 0
+#define HASH_OFFSET USERNAME_LENGTH
+#define SALT_OFFSET (HASH_OFFSET + HASH_LENGTH)
+#define TYPE_OFFSET (SALT_OFFSET + SALT_LENGTH)
 
 FileSystemAPI::FileSystemAPI() : authenticator(&this->fs) {
   this->readFromFile(this->users_file);
 }
 
-
-bool FileSystemAPI::addUser(std::string username, const std::string& hashed_password, int role) {
+bool FileSystemAPI::addUser(std::string username, const std::string& hash,
+    const std::string& salt, int type) {
   if (username.length() > USERNAME_LENGTH) {
+    Log::getInstance().write(
+        Log::MessageType::ERROR, "FileSystemAPI", "Invalid username length.");
+    return false;
+  }
+
+  if (hash.length() > HASH_LENGTH) {
+    Log::getInstance().write(
+        Log::MessageType::ERROR, "FileSystemAPI", "Invalid hash length.");
+    return false;
+  }
+
+  if (salt.length() > SALT_LENGTH) {
+    Log::getInstance().write(
+        Log::MessageType::ERROR, "FileSystemAPI", "Invalid salt length.");
     return false;
   }
 
   Util::padLeft(username, 10);
 
   this->writeString(users_file, username);
-  this->writeString(users_file, hashed_password);
-  this->writeString(users_file, std::to_string(role));
+  this->writeString(users_file, hash);
+  this->writeString(users_file, salt);
+  this->writeString(users_file, std::to_string(type));
 
-  this->writeToFile("usuarios.dat");
+  this->writeToFile(this->users_file);
 
   return true;
 }
 
-bool FileSystemAPI::authenticateUser(const std::string& username, const std::string& hash) {
-  if (username.length() > USERNAME_LENGTH) {
-    Log::getInstance().write(Log::ERROR, "ErrorUsername", "On auth user, username.length > 10");
+bool FileSystemAPI::removeUser(std::string username) {
+  char* start = this->getUserOffset(username);
+
+  if (start == nullptr) {
     return false;
   }
 
-  int error =  this->authenticator.authPass(users_file, username, hash);
+  size_t file_size =
+      static_cast<size_t>(this->fs.getFileSize(this->users_file));
 
-  /*
-  switch (error) {
-    case Error::OK: {
-      std::cout << "Contraseña correcta.\n";
-      break;
-    }
+  size_t eof_start = file_size - USER_BYTES;
 
-    case Error::INVALID_PASSWORD: {
-      std::cout << "Contraseña incorrecta.\n";
-      break;
-    }
+  ::memmove(start, start + USER_BYTES, eof_start + 1);
 
-    case Error::USER_NOT_FOUND: {
-      std::cout << "Usuario no encontrado.\n";
-      break;
-    }
+  ::memset(start + eof_start, '\0', USER_BYTES);
 
-    default: {
-      break;
-    }
+  return true;
+}
+
+bool FileSystemAPI::editUser(std::string username, const std::string& hash,
+    const std::string& salt, int type) {
+  char* start = this->getUserOffset(username);
+
+  if (start == nullptr) {
+    return false;
   }
-   */
+
+  Util::padLeft(username, 10);
+
+  const char* typeChar = std::to_string(type).c_str();
+
+  ::memcpy(start + USERNAME_OFFSET, username.c_str(), USERNAME_LENGTH);
+  ::memcpy(start + HASH_OFFSET, hash.c_str(), HASH_LENGTH);
+  ::memcpy(start + SALT_OFFSET, salt.c_str(), SALT_LENGTH);
+  ::memcpy(start + TYPE_OFFSET, typeChar, TYPE_LENGTH);
+
+  return true;
+}
+
+bool FileSystemAPI::authenticateUser(
+    const std::string& username, const std::string& hash) {
+  if (username.length() > USERNAME_LENGTH) {
+    Log::getInstance().write(
+        Log::ERROR, "ErrorUsername", "On auth user, username.length > 10");
+    return false;
+  }
+
+  int error = this->authenticator.authPass(users_file, username, hash);
 
   return error == Error::OK;
 }
@@ -100,14 +142,16 @@ void FileSystemAPI::writeToFile(const std::string& source_file_name) {
   }
 }
 
-void FileSystemAPI::writeString(const std::string& file, const std::string& string) {
+void FileSystemAPI::writeString(
+    const std::string& file, const std::string& string) {
   for (char index : string) {
     this->fs.append(file, index);
   }
 }
 
 int FileSystemAPI::readInteger(const std::string& message,
-    const std::string& error_message, const std::function<bool(int)>& predicate) {
+    const std::string& error_message,
+    const std::function<bool(int)>& predicate) {
   int result;
 
   std::cout << message << std::endl;
@@ -146,83 +190,60 @@ std::string FileSystemAPI::viewFS() {
 }
 
 int FileSystemAPI::getUserType(const std::string& username) {
-  int type = -1;
+  char* address = this->getUserOffset(username);
 
-  bool found_user = false;
-
-  size_t user_offset = 0;
-
-  const size_t user_bytes = 41;
-
-  while (!found_user &&
-         user_offset < static_cast<size_t>(this->fs.getFileSize(this->users_file))) {
-
-    char* address = this->fs.readAddress(this->users_file, user_offset);
-    std::string info(address, address + user_bytes);
-    // info username is the username stored in FileSystem
-    std::string info_username = info.substr(0, 10);
-    Util::trimLeft(info_username);
-
-    // If the username was found in FS then
-    if (username == info_username) {
-      char charType = info[info.length() - 1];
-      type = charType - 48;
-      found_user = true;
-    }
-
-    user_offset += user_bytes;
+  if (address == nullptr) {
+    return -1;
   }
+
+  std::string info(address, address + USER_BYTES);
+
+  char charType = info[info.length() - 1];
+  int type = charType - 48;
 
   return type;
 }
 
-bool FileSystemAPI::userExists(const std::string& username) {
+char* FileSystemAPI::getUserOffset(const std::string& username) {
   size_t user_offset = 0;
-  const size_t user_bytes = 41;
 
-  while (user_offset < static_cast<size_t>(this->fs.getFileSize(this->users_file))) {
+  while (user_offset <
+         static_cast<size_t>(this->fs.getFileSize(this->users_file))) {
     char* address = this->fs.readAddress(this->users_file, user_offset);
 
-    std::string info(address, address + user_bytes);
+    std::string info(address, address + USER_BYTES);
 
     std::string info_username = info.substr(0, USERNAME_LENGTH);
 
     Util::trimLeft(info_username);
 
     if (username == info_username) {
-      return true;
+      return address;
     }
 
-    user_offset += user_bytes;
+    user_offset += USER_BYTES;
   }
 
-  return false;
+  return nullptr;
+}
+
+bool FileSystemAPI::userExists(const std::string& username) {
+  return this->getUserOffset(username) != nullptr;
 }
 
 std::string FileSystemAPI::getUserSalt(const std::string& username) {
-  size_t user_offset = 0;
-  const size_t user_bytes = 41;
+  char* address = this->getUserOffset(username);
 
-  while (user_offset < static_cast<size_t>(this->fs.getFileSize(this->users_file))) {
-    char* address = this->fs.readAddress(this->users_file, user_offset);
-
-    std::string info(address, address + user_bytes);
-
-    std::string info_username = info.substr(0, USERNAME_LENGTH);
-
-    Util::trimLeft(info_username);
-
-    if (username == info_username) {
-      info = info.substr(USERNAME_LENGTH);
-      std::string info_hash = info.substr(0, HASH_LENGTH);
-      info = info.substr(HASH_LENGTH);
-      std::string info_salt = info.substr(0, SALT_LENGTH);
-
-      return info_salt;
-    }
-
-    user_offset += user_bytes;
+  if (address == nullptr) {
+    return "";
   }
 
-  return "";
+  std::string info(address, address + USER_BYTES);
+
+  info = info.substr(USERNAME_LENGTH);
+  std::string info_hash = info.substr(0, HASH_LENGTH);
+  info = info.substr(HASH_LENGTH);
+  std::string info_salt = info.substr(0, SALT_LENGTH);
+
+  return info_salt;
 }

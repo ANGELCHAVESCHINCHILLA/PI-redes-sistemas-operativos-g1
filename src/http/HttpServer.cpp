@@ -83,7 +83,7 @@ void HttpServer::handleClientConnection(
   const bool handled = this->route(http_request, http_response);
 
   // If subclass did not handle the request or the client used HTTP/1.0
-  if (!handled || http_request.getHttpVersion() == "HTTP/1.0") {
+  if (!handled) {
     // The socket will not be more used, close the connection
     client.close();
     // break;
@@ -92,7 +92,6 @@ void HttpServer::handleClientConnection(
     // client
     if (client.send(http_response.getOutput()) != SocketError::OK_SOCKET) {
       // If could not sent data then close the connection
-      // std::cout << "No se logró enviar la respuesta \n" << std::endl;
       client.close();
     } else {
       // std::cout << "Respuesta enviada: \n" << std::endl;
@@ -157,6 +156,7 @@ HttpResponse HttpServer::privateFetch(HttpRequest& request) {
   Socket& client_socket = client->connect(host, port);
 
   error = client_socket.send(request.buildString());
+
 
   std::string response;
 
