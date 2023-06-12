@@ -49,71 +49,38 @@ function reloadRequests() {
 
 async function populateRequestContainer() {
     const status = ["APROBADO", "REVISION", "RECHAZADO"];
-    const area = localStorage.getItem('area');
-    /*
-    // send request to server
-    const response = await fetch(`/consultRequestsByUser?user=${area}`, {
-        method: 'GET'
-    });
+    const area = 'SanJose';
 
-    if (!response.ok) {
-        window.location.href = PAGE_PRINCIPAL;
-    }
+    try {
+        const response = await fetch(`/consultRequestsByArea?area=${area}`, {
+            method: 'GET'
+        });
+
+        const responseText = await response.text();
+        console.log(responseText);
+        const requests = JSON.parse(responseText);
 
 
-    // wait the JSON response
-    const requests = await response.json();
-    */
-    const requests = {
-        "request1": {
-            "user": "Juan",
-            "ID": 3,
-            "state": 1,
-            "padding": "          ",
-            "information": "Hola, por favor puedo tener mi constancia salarial?",
-            "feedback": "   ",
-            "request_type": "ConstanciaSalarial",
-            "vacation_days": 0,
-            "vacation_start_date": 0,
-            "vacation_end_date": 0,
-            "area": "Cartago"
-        },
-        "request2": {
-            "user": "Juan",
-            "ID": 7,
-            "state": 1,
-            "padding": "          ",
-            "information": "Hola, por favor puedo tener mis 13 días de vacaciones?",
-            "feedback": "   ",
-            "request_type": "Vacaciones",
-            "vacation_days": 13,
-            "vacation_start_date": 11223,
-            "vacation_end_date": 151223,
-            "area": "Cartago"
-        },
-    };
-
-    // Get Container
-    var requestContainer = document.getElementById("request-container");
-    // remove first
-    while (requestContainer.firstChild) {
-        requestContainer.removeChild(requestContainer.firstChild);
-    }
-
-    // Utilizando un bucle for...in
-    for (const requestKey in requests) {
-        if (requests.hasOwnProperty(requestKey)) {
-            const request = requests[requestKey];
-            // Populate with Solicitudes' Div
-            requestContainer.appendChild(
-                createSolicitudDiv(request.user, request.request_type
-                    , status[request.state], request.ID)
-            );
+        const requestContainer = document.getElementById("request-container");
+        while (requestContainer.firstChild) {
+            requestContainer.removeChild(requestContainer.firstChild);
         }
-    }
+        for (const requestKey in requests) {
+            if (requests.hasOwnProperty(requestKey)) {
+                const request = requests[requestKey];
+                requestContainer.appendChild(
+                    createSolicitudDiv(request.user, request.request_type, status[request.state], request.ID)
+                );
+            }
+        }
+        reloadDetailsBtns();
 
-    reloadDetailsBtns();
+    } catch (error) {
+        console.error(error);
+    }
 }
+
+
 
 /**
  * This method make 'Solicitud' div. The idea is call this method when
@@ -184,7 +151,7 @@ function reloadDetailsBtns() {
                 let requestId = requestDiv.getAttribute("data-id");
 
                 // send to server to get the request by ID
-                /*
+
                 const response = await fetch(`/consultRequestsByID?id=${requestId}`, {
                     method: 'GET'
                 });
@@ -196,20 +163,7 @@ function reloadDetailsBtns() {
 
                 // wait the JSON response
                 const request = await response.json();
-                */
-                 const request = {
-                     "user": "Juan",
-                     "ID": 3,
-                     "state": 0,
-                     "padding": "          ",
-                     "information": "Hola, por favor puedo tener mi constancia salarial?",
-                     "feedback": "   ",
-                     "request_type": "ConstanciaSalarial",
-                     "vacation_days": 0,
-                     "vacation_start_date": 0,
-                     "vacation_end_date": 0,
-                     "area": "Cartago"
-                 }
+
                 // build request info for be put in page
                 let requestInfo = `Nombre: ${request.user}<br>
         Area: ${request.area}<br><br>
@@ -272,6 +226,7 @@ if (aprove_query_btn) {
         const request_str = request_div.getAttribute("request_id");
         const request = JSON.parse(request_str);
         // TODO: when db is complete, send the request to gerency in request area
+        fetch('')
     })
 
 }
