@@ -1,0 +1,12 @@
+Usuario		Contraseña	Rol
+CarlosMon	C123		Empleado
+JuanGar10	J123		Empleado
+LeoMessi	L123		Gerente
+DavidCer	D123		Administrador
+FedeBaron	F123		Supervisor
+RicarGanV	R123		Debugger
+DaniCabeza	D123		Debugger
+AngelaChav	A123		Administrador
+CamilaSua	C123		Administrador
+MirandaLa	M123		Supervisor
+ElBichoCR7	E132		Gerente
