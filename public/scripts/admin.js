@@ -71,13 +71,13 @@ if (add_user_send_button !== null) {
         const salt = getSalt(15);
 
         const fs_json = {
-            "username": user_id.value,
-            "salt": salt,
-            "password": getHash(user_password, salt),
-            "type": parseInt(user_type.value)
+            username: user_id.value,
+            password: getHash(user_password, salt),
+            salt: salt,
+            type: parseInt(user_type.value)
         };
 
-        const database_json = {
+        const db_json = {
             user: user_id.value,
             employee_name: user_name.value,
             job_name: user_job_name.value,
@@ -93,7 +93,7 @@ if (add_user_send_button !== null) {
 
         const db_response = await fetch("/admin/add_user/data", {
             method: "POST",
-            body: JSON.stringify(database_json)
+            body: JSON.stringify(db_json)
         });
 
         if (fs_response.status === 200 && db_response.status === 200) {
@@ -115,18 +115,28 @@ if (remove_user_send_button !== null) {
 
         const user_id = document.querySelector("#user_id");
 
-        const database_json = {
+        const db_json = {
             user: user_id.value,
         };
 
-        let response = await fetch("/admin/remove_user/data", {
+        const fs_json = {
+            username: user_id.value,
+        };
+
+        const fs_response = await fetch('/admin/remove_user/auth', {
+            method: 'POST',
+            body: JSON.stringify(fs_json)
+        })
+
+        const db_response = await fetch("/admin/remove_user/data", {
             method: "POST",
-            body: JSON.stringify(database_json)
+            body: JSON.stringify(db_json)
         });
 
-        // REMOVING USERS IS NOT IMPLEMENTED IN THE FILE SYSTEM
+        console.log(fs_response.status);
+        console.log(db_response.status);
 
-        if (response.status === 200) {
+        if (fs_response.status === 200 && db_response.status === 200) {
             feedback_message.style.display = 'block';
         } else {
             error_message.style.display = 'block';
@@ -151,7 +161,16 @@ if (edit_user_send_button !== null) {
         const user_phone_number = document.querySelector("#user_phone_number");
         const user_type = document.querySelector("#user_type");
 
-        const database_json = {
+        const salt = getSalt(15);
+
+        const fs_json = {
+            username: user_id.value,
+            password: getHash(user_password, salt),
+            salt: salt,
+            type: parseInt(user_type.value)
+        };
+
+        const db_json = {
             user: user_id.value,
             employee_name: user_name.value,
             job_name: user_job_name.value,
@@ -160,14 +179,20 @@ if (edit_user_send_button !== null) {
             phone_number: parseInt(user_phone_number.value),
         };
 
-        let response = await fetch("/admin/edit_user/data", {
-            method: "POST",
-            body: JSON.stringify(database_json)
+        const fs_response = await fetch('/admin/edit_user/auth', {
+            method: 'POST',
+            body: JSON.stringify(fs_json)
         });
 
-        // EDITING USERS IS NOT IMPLEMENTED IN THE FILE SYSTEM
+        const db_response = await fetch("/admin/edit_user/data", {
+            method: "POST",
+            body: JSON.stringify(db_json)
+        });
 
-        if (response.status === 200) {
+        console.log(fs_response.status);
+        console.log(db_response.status);
+
+        if (fs_response.status === 200 && db_response.status === 200) {
             feedback_message.style.display = 'block';
         } else {
             error_message.style.display = 'block';

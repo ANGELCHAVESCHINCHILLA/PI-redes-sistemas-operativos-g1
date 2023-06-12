@@ -36,16 +36,16 @@ class FileSystemAPI {
   char* getUserOffset(const std::string& username);
 
  public:
-  bool addUser(std::string username, const std::string& hashkey,
-      const std::string& salt, int role);
+  bool addUser(std::string username, const std::string& hash,
+      const std::string& salt, int type);
 
   bool removeUser(std::string username);
 
-  bool editUser(std::string username, const std::string& hashkey,
-      const std::string& salt, int role);
+  bool editUser(std::string username, const std::string& hash,
+      const std::string& salt, int type);
 
   bool authenticateUser(
-      const std::string& username, const std::string& hashkey);
+      const std::string& username, const std::string& hash);
 
   int getUserType(const std::string& username);
 

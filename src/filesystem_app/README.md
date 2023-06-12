@@ -119,7 +119,10 @@ could change depending on where server is hosted.
 * Body:
 ```json
 {
-  "username": "AngelSuare"
+  "username": "AngelSuare",
+  "password": "YdntnTQSY4nmWkM",
+  "salt": "G9cB0Lh16HEp862",
+  "type": 5
 }
 ```
 

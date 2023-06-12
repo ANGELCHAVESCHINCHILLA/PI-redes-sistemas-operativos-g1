@@ -61,30 +61,6 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       return true;
     }
 
-    // Remove a user in the database
-    if (request.getTarget().getPath() == "/admin/remove_user/data") {
-      try {
-        this->callDatabase(request, response, "DELETE", "/data/personal_data");
-      } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << "\n";
-        response.setStatusCode(401);
-      }
-
-      return true;
-    }
-
-    // Remove a user in the file system
-    if (request.getTarget().getPath() == "/admin/remove_user/data") {
-      try {
-        this->callFileSystem(request, response, "DELETE", "/auth/user");
-      } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << "\n";
-        response.setStatusCode(401);
-      }
-
-      return true;
-    }
-
     // Edit a user in the database
     if (request.getTarget().getPath() == "/admin/edit_user/data") {
       try {
@@ -98,9 +74,9 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     }
 
     // Edit a user in the file system
-    if (request.getTarget().getPath() == "/admin/edit_user/data") {
+    if (request.getTarget().getPath() == "/admin/edit_user/auth") {
       try {
-        this->callDatabase(request, response, "PUT", "/auth/user");
+        this->callFileSystem(request, response, "PUT", "/auth/user");
       } catch (const std::runtime_error& error) {
         std::cerr << error.what() << "\n";
         response.setStatusCode(401);
@@ -108,6 +84,32 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
       return true;
     }
+
+    // Remove a user in the database
+    if (request.getTarget().getPath() == "/admin/remove_user/data") {
+      try {
+        this->callDatabase(request, response, "DELETE", "/data/personal_data");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << "\n";
+        response.setStatusCode(401);
+      }
+
+      return true;
+    }
+
+    // Remove a user in the file system
+    if (request.getTarget().getPath() == "/admin/remove_user/auth") {
+      try {
+        this->callFileSystem(request, response, "DELETE", "/auth/user");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << "\n";
+        response.setStatusCode(401);
+      }
+
+      return true;
+    }
+
+    return true;
   }
 
   return false;
