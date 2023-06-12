@@ -111,7 +111,7 @@ function reloadRequests() {
 }
 */
 async function populateRequestContainer() {
-  const status = ["APROBADO", "REVISION", "RECHAZADO"];
+  const status = ["PENDIENTE", "APROBADO", "RECHAZADO"];
   const username = localStorage.getItem('username');
 
   // send request to server
@@ -244,7 +244,7 @@ function reloadDetailsBtns() {
         if(!response.ok) {
           window.location.href = PAGE_PRINCIPAL;
         }
-      
+
         // wait the JSON response
         const request = await response.json();
         // build request info for be put in page
@@ -253,11 +253,14 @@ function reloadDetailsBtns() {
         Información: ${request.information}<br><br>`
         // TODO: si la request es de vacaciones, se debe agregar la informacion
         if (request.request_type === "Solicitud de Vacaciones") {
-          `Días de vacaciones: ${formatDate(request.vacation_days)}<br>`;
-          `Inicio de vacaciones: ${formatDate(request.vacation_start_date)}<br>`;
-          `Fin de vacaciones: ${formatDate(request.vacationEndDate)}<br>`;
+          requestInfo += `Días de vacaciones: ${request.vacation_days}<br>
+          Inicio de vacaciones: ${formatDate(request.vacation_start_date)}<br>
+          Fin de vacaciones: ${formatDate(request.vacation_end_date)}<br>`;
         }
         requestInfo += `Observación: ${request.feedback}<br>`;
+        if (request.ID == 1) {
+          requestInfo += `ID de la solicitud: ${request.ID}<br>`;
+        }
 
         // The title is the request type, e.g. Constancia Salarial
         let requestTitle = `${request.request_type}`;
@@ -308,7 +311,7 @@ async function showBaseSalary() {
   const title = "Información salarial";
 
   let content = `Nombre: ${salaryInfo.name} <br>
-  Compañía: ${salaryInfo.company_name}<br><br>`;
+  Área: ${salaryInfo.company_name}<br><br>`;
 
   let salaryCount = 1;
 
@@ -320,8 +323,8 @@ async function showBaseSalary() {
       const salaryStrNet = numeroALetras.convertir(salary.net_salary);
 
       content += `Salario ${salaryCount}<br>
-      Salario base: CRC${salary.gross_salary} (${salaryStrGross})<br>
-      Salario neto: CRC${salary.net_salary} (${salaryStrNet})<br>
+      Salario base: ${salary.gross_salary.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} (${salaryStrGross})<br>
+      Salario neto: ${salary.net_salary.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} (${salaryStrNet})<br>
       Fecha de inicio del salario: ${formatDate(salary.salary_start_date)} <br><br>`;
       salaryCount++;
     }
@@ -388,7 +391,7 @@ async function showExpedientAnotations() {
   let title = "Anotaciones al expediente";
 
   let content = `Nombre: ${annotations.name}<br>
-  Empresa: ${annotations.company_name}<br><br>`;
+  Área: ${annotations.company_name}<br><br>`;
 
   let annotCount = 1;
   // Recorrer las anotaciones utilizando un bucle for...in
@@ -427,7 +430,6 @@ function createTextBlankPage(title, content) {
             <h2>${title}</h2>
             <button id="regresar" onclick="window.close()"></button>
             <div id="text-container"> ${content} </div>
-            <button class="submit-btn imprimir-btn">IMPRIMIR</button>
           </div>
         </div>
         <footer style="bottom: 0px">
