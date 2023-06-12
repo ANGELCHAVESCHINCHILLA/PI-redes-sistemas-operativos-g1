@@ -58,13 +58,7 @@ Response: An integer larger or equal than 0 if successfully. -1 if not. The inte
 #### Request
 
 * Method: GET
-* URL: /auth/salt
-* Body:
-```json
-{
-  "username": "AngelSuare"
-}
-```
+* URL: /auth/salt?username='username'
 
 #### Response:
 
