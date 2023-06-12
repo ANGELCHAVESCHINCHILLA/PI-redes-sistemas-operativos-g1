@@ -17,7 +17,7 @@ const ADD_ANNOTATION = "supervisory/add_annotation_html";
 // common html head used. Used for quick html pages creation
 const HTML_HEAD = `<title>Información de solicitud</title>
                       <meta charset="UTF-8">
-                      <link rel="stylesheet" href=".././styles/styles.css">
+                      <link rel="stylesheet" href="../styles/styles.css">
                       <link rel="preconnect" href="https://fonts.googleapis.com">
                       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
@@ -36,35 +36,116 @@ if (backbtn) {
 }
 
 /**
+ * Formats a date from num to string
+ * @param {*int} numDate The num in format ddmmyy as a integer, e.g. 230523
+ * @returns The date in format dd-mm-yy as a string, e.g. "23-05-23"
+ */
+function formatDate(numDate) {
+  // numDate = 230523
+
+  // Obtener los componentes de la fecha
+  const year = Math.floor(numDate / 10000);
+  const month = Math.floor((numDate % 10000) / 100);
+  const day = numDate % 100;
+
+  // Crear un objeto Date con los componentes de la fecha
+  const date = new Date(year, month - 1, day);
+
+  // Obtener los componentes de la date formateados con ceros a la izquierda
+  const daysFormat = String(date.getDate()).padStart(2, '0');
+  const montFormat = String(date.getMonth() + 1).padStart(2, '0');
+  const yearFormat = String(date.getFullYear()).slice(2);
+
+  // Crear la cadena de fecha con el formato deseado
+  const dateFormat = `${daysFormat}-${montFormat}-${yearFormat}`;
+
+  return dateFormat
+}
+
+/**
+ * Open PAGE_REQUESTS page
+ */
+function openSolicitudesPage() {
+  window.location.href = PAGE_REQUESTS;
+}
+
+/**
  * Reload the requests. It used to reload requests into a requests container.
  * Used in PAGE_REQUESTS page. It calls populateRequestContainer() and reloadDetailsBtns()
  */
 function reloadRequests() {
-    populateRequestContainer();
-    reloadDetailsBtns();
+  populateRequestContainer();
 }
 
 /**
  * Popoulate a request-container with requests divs.
  */
-function populateRequestContainer() {
-    // Get Container
-    var requestContainer = document.getElementById("request-container");
-    /**TODO: Read from filesystem what request have the employee reader.Then, from their
-     * requests, craft the divs and populate them to the container. The actual implemention just
-     * populate three static requests. The actual employee is Marta.
-     */
+/*
+{
+  "request1": {
+    "user": "Juan",
+    "ID": 3,
+    "state": 0,
+    "padding": "          ",
+    "information": "Hola, por favor puedo tener mi constancia salarial?",
+    "feedback": "   ",
+    "request_type": "ConstanciaSalarial",
+    "vacation_days": 0,
+    "vacation_start_date": 0,
+    "vacation_end_date": 0,
+    "area": "Cartago"
+  },
+  "request2": {
+    "user": "Juan",
+    "ID": 7,
+    "state": 0,
+    "padding": "          ",
+    "information": "Hola, por favor puedo tener mi 13 dias de vacaciones?",
+    "feedback": "   ",
+    "request_type": "Vacaciones",
+    "vacation_days": 13,
+    "vacation_start_date": 11223,
+    "vacation_end_date": 151223,
+    "area": "Cartago"
+  },
+}
+*/
+async function populateRequestContainer() {
+  const status = ["APROBADO", "REVISION", "RECHAZADO"];
+  const username = localStorage.getItem('username');
 
-    // Populate with Solicitudes' Div
-    requestContainer.appendChild(
-        createSolicitudDiv("Marta", "Constancia Salarial", "APROBADO", 0)
-    );
-    requestContainer.appendChild(
-        createSolicitudDiv("Marta", "Vacaciones", "RECHAZADO", 1)
-    );
-    requestContainer.appendChild(
-        createSolicitudDiv("Marta", "Comprobante de Pago", "REVISION", 2)
-    );
+  // send request to server
+  const response = await fetch(`/consultRequestsByUser?user=${username}`, {
+    method: 'GET'
+  });
+
+  if(!response.ok) {
+    alert("No tiene solicitudes por revisar");
+    window.location.href = PAGE_PRINCIPAL;
+  }
+  // wait the JSON response
+  const requests = await response.json();
+
+  // Get Container
+  var requestContainer = document.getElementById("request-container");
+  // remove first
+  while (requestContainer.firstChild) {
+    requestContainer.removeChild(requestContainer.firstChild);
+  }
+
+  // Utilizando un bucle for...in
+  for (const requestKey in requests) {
+    if (requests.hasOwnProperty(requestKey)) {
+      const request = requests[requestKey];
+      // Populate with Solicitudes' Div
+      requestContainer.appendChild(
+        createSolicitudDiv(request.user, request.request_type
+          , status[request.state], request.ID)
+      );
+    }
+  }
+
+  reloadDetailsBtns();
 }
 
 /**
@@ -79,240 +160,248 @@ function populateRequestContainer() {
  * @returns
  */
 function createSolicitudDiv(nombre, solicitud, estado, id) {
-    // Create the main div
-    const solicitudDiv = document.createElement("div");
-    solicitudDiv.classList.add("solicitud");
+  console.log(`Request type: ${solicitud}`);
+  console.log(`User: ${nombre}`);
+  console.log(`ID: ${id}`);
+  console.log(`estado: ${estado}`);
+  // Create the main div
+  const solicitudDiv = document.createElement("div");
+  solicitudDiv.classList.add("solicitud");
 
-    const solicitudBody = document.createElement("div");
-    solicitudBody.classList.add("solicitud_body");
-    // Create the title with the name
-    const title = document.createElement("h3");
-    title.textContent = `Solicitud de ${nombre}`;
-    solicitudBody.appendChild(title);
-    // Create the solicitud name
-    const solicitudName = document.createElement("p");
-    solicitudName.textContent = `Nombre de solicitud: ${solicitud}`;
-    solicitudBody.appendChild(solicitudName);
-    // Manage the ID
-    const idField = document.createElement("p");
-    idField.textContent = `ID: ${id}`;
-    solicitudDiv.setAttribute("data-id", id);
-    solicitudBody.appendChild(idField);
+  const solicitudBody = document.createElement("div");
+  solicitudBody.classList.add("solicitud_body");
+  // Create the title with the name
+  const title = document.createElement("h3");
+  title.textContent = `Solicitud de ${nombre}`;
+  solicitudBody.appendChild(title);
+  // Create the solicitud name
+  const solicitudName = document.createElement("p");
+  solicitudName.textContent = `Nombre de solicitud: ${solicitud}`;
+  solicitudBody.appendChild(solicitudName);
+  // Manage the ID
+  // const idField = document.createElement("p");
+  // idField.textContent = `ID: ${id}`;
+  solicitudDiv.setAttribute("data-id", id);
+  // solicitudBody.appendChild(idField);
 
-    // Create the estado element with its color
-    const estadoElement = document.createElement("p");
-    estadoElement.textContent = `Estado: ${estado}`;
-    if (estado === "APROBADO") {
-        estadoElement.classList.add("aprobado");
-    } else if (estado === "REVISION") {
-        estadoElement.classList.add("revision");
-    } else if (estado === "RECHAZADO") {
-        estadoElement.classList.add("rechazado");
-    }
-    solicitudBody.appendChild(estadoElement);
+  // Create the estado element with its color
+  const estadoElement = document.createElement("p");
+  estadoElement.textContent = `Estado: ${estado}`;
+  if (estado === "APROBADO") {
+      estadoElement.classList.add("aprobado");
+  } else if (estado === "REVISION") {
+      estadoElement.classList.add("revision");
+  } else if (estado === "RECHAZADO") {
+      estadoElement.classList.add("rechazado");
+  }
+  solicitudBody.appendChild(estadoElement);
 
-    // Create the button
-    const button = document.createElement("button");
-    button.textContent = "Detalles";
-    button.classList.add("detalles-btn");
-    button.classList.add("submit-btn");
-    solicitudDiv.appendChild(solicitudBody);
-    solicitudDiv.appendChild(button);
+  // Create the button
+  const button = document.createElement("button");
+  button.textContent = "Detalles";
+  button.classList.add("detalles-btn");
+  button.classList.add("submit-btn");
+  solicitudDiv.appendChild(solicitudBody);
+  solicitudDiv.appendChild(button);
 
-    return solicitudDiv;
+  return solicitudDiv;
 }
 
-/**
- * This method *MUST* be into a FileSystemAPI. Is used here just for an example, but NEVER
- * could exists on frontend orient JS file.
- * @param {*} requestId
- * @returns
- */
-function searchRequest(requestId) {
-    // TODO: search in FileSystem by request id the requestInfo
-    // The actual implemention is weird. Just ids from zero to two.
-    // Used to static actual implementation
-    // return requestInfo;
-    let requestInfo = "";
-    console.log(requestId);
-    switch (requestId) {
-        case "0":
-            requestInfo =
-                "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Marta Viquez, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nMarta Viquez";
-            break;
-        case "1":
-            requestInfo =
-                "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Lobo Lopez, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nLobo Lopez";
-
-            break;
-        case "2":
-            requestInfo =
-                "Me dirijo a usted para solicitar formalmente mis vacaciones anuales correspondientes. Soy Jonathan Beltran, empleada de esta empresa desde hace [número de años/trimestres/meses].\nMe gustaría solicitar un período de vacaciones desde el [fecha de inicio] hasta el [fecha de finalización] para poder disfrutar de un merecido descanso y pasar tiempo con mi familia y amigos. Durante mi ausencia, he tomado las medidas necesarias para garantizar que mi trabajo sea cubierto y que los plazos y responsabilidades se cumplan sin problemas. Por favor, háganme saber si hay algún problema o si necesitan que realice alguna tarea adicional antes de irme.\nAgradezco de antemano su consideración y espero poder disfrutar de un descanso reparador. Si necesita más información o detalles adicionales, no dude en ponerse en contacto conmigo.\n Atentamente,\nJonathan Beltran";
-            break;
-        default:
-            "Texto no disponible. Llame a soporte";
-    }
-    console.log(`En request: ${requestId}`);
-    return requestInfo;
-}
 
 /**
  * Add listener event to new details buttons.
- *  TODO: Maybe this method could be more abstract.
+ *
  */
+/*
+{
+  "user": "Juan",
+  "ID": 3,
+  "state": 0,
+  "padding": "          ",
+  "information": "Hola, por favor puedo tener mi constancia salarial?",
+  "feedback": "   ",
+  "request_type": "ConstanciaSalarial",
+  "vacation_days": 0,
+  "vacation_start_date": 0,
+  "vacation_end_date": 0,
+  "area": "Cartago"
+}
+*/
 function reloadDetailsBtns() {
-    const detailsBtns = document.querySelectorAll(".detalles-btn"); // get by class
-    if (detailsBtns) {
-        detailsBtns.forEach(function (btn) {
-            btn.addEventListener("click", function () {
-                let requestDiv = btn.parentNode;
-                let requestId = requestDiv.getAttribute("data-id");
-                // let requestInfo = searchRequest.info;
-                // let requestTitle = searchRequest.title;
-                let requestInfo = searchRequest(requestId);
-                let requestTitle = "Solicitud de Vacaciones";
-                createTextBlankPage(requestTitle, requestInfo);
-            });
+  // const detailsBtns = document.getElementsByClassName(".detalles-btn");
+  const detailsBtns = document.querySelectorAll(".detalles-btn"); // get by class
+  if (detailsBtns) {
+    detailsBtns.forEach(function (btn) {
+      btn.addEventListener("click", async () => {
+        let requestDiv = btn.parentNode;
+        let requestId = requestDiv.getAttribute("data-id");
+
+        // send to server to get the request by ID
+        const response = await fetch(`/consultRequestsByID?id=${requestId}`, {
+          method: 'GET'
         });
+      
+        if(!response.ok) {
+          window.location.href = PAGE_PRINCIPAL;
+        }
+      
+        // wait the JSON response
+        const request = await response.json();
+        // build request info for be put in page
+        let requestInfo = `Nombre: ${request.user}<br>
+        Area: ${request.area}<br><br>
+        Información: ${request.information}<br><br>`
+        // TODO: si la request es de vacaciones, se debe agregar la informacion
+        if (request.request_type === "Solicitud de Vacaciones") {
+          `Días de vacaciones: ${formatDate(request.vacation_days)}<br>`;
+          `Inicio de vacaciones: ${formatDate(request.vacation_start_date)}<br>`;
+          `Fin de vacaciones: ${formatDate(request.vacationEndDate)}<br>`;
+        }
+        requestInfo += `Observación: ${request.feedback}<br>`;
+
+        // The title is the request type, e.g. Constancia Salarial
+        let requestTitle = `${request.request_type}`;
+        createTextBlankPage(requestTitle, requestInfo);
+      });
+    });
+  }
+}
+
+/*
+asi se ve el json de respuesta que da el servidor para la parte de salarios
+const json = {
+  "name": "Carlos Montoya",
+  "company_name": "Apple",
+  "salaries": {
+    "salary1": {
+      "gross_salary": 2000,
+      "net_salary": 3000,
+      "salary_start_date": 230323
+    },
+    "salary2": {
+      "gross_salary": 3000,
+      "net_salary": 4000,
+      "salary_start_date": 230523
     }
-}
+  }
+};
+*/
+/**
+ * Show the result of consult salary base
+ */
+async function showBaseSalary() {
+  const username = localStorage.getItem('username');
 
-function showBaseSalary() {
-    var username = localStorage.getItem('username');
-    // envia un post al servidor para consulta salario
-    fetch('/consultSalaryByUser', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username: username})
-    })
-        .then(function (response) {
-            if (response.ok) {
-                return response.json();
-            } else {
-                window.location.href = PAGE_PRINCIPAL;
-            }
-        })
-        .then(function (data) {
-            // for debug
-            console.log(data);
-            console.log(data.name);
-            console.log(data.company_name);
-            console.log(data.salaries[0]);  // Gross Salary
-            console.log(data.salaries[1]);  // Net Salary
-            console.log(data.salaries[2]);  // Salary Start Date
+  // Send request to server
+  const response = await fetch(`/consultSalaryByUser?user=${username}`, {
+    method: 'GET'
+  });
 
-            // Crea la pagina de
-            let salaryStr = numeroALetras.convertir(data.salaries[0]);
-            let title = "Salario Base";
-            const content = `Su salario base es de: CRC${data.salaries[0]} (${salaryStr})<br><br>
-              [Nombre y cargo del representante de la empresa] <br>
-              Compañía: ${data.company_name}<br>
-              [Fecha de emisión]<br>`;
+  if(!response.ok) {
+    window.location.href = PAGE_PRINCIPAL;
+  }
 
-            createTextBlankPage(title, content);
-        })
-        .catch(function (error) {
-            // Manejar el error en caso de que la solicitud falle
-            console.error('Error al enviar la solicitud:', error);
-        });
-}
+  // wait the JSON response
+  const salaryInfo = await response.json()
 
-function showVacationsBalance() {
-    var username = localStorage.getItem('username');
-    // envia un post al servidor para consultar balance de vacaciones
-    fetch('/consultVacationBalanceByUser', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username: username})
-    })
-        .then(function (response) {
-            if (response.ok) {
-                return response.json();
-            } else {
-                window.location.href = PAGE_PRINCIPAL;
-            }
-        })
-        .then(function (data) {
-            // conse.log for debug
-            console.log(data);
-            console.log(data.vacationBalance);  // balance de vacaciones
+  // Construct page
+  const title = "Información salarial";
 
-            // cree le pagina que mostrará el balance de vacaciones
-            let vacationsStr = numeroALetras.convertir(data.vacationBalance);
-            let title = "Saldo de Vacaciones";
-            const content = `Su saldo de vacaciones es de: ${data.vacationBalance} (${vacationsStr}) días.<br><br>
-              [Nombre y cargo del representante de la empresa] <br>
-              [Nombre de la empresa]<br>
-              [Fecha de emisión]<br>`;
+  let content = `Nombre: ${salaryInfo.name} <br>
+  Compañía: ${salaryInfo.company_name}<br><br>`;
 
-            createTextBlankPage(title, content);
-        })
-        .catch(function (error) {
-            // Manejar el error en caso de que la solicitud falle
-            console.error('Error al enviar la solicitud:', error);
-        });
-}
+  let salaryCount = 1;
 
-function showExpedientAnotations() {
-    var username = localStorage.getItem('username');
-    // envia un post al servidor para consultar expediente de anotaciones
-    fetch('/consultAnnotationsByUser', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username: username})
-    })
-        .then(function (response) {
-            if (response.ok) {
-                return response.json();
-            } else {
-                window.location.href = PAGE_PRINCIPAL;
-            }
-        })
-        .then(function (data) {
-            // conse.log for debug
-            console.log(data);
-            console.log(data.name);  // nombre del empleado?
-            console.log(data.company_name);  // nombre de la compañía
-            console.log(data.annotations);  // arreglo de anotaciones
+  for (const salaryKey in salaryInfo.salaries) {
+    if (salaryInfo.salaries.hasOwnProperty(salaryKey)) {
+      const salary = salaryInfo.salaries[salaryKey];
 
-            let title = "Anotaciones al expediente";
+      const salaryStrGross = numeroALetras.convertir(salary.gross_salary);
+      const salaryStrNet = numeroALetras.convertir(salary.net_salary);
 
-            let content = ``;
-            // Append each annotation
-            for (let index = 0; index < data.annotations.length; index++) {
-                content += `- ${data.annotations[index]} <br><br>`;
-            }
+      content += `Salario ${salaryCount}<br>
+      Salario base: CRC${salary.gross_salary} (${salaryStrGross})<br>
+      Salario neto: CRC${salary.net_salary} (${salaryStrNet})<br>
+      Fecha de inicio del salario: ${formatDate(salary.salary_start_date)} <br><br>`;
+      salaryCount++;
+    }
+  }
 
-            // let content = `- El [fecha], el empleado llegó tarde al trabajo sin previo aviso y sin una justificación válida. Se le ha recordado la política de puntualidad de la empresa y se le ha informado que otra falta similar podría resultar en una medida disciplinaria. <br><br>
-            // - El [fecha], se recibió una queja de un cliente que afirma que el empleado fue poco amable y no pudo solucionar su problema de manera efectiva. Se ha hablado con el empleado y se le ha recordado la importancia de mantener un servicio al cliente de alta calidad. <br><br>
-            // - El [fecha], el empleado tuvo una reunión con su supervisor para discutir su desempeño. Se discutieron áreas en las que el empleado ha mostrado fortalezas y áreas que necesitan mejorar. Se acordó un plan de acción para ayudar al empleado a alcanzar sus objetivos de desempeño. <br><br>
-            // - El [fecha], el empleado recibió un reconocimiento por su excelente desempeño en la finalización de un proyecto importante. Se le agradeció por su dedicación y esfuerzo en la empresa.<br><br>
-
-            // Append other info
-            content += `[Nombre y cargo del representante de la empresa] <br>
-                Empresa: ${data.company_name}<br>
-                [Fecha de emisión]<br>`;
-
-            // Create page
-            createTextBlankPage(title, content);
-        })
-        .catch(function (error) {
-            // Manejar el error en caso de que la solicitud falle
-            console.error('Error al enviar la solicitud:', error);
-        });
+  createTextBlankPage(title, content);
 }
 
 /**
- * Open PAGE_REQUESTS page
+ * Show my vacations balance
  */
-function openSolicitudesPage() {
-    window.location.href = PAGE_REQUESTS;
+async function showVacationsBalance() {
+  const username = localStorage.getItem('username');
+
+  // sent request to server
+  const response = await fetch(`/consultVacationBalanceByUser?user=${username}`, {
+    method: 'GET'
+  });
+
+  if(!response.ok) {
+    window.location.href = PAGE_PRINCIPAL;
+  }
+  // wait the JSON response
+  const vacations = await response.json();
+  // construct the page
+  const title = "Saldo de Vacaciones";
+
+  let vacationsStr = numeroALetras.convertir(vacations.vacationBalance);
+
+  const content = `Su saldo de vacaciones es de: ${vacations.vacationBalance}
+   (${vacationsStr}) días.<br><br>`;
+
+  createTextBlankPage(title, content);
+}
+
+/*
+{
+  "name": "Miranda Jop",
+  "company_name": "Amazon",
+  "annotations": {
+    "annotation1": "Miranda chocó el carro en el parqueo de la compañía el día 22/3/23",
+    "annotation2": "Miranda se robó una computadora el día 23/3/23",
+  }
+}
+*/
+/**
+ * Show my annotations to expedient
+ */
+async function showExpedientAnotations() {
+  const username = localStorage.getItem('username');
+
+  // sent request to server
+  const response = await fetch(`/consultAnnotationsByUser?user=${username}`, {
+    method: 'GET'
+  });
+
+  if(!response.ok) {
+    alert("No tiene anotaciones al expediente");
+    window.location.href = PAGE_PRINCIPAL;
+  }
+  // wait the JSON response
+  const annotations = await response.json();
+
+  let title = "Anotaciones al expediente";
+
+  let content = `Nombre: ${annotations.name}<br>
+  Empresa: ${annotations.company_name}<br><br>`;
+
+  let annotCount = 1;
+  // Recorrer las anotaciones utilizando un bucle for...in
+  for (const annotationKey in annotations.annotations) {
+    if (annotations.annotations.hasOwnProperty(annotationKey)) {
+      const annotation = annotations.annotations[annotationKey];
+      content += `Anotación ${annotCount}: ${annotation}<br>`;
+      annotCount++;
+    }
+  }
+
+  // Create page
+  createTextBlankPage(title, content);
 }
 
 /**
@@ -375,6 +464,7 @@ function createFormPage(title, form) {
             <h2>${title}</h2>
             <button id="regresar" onclick="window.close()"></button>
             <div id="form-container"></div>
+            <button class="submit-btn" id="enviar" style="margin-top: 25px" >Enviar solicitud</button>
           </div>
         </div>
         <footer style="bottom: 0px">
@@ -388,8 +478,146 @@ function createFormPage(title, form) {
 `);
     const textContainer = newPage.document.getElementById("form-container");
     textContainer.appendChild(form);
-    // textContainer.innerHTML = form;
+    newPage.document.getElementById("enviar").addEventListener("click", makeRequest.bind(null, form, title, newPage));
     return newPage;
+}
+
+function renderRequestSuccess(page) {
+  page.document.body.innerHTML = `<!DOCTYPE html>
+  <html>
+    <head>
+      ${HTML_HEAD}
+      <title>Solicitud Realizada</title>
+    </head>
+    <body id="consultas">
+      <div id="holder">
+        <div id="body">
+          <div class="w3-container w3-light-blue">
+            <h1>Solicitud realizada</h1>
+          </div>
+          <div id="page-blank-container">
+            <h2>Solicitud Realizada</h2>
+            <button id="regresar" onclick="window.close()"></button>
+            <div id="container">Tu solicitud ha sido realizada con exito.</div>
+            <button class="submit-btn" style="margin-top: 25px" onclick="window.close()">Regresar</button>
+          </div>
+        </div>
+        <footer style="bottom: 0px">
+          Sistema de Gestión de Recursos Humanos
+        </footer>
+      </div>
+    </body>
+
+  </html>
+  `;
+}
+
+/*
+{
+  "user": "CamiloSua",
+  "request_type": "Vacation",
+  "information": "Deseo pedir vacaciones por favor",
+  "area": "San Jose",
+  "vacation_days": 14,
+  "vacation_start_date": 10623,
+  "vacation_end_date": 150623
+}
+*/
+
+async function makeRequest(form, reqType, page) {
+  let formJson = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {});
+  console.log(formJson);
+  
+  if (!formJson.information) {
+    page.close();
+    alert("Error al enviar solicitud: Debe llenar el campo de motivo de solicitud");
+    return;
+  }
+
+  if (reqType === "Solicitud de Vacaciones") {
+    if (!formJson.vacationDays) {
+      page.close();
+      alert("Error al enviar solicitud: Debe llenar el campo de cantidad de dias");
+      return;
+    }
+    if (!formJson.vacationStartDate) {
+      page.close();
+      alert("Error al enviar solicitud: Debe llenar el campo de fecha de inicio de vacaciones");
+      return;
+    }
+    if (!formJson.vacationEndDate) {
+      page.close();
+      alert("Error al enviar solicitud: Debe llenar el campo de fecha de final de vacaciones");
+      return;
+    }
+  }
+
+  let body = {
+    user: formJson.user,
+    request_type: reqType,
+    information: formJson.information,
+    // TODO: get area from local storage, this below is just a dummy value
+    area: "San Jose",
+    vacation_days: formJson.vacationDays ? +formJson.vacationDays.replaceAll('-', '') : 0,
+    vacation_start_date: formJson.vacationStartDate ? +formJson.vacationStartDate.replaceAll('-', '') : 0,
+    vacation_end_date: formJson.vacationEndDate ? +formJson.vacationEndDate.replaceAll('-', '') : 0
+  }
+  console.log(body);
+
+  fetch('makeRequest', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+  .then(function (response) {
+    console.log(response.status);
+    return response.status;
+  })
+  .then(function (status) {
+    if (status === 200) {
+      renderRequestSuccess(page);
+    }
+    if (status === 401) {
+      window.location.href = DEFAUL_PAGE;
+    }
+  })
+  .catch(function (error) {
+      // Manejar el error en caso de que la solicitud falle
+      alert('Error al enviar la solicitud:', error);
+  });
+}
+
+function createAcceptDenyPage(title, content) {
+    let newPage = window.open();
+    newPage.document.write(`<!DOCTYPE html>
+  <html>
+    <head>
+      ${HTML_HEAD}
+      <title>${title}</title>
+    </head>
+    <body id="consultas">
+      <div id="holder">
+        <div id="body">
+          <div class="w3-container w3-light-blue">
+            <h1>Consulta</h1>
+          </div>
+          <div id="page-blank-container">
+            <h2>${title}</h2>
+            <button id="regresar" onclick="window.close()"></button>
+            <div id="text-container"> ${content} </div>
+            <button class="submit-btn deny-btn">DENEGAR</button>
+            <button class="submit-btn accept-btn">APROBAR</button>
+          </div>
+        </div>
+        <footer style="bottom: 0px">
+          Sistema de Gestión de Recursos Humanos
+        </footer>
+      </div>
+    </body>
+  </html>
+  `);
 }
 
 function createUserRegistrationPage() {
@@ -411,59 +639,43 @@ function createUserRegistrationPage() {
 function openSalaryConstanceForm() {
     let title = "Constancia de Salarios";
     let form = new FormBuilder();
-    // TODO: get employee name via backend
-    let employeeName = "Marta Gonzalez Beltrán";
+    let user = localStorage.getItem('username');
     form
-        .addReadOnlyText("empleado", "Empleado:", employeeName)
-        .addTextField("motivo", "Motivo de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false)
-        .addSubmitlButton("enviar", "Enviar")
-        .addCancelButton("cancelar", "Cancelar");
+        .addReadOnlyText("user", "Usuario:", user)
+        .addTextField("information", "Motivo de la solicitud:", true)
     createFormPage(title, form.build());
 }
 
 function openEmploymentCertificateForm() {
     let title = "Constancia laboral";
     let form = new FormBuilder();
-    // TODO: get employee name via backend
-    let employeeName = "Marta Gonzalez Beltrán";
+    let user = localStorage.getItem('username');
     form
-        .addReadOnlyText("empleado", "Empleado:", employeeName)
-        .addTextField("motivo", "Motivo de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false)
-        .addSubmitlButton("enviar", "Enviar")
-        .addCancelButton("cancelar", "Cancelar");
+        .addReadOnlyText("user", "Usuario:", user)
+        .addTextField("information", "Motivo de la solicitud:", true);
     createFormPage(title, form.build());
 }
 
 function openVacationsForm() {
     let title = "Solicitud de Vacaciones";
     let form = new FormBuilder();
-    // TODO: get employee name via backend
-    let employeeName = "Marta Gonzalez Beltrán";
+    let user = localStorage.getItem('username');
     form
-        .addReadOnlyText("empleado", "Empleado:", employeeName)
-        .addNumericField("dias-vacaciones", "Especifique la cantidad de días", true)
-        .addDateField("inicio-vacaciones", "Fecha de inicio de las vacaciones")
-        .addDateField("final-vacaciones", "Fecha final de las vacaciones")
-        .addTextField("motivo", "Motivo de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false)
-        .addSubmitlButton("enviar", "Enviar")
-        .addCancelButton("cancelar", "Cancelar");
+        .addReadOnlyText("user", "Usuario:", user)
+        .addTextField("information", "Motivo de la solicitud:", true)
+        .addNumericField("vacationDays", "Especifique la cantidad de días", true)
+        .addDateField("vacationStartDate", "Fecha de inicio de las vacaciones")
+        .addDateField("vacationEndDate", "Fecha final de las vacaciones");
     createFormPage(title, form.build());
 }
 
 function openPaymentProofForm() {
     let title = "Constancia de Pago";
     let form = new FormBuilder();
-    // TODO: get employee name via backend
-    let employeeName = "Marta Gonzalez Beltrán";
+    let user = localStorage.getItem('username');
     form
-        .addReadOnlyText("empleado", "Empleado:", employeeName)
-        .addTextField("motivo", "Motivo de la solicitud:", true)
-        .addTextField("informacion-adicional", "Información Adicional:", false)
-        .addSubmitlButton("enviar", "Enviar")
-        .addCancelButton("cancelar", "Cancelar");
+        .addReadOnlyText("user", "Usuario:", user)
+        .addTextField("information", "Motivo de la solicitud:", true);
     createFormPage(title, form.build());
 }
 
@@ -531,7 +743,6 @@ function checkLogin() {
             return response.status;
         })
         .then(function (status) {
-            console.log(status)
             if (status === 401) {
                 window.location.href = DEFAUL_PAGE;
             }

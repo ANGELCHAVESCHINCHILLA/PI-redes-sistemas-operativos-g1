@@ -155,7 +155,7 @@ HttpResponse HttpServer::privateFetch(HttpRequest& request) {
 
   Socket& client_socket = client->connect(host, port);
 
-  error = client_socket.send(request.toString());
+  error = client_socket.send(request.buildString());
 
 
   std::string response;
@@ -167,7 +167,6 @@ HttpResponse HttpServer::privateFetch(HttpRequest& request) {
   if (error) {
     throw std::runtime_error("Can't execute fetch.");
   }
-
   return HttpResponse(response);
 }
 

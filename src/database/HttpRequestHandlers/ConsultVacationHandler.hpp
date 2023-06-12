@@ -30,9 +30,11 @@ class ConsultVacationHandler : public DatabaseRequestHandler {
         if (vacationBalance == "user not found") {
           statusCode = 400;
           responseBody << INVALID_USER;
+          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_USER);
         } else {
           statusCode = 200;
           responseBody << "{ \"vacationBalance\": " << std::stoi(vacationBalance) << "}";
+          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
         }
         // build the response
         response.setStatusCode(statusCode);
@@ -42,6 +44,7 @@ class ConsultVacationHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
+        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
       }
       response.buildResponse();
       

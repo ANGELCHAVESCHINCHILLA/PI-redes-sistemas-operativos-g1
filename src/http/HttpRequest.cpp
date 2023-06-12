@@ -36,7 +36,7 @@ std::string HttpRequest::toString() {
 std::string HttpRequest::buildString() {
   std::stringstream ss;
 
-  ss << this->method << " " << this->target.getPath() << " "
+  ss << this->method << " " << this->target.getInput() << " "
      << this->httpVersion;
 
   ss << HttpMessage::lineSeparator;

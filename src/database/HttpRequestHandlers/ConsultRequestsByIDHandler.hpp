@@ -78,9 +78,11 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
           }
           statusCode = 200;
           responseBody << requestsAsJSON.str();
+          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
         } else {
           statusCode = 400;
           responseBody << INVALID_ID;
+          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_ID);
         }
         
         // build the response
@@ -91,11 +93,13 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
+        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
       } catch(const std::invalid_argument& err) {
         std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
         response.getBody() << PARAM_NOT_INTEGER;
+        Log::getInstance().write(Log::ERROR, "DatabaseFail", PARAM_NOT_INTEGER);
       }
       response.buildResponse();
       return true;

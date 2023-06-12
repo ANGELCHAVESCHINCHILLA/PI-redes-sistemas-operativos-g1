@@ -7,6 +7,7 @@
 #include "HttpRequestHandlers/UserAdminHandler/UserAdminHandler.hpp"
 
 GuachisWebApp::GuachisWebApp() {
+  this->requestHandlers.push_back(new UserAdminHandler());
   this->requestHandlers.push_back(new StaticHandler());
   this->requestHandlers.push_back(new UserAdminHandler());
   this->requestHandlers.push_back(new LoginHandler());

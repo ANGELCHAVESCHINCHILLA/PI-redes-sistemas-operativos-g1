@@ -36,14 +36,19 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
           << nameAndCompany[1] << "\", \"annotations\": {";
           for (int i = 0; i < annotationsData.size(); ++i) {
             annotationsAsJSON << "\"annotation" << (i + 1) << "\": \"";
-            annotationsAsJSON << annotationsData[i] << "\",";
+            annotationsAsJSON << annotationsData[i];
+            if (i != annotationsData.size()) {
+              annotationsAsJSON << "\",";
+            }
           }
           annotationsAsJSON << "} }";
           statusCode = 200;
           responseBody << annotationsAsJSON.str();
+          Log::getInstance().write(Log::INFO, "DatabaseReached", "Request checked correctly");
         } else {
           statusCode = 400;
           responseBody << INVALID_USER;
+          Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_USER);
         }
         // build the response
         response.setStatusCode(statusCode);
@@ -53,6 +58,7 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
+        Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
       }
       response.buildResponse();
       return true;

@@ -3,6 +3,7 @@ import {
   showExpedientAnotations,
   showVacationsBalance,
   showBaseSalary,
+  // showRequestDetails,
   openRequestForm,
   reloadRequests,
   toBackPage,
@@ -12,7 +13,7 @@ function addButtonClickListener(buttonId, clickHandler, args) {
   const button = document.getElementById(buttonId);
   if (button) {
     if (args) {
-      button.addEventListener("click", function () {
+      button.addEventListener("click", async () => {
         clickHandler(args);
       });
     } else {
@@ -31,6 +32,8 @@ addButtonClickListener("salario-base-btn", showBaseSalary);
 addButtonClickListener("expediente-btn", showExpedientAnotations);
 // Requests button
 addButtonClickListener("estado-soluciones-btn", openSolicitudesPage);
+// // See Details Request button
+// addButtonClickListener("detalles-btn", showRequestDetails);
 
 // Salary Form button
 addButtonClickListener("salarial-btn", openRequestForm, "salarial-btn");

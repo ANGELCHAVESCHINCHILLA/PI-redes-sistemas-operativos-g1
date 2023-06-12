@@ -39,6 +39,7 @@ bool DatabaseWebApp::start() {
 }
 
 bool DatabaseWebApp::run(HttpRequest& request, HttpResponse& response) {
+  Log::getInstance().write(Log::INFO, "RequestReceived", request.getTarget().getPath());
   for (auto& handler : this->requestHandlers) {
     if (handler->canHandle(request, response)) {
       return true;
