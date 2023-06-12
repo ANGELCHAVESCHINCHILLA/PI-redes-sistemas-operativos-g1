@@ -1,4 +1,5 @@
 const PAGE_PRINCIPAL = "/index.html";
+const PAGE_QUERIES = "/supervisory_queries";
 
 const send_annotation_btn = document.getElementById("send-annotation");
 const cancel_btn = document.getElementById("cancel");
@@ -162,8 +163,8 @@ function reloadDetailsBtns() {
                 }
 
                 // wait the JSON response
-                const request = await response.json();
-
+                const requests = await response.json();
+                console.log(requests);
                 // build request info for be put in page
                 let requestInfo = `Nombre: ${request.user}<br>
         Area: ${request.area}<br><br>
@@ -178,6 +179,58 @@ function reloadDetailsBtns() {
         });
     }
 }
+
+if (aprove_query_btn) {
+    aprove_query_btn.addEventListener("click", function () {
+        const request_div = document.getElementById("request_id");
+        const request_str = (request_div.getAttribute("request_id"));
+        console.log(request_str);
+        const request = JSON.parse(request_str);
+
+        const fetchInfo = {
+            request_id: request.ID,
+            state: 1,
+            feedback: "Solicitud aprobada por el supervisor del área"
+        }
+        fetch('/checkRequest', {
+            method: 'POST',
+            body: JSON.stringify(fetchInfo)
+        }).then(response => {
+            if (!response.ok) {
+                alert("Ha ocurrido un error en la comunicación. Rediriguiendo a la página de consultas")
+            } else {
+                alert("Solicitud APROBADA correctamente. Rediriguiendo a la página de consultas")
+            }
+            window.location.href = PAGE_QUERIES;
+        })
+    })
+}
+if (deny_btn) {
+    deny_btn.addEventListener("click", function () {
+        const request_div = document.getElementById("request_id");
+        const request_int = parseInt(request_div.getAttribute("request_id"));
+        console.log(request_str);
+        const request = JSON.parse(request_str);
+
+        const fetchInfo = {
+            request_id: request.ID,
+            state: 2,
+            feedback: "Solicitud denegada por el supervisor del área"
+        }
+        fetch('/checkRequest', {
+            method: 'POST',
+            body: JSON.stringify(fetchInfo)
+        }).then(response => {
+            if (!response.ok) {
+                alert("Ha ocurrido un error en la comunicación. Rediriguiendo a la página de consultas")
+            } else {
+                alert("Solicitud DENEGADA correctamente. Rediriguiendo a la página de consultas")
+            }
+            window.location.href = PAGE_QUERIES;
+        })
+    })
+}
+
 function createAcceptDenyPage(title, content, request) {
     let newPage = window.open();
     newPage.document.write(`<!DOCTYPE html>
@@ -219,19 +272,6 @@ function createAcceptDenyPage(title, content, request) {
     const request_Div = document.getElementById("request_id");
     request_Div.setAttribute("REQUEST", JSON.stringify(request));
 }
-
-if (aprove_query_btn) {
-    aprove_query_btn.addEventListener("click", function () {
-        const request_div = document.getElementById("request_id");
-        const request_str = request_div.getAttribute("request_id");
-        const request = JSON.parse(request_str);
-        // TODO: when db is complete, send the request to gerency in request area
-        fetch('')
-    })
-
-}
-
-
 
 
 
