@@ -544,9 +544,13 @@ function checkLogin() {
 
 
 function populateIndexButtons(permissions) {
-    if (permissions > 1) {
+    if (permissions === 2) {
         const divContainer = document.getElementById("supervisory-btns")
         addSupervisorButtons(divContainer);
+    }
+
+    if (permissions === 4) {
+        addAdministratorButtons();
     }
 }
 
@@ -575,6 +579,13 @@ function addSupervisorButtons(divcontainer) {
     divcontainer.appendChild(solicitudesBtn);
     divcontainer.appendChild(anotacionesBtn);
 }
+
+function addAdministratorButtons() {
+    const divContainer = document.querySelector("#admin-btns");
+
+    divContainer.style.display = 'block';
+}
+
 function openMakeAnnotationsPage() {
     window.location.href = "/add_annotation";
 }
