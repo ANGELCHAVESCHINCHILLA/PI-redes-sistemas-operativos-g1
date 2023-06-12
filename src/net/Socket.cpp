@@ -13,7 +13,7 @@
 
 #include "../common/Log.hpp"
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 
 struct SharedSocket {
   /// Cannot be coppied
