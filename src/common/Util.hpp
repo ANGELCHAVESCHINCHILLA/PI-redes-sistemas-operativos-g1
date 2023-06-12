@@ -19,7 +19,7 @@ class Util {
   ~Util() = delete;
 
  public:
-  static void padLeft(std::string& string, size_t length);
+  static void padLeft(std::string& string, size_t length, char pad = ' ');
 
   static void trimLeft(std::string& string);
 };

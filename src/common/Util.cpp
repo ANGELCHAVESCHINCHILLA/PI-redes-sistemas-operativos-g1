@@ -2,9 +2,9 @@
 
 #include "Util.hpp"
 
-void Util::padLeft(std::string& string, size_t length) {
+void Util::padLeft(std::string& string, size_t length, char pad) {
   while (string.size() < length) {
-    string.insert(0, 1, ' ');
+    string.insert(0, 1, pad);
   }
 }
 

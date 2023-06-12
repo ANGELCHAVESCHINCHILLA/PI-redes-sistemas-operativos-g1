@@ -3,6 +3,8 @@
 #include <cassert>
 #include <stdexcept>
 
+#include "Util.hpp"
+
 /// The respective texts for the message types
 const char* const Log::MESSAGE_TYPE_TEXT[] = {
     "Debug",
@@ -44,7 +46,7 @@ void Log::stop() {
 void Log::write(Log::MessageType type, const std::string& category,
     const std::string& text) {
   this->mutex.lock();
-  std::string log = "[" + getActualTime() + "] " + MESSAGE_TYPE_TEXT[type] + '\t' + category + '\t' + text;
+  std::string log = "[" + getActualTime() + "] [" + MESSAGE_TYPE_TEXT[type] + "]\t" + category + ":\t" + text;
   this->output << log << std::endl;
   if(this->file.is_open()) {
     this->file << log << std::endl;
@@ -66,8 +68,13 @@ std::string Log::getActualTime() {
   int mins = localTime->tm_min;
   int secs = localTime->tm_sec;
 
-  std::string formatHour =  std::to_string(hour) + ":" + std::to_string(mins) +
-    ":" + std::to_string(secs);
+  std::string formatHour = std::to_string(hour);
+  std::string formatMins = std::to_string(mins);
+  std::string formatSecs = std::to_string(secs);
 
-  return formatHour;
+  Util::padLeft(formatHour, 2, '0');
+  Util::padLeft(formatMins, 2, '0');
+  Util::padLeft(formatSecs, 2, '0');
+
+  return formatHour + ":" + formatMins + ":" + formatSecs;
 }
