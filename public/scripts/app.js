@@ -111,7 +111,7 @@ function reloadRequests() {
 }
 */
 async function populateRequestContainer() {
-  const status = ["APROBADO", "REVISION", "RECHAZADO"];
+  const status = ["PENDIENTE", "APROBADO", "RECHAZADO"];
   const username = localStorage.getItem('username');
 
   // send request to server
@@ -244,7 +244,7 @@ function reloadDetailsBtns() {
         if(!response.ok) {
           window.location.href = PAGE_PRINCIPAL;
         }
-      
+
         // wait the JSON response
         const request = await response.json();
         // build request info for be put in page
@@ -253,11 +253,14 @@ function reloadDetailsBtns() {
         Información: ${request.information}<br><br>`
         // TODO: si la request es de vacaciones, se debe agregar la informacion
         if (request.request_type === "Solicitud de Vacaciones") {
-          `Días de vacaciones: ${formatDate(request.vacation_days)}<br>`;
-          `Inicio de vacaciones: ${formatDate(request.vacation_start_date)}<br>`;
-          `Fin de vacaciones: ${formatDate(request.vacationEndDate)}<br>`;
+          requestInfo += `Días de vacaciones: ${request.vacation_days}<br>
+          Inicio de vacaciones: ${formatDate(request.vacation_start_date)}<br>
+          Fin de vacaciones: ${formatDate(request.vacation_end_date)}<br>`;
         }
         requestInfo += `Observación: ${request.feedback}<br>`;
+        if (request.ID == 1) {
+          requestInfo += `ID de la solicitud: ${request.ID}<br>`;
+        }
 
         // The title is the request type, e.g. Constancia Salarial
         let requestTitle = `${request.request_type}`;
@@ -427,7 +430,6 @@ function createTextBlankPage(title, content) {
             <h2>${title}</h2>
             <button id="regresar" onclick="window.close()"></button>
             <div id="text-container"> ${content} </div>
-            <button class="submit-btn imprimir-btn">IMPRIMIR</button>
           </div>
         </div>
         <footer style="bottom: 0px">
