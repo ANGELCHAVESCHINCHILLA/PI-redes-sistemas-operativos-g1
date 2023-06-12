@@ -27,7 +27,7 @@ bool RemoveUserHandler::canHandle(
 
       std::string username = root["username"].asString();
 
-      if (!this->fileSystemApi->userExists(username) &&
+      if (!this->fileSystemApi->userExists(username) ||
           !this->fileSystemApi->removeUser(username)) {
         throw std::runtime_error("User doesn't exist.");
       }
