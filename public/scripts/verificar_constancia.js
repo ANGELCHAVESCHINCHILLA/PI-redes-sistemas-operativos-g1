@@ -11,17 +11,14 @@ async function buscarConstancia() {
     // const params = {id: constanciaId};
     // url.search = new URLSearchParams(params).toString();
     console.log(url);
-    await fetch(url, {
+     fetch(url, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
     }).then(async response => {
         console.log("Status: " + response.status)
         if (response.status == 200) {
             let newWindow = window.open('');
             let pageHTML = formatResponseInfo(response.json());
-            newWindow.write(pageHTML);
+            newWindow.document.write(pageHTML);
         } else {
             const errorText = await response.text();
             document.write(errorText);
