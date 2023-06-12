@@ -120,6 +120,7 @@ async function populateRequestContainer() {
   });
 
   if(!response.ok) {
+    alert("No tiene solicitudes por revisar");
     window.location.href = PAGE_PRINCIPAL;
   }
   // wait the JSON response
@@ -251,6 +252,11 @@ function reloadDetailsBtns() {
         Area: ${request.area}<br><br>
         Información: ${request.information}<br><br>`
         // TODO: si la request es de vacaciones, se debe agregar la informacion
+        if (request.request_type === "Solicitud de Vacaciones") {
+          `Días de vacaciones: ${formatDate(request.vacation_days)}<br>`;
+          `Inicio de vacaciones: ${formatDate(request.vacation_start_date)}<br>`;
+          `Fin de vacaciones: ${formatDate(request.vacationEndDate)}<br>`;
+        }
         requestInfo += `Observación: ${request.feedback}<br>`;
 
         // The title is the request type, e.g. Constancia Salarial
@@ -373,6 +379,7 @@ async function showExpedientAnotations() {
   });
 
   if(!response.ok) {
+    alert("No tiene anotaciones al expediente");
     window.location.href = PAGE_PRINCIPAL;
   }
   // wait the JSON response
