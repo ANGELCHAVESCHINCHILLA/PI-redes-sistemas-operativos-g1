@@ -83,13 +83,17 @@ if (add_user_send_button !== null) {
 
         if (response.status === 200) {
             const salt = getSalt(15);
-
+            
             const fs_json = {
                 "username": user_id.value,
                 "salt": salt,
-                "password": getHash(user_password, salt),
+                "password": getHash(user_password.value, salt),
                 "type": parseInt(user_type.value)
             };
+
+            console.log(`Contraseña: ${user_password.value}`);
+            console.log(`Hah: ${fs_json.password}`);
+            console.log(`Salt: ${salt}`);
 
             response = await fetch("/admin/add_user/auth", {
                 method: "POST",
