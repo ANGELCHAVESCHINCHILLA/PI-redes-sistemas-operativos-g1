@@ -392,37 +392,6 @@ function createFormPage(title, form) {
     return newPage;
 }
 
-function createAcceptDenyPage(title, content) {
-    let newPage = window.open();
-    newPage.document.write(`<!DOCTYPE html>
-  <html>
-    <head>
-      ${HTML_HEAD}
-      <title>${title}</title>
-    </head>
-    <body id="consultas">
-      <div id="holder">
-        <div id="body">
-          <div class="w3-container w3-light-blue">
-            <h1>Consulta</h1>
-          </div>
-          <div id="page-blank-container">
-            <h2>${title}</h2>
-            <button id="regresar" onclick="window.close()"></button>
-            <div id="text-container"> ${content} </div>
-            <button class="submit-btn deny-btn">DENEGAR</button>
-            <button class="submit-btn accept-btn">APROBAR</button>
-          </div>
-        </div>
-        <footer style="bottom: 0px">
-          Sistema de Gestión de Recursos Humanos
-        </footer>
-      </div>
-    </body>
-  </html>
-  `);
-}
-
 function createUserRegistrationPage() {
     let title = "Registrar Usuario";
     let form = new FormBuilder()
@@ -594,7 +563,7 @@ function addSupervisorButtons(divcontainer) {
     solicitudesBtn.id = 'supervisor-solicitudes';
     anotacionesBtn.id = 'supervisor-anotaciones';
 
-    // solicitudesBtn.addEventListener("click");
+    solicitudesBtn.addEventListener("click", openSupervisoryQueriesPage);
     anotacionesBtn.addEventListener("click", openMakeAnnotationsPage);
 
     divcontainer.appendChild(header);
@@ -603,6 +572,10 @@ function addSupervisorButtons(divcontainer) {
 }
 function openMakeAnnotationsPage() {
     window.location.href = "/add_annotation";
+}
+
+function openSupervisoryQueriesPage() {
+    window.location.href = "/supervisory_queries";
 }
 
 

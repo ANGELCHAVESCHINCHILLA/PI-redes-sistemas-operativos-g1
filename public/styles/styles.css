@@ -422,6 +422,7 @@ div#page-blank-container {
   align-items: center;
   justify-content: center;
   padding: 20vh;
+  gap: 20px;
 }
 
 
@@ -442,7 +443,7 @@ button[type="submit"] {
   background: rgba(0, 120, 240, 0.1);
   border: 1px solid #0078F0;
   border-radius: 10px;
-  max-width: 200px;
+  width: 200px;
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -467,7 +468,7 @@ button[type="cancel"] {
   font-style: normal;
   font-weight: 5000;
   color: #ff5b5b;
-  max-width: 200px;
+  width: 200px;
   transition: background-color 0.3s ease-in-out;
 }
 
