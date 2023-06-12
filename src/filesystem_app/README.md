@@ -69,13 +69,7 @@ could change depending on where server is hosted.
 #### Request
 
 * Method: GET
-* URL: /auth/salt
-* Body:
-```json
-{
-  "username": "AngelSuare"
-}
-```
+* URL: /auth/salt?username='username'
 
 #### Response:
 

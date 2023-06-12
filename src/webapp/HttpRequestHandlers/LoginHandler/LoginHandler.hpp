@@ -15,31 +15,11 @@ class UserSession;
  * 
  */
 class LoginHandler : public HttpRequestHandler {
- protected:
-  /**
-  * @brief The filesystem server
-  * 
-  */
-  std::string server;
-
-  /**
-   * @brief Port in which filesystem server is listenning
-   * 
-   */
-  std::string port;
-
  public:
   DISABLE_COPY(LoginHandler);
 
   LoginHandler() = default;
 
-  /**
-   * @brief Construct a new Login Handler object
-   * 
-   * @param server The filesystem server
-   * @param port Port in which filesystem server is listenning
-   */
-  LoginHandler(const std::string& server, const std::string& port);
   /**
    * @brief 
    * 
@@ -50,23 +30,11 @@ class LoginHandler : public HttpRequestHandler {
    */
   bool canHandle(HttpRequest& request, HttpResponse& response) override;
 
-  /**
-   * @brief true if the user is valid
-   * 
-   * @param request 
-   * @param user 
-   * @return true 
-   * @return false 
-   */
-  bool isValidUser(HttpRequest& request, UserSession& user);
-
-  inline void setServer(const std::string& server);
-
-  inline void setPort(const std::string& port);
+  bool callToFs(HttpRequest& request, HttpResponse& response
+  , const std::string& method, const std::string& contentType);
 
   bool serveAuthFailed(HttpRequest& httpRequest,
                                     HttpResponse& httpResponse);
-
 };
 
 #endif  // LOGIN_HANDLER

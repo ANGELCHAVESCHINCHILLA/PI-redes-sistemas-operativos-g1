@@ -506,7 +506,12 @@ function cancelar() {
 document.addEventListener('DOMContentLoaded', () => {
     checkLogin();
     if (window.location.pathname == '/index.html') {
-        populateIndexButtons(2);
+        const permissions = localStorage.getItem('permissions');
+        if (permissions) {
+            populateIndexButtons(parseInt(permissions));
+        } else {
+            window.location.href = DEFAUL_PAGE;
+        }
     }
 
     console.log(window.location.pathname);

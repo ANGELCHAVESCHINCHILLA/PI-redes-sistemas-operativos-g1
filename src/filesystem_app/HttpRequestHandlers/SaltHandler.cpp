@@ -3,6 +3,7 @@
 #include "SaltHandler.hpp"
 
 #include <jsoncpp/json/json.h>
+#include <iostream>
 
 SaltHandler::SaltHandler(FileSystemAPI* api) : FileSystemRequestHandler(api) {
 }
@@ -13,12 +14,16 @@ SaltHandler::~SaltHandler() {
 bool SaltHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "GET") {
     if (request.getTarget().getPath() == "/auth/salt") {
-      Json::Reader reader;
-      Json::Value root;
+      // Json::Reader reader;
+      // Json::Value root;
 
-      reader.parse(request.getBody(), root);
+      // reader.parse(request.getBody(), root);
 
-      std::string username = root["username"].asString();
+      // std::string username = root["username"].asString();
+
+      // std::string salt = this->fileSystemApi->getUserSalt(username);
+
+      std::string username = request.getTarget().getQuery().find("username")->second;
 
       std::string salt = this->fileSystemApi->getUserSalt(username);
 

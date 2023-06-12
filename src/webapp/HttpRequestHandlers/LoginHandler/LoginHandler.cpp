@@ -3,117 +3,84 @@
 #include "LoginHandler.hpp"
 #include <iostream>
 
+#include "../../../configuration.hpp"
 #include "../../../net/TcpClient.hpp"
-
-
-struct UserInfo {
- public:
-  std::string username;
-  std::string password;
-
- public:
-  DECLARE_RULE4(UserInfo, default);
-
-  UserInfo() = default;
-
-  UserInfo(const std::string& username, const std::string& password)
-    : username(username)
-    , password(password) {
-  }
-};
-class UserSession {
-  /// Objects of this class can be copied, but avoid innecesary copies
-  DECLARE_RULE4(UserSession, default);
- protected:
-  std::shared_ptr<TcpClient> client;
-
-  UserInfo userInfo;
-
- public:
-  UserSession(HttpRequest& request)
-      : client(new TcpClient()) {
-    Json::Value root;
-    Json::Reader reader;
-
-    if (!reader.parse(request.getBody(), root)) {
-      std::runtime_error("Could not parse the JSON file from POST request");
-    }
-
-    std::string username = root["username"].asString();
-    std::string hash = root["password"].asString();
-
-    this->userInfo.password = root["password"].asString();
-    this->userInfo.username = root["username"].asString();
-
-  }
-
-  Socket& connect(const char* server, const char* port) {
-    return (*this->client).connect(server, port);
-  }
-};
-
-LoginHandler::LoginHandler(const std::string& server, const std::string& port)
-    : server(server)
-    , port(port) { 
-  std::cout << "Client will connect to at http://" << server << ":" << port
-    << "\n";
-}
+#include "../../../http/HttpServer.hpp"
 
 bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "POST") {
     if (request.getTarget().getPath() == "/login") {
-      bool served = false;
-      // Create the info for current user
-      UserSession user(request);
-
-      // If the username and password are correct then
-      if (this->isValidUser(request, user)) {
-        // std::cout << "soy usuaro valido" << std::endl;
-        // serve a valid response
-        return this->serveAny(response, 200);
-      } else {
-        // serve an authentication failed
-        served = this->serveAuthFailed(request, response);
+      // TODO: QUitar este return cuando ya la constrasea venga encriptada.
+      // return this->serveAny(response, 200);
+      try {
+        // send request to and receive response from data base server
+        this->callToFs(request, response, "POST", "application/json");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << ".\n";
+        response.setStatusCode(401);
       }
-      return served;
+      return true;
+    }
+  }
+  if (request.getMethod() == "GET") {
+    if (request.getTarget().getPath().rfind("/permissions") == 0) {
+      try {
+        // send request to and receive response from data base server
+        this->callToFs(request, response, "GET", "text/plain");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << ".\n";
+        response.setStatusCode(401);
+      }
+      return true;
+    }
+  }
+
+  if (request.getMethod() == "GET") {
+    if (request.getTarget().getPath().rfind("/auth/salt") == 0) {
+      try {
+        std::cout << "Login Handler se encargará" << std::endl;
+        // send request to and receive response from data base server
+        this->callToFs(request, response, "GET", "application/json");
+      } catch (const std::runtime_error& error) {
+        std::cerr << error.what() << ".\n";
+        response.setStatusCode(401);
+      }
+      return true;
     }
   }
   return false;
 }
 
-bool LoginHandler::isValidUser(HttpRequest& request, UserSession& user) {
-  // TODO: remove this return true. Now works as bypass just to testing
-  return true;
-  // Connect with fylesystem server
-  Socket& loginSocket = user.connect(this->server.data(), this->port.data());
+bool LoginHandler::callToFs(HttpRequest& request, HttpResponse& response
+  , const std::string& method, const std::string& contentType) {
+    Configuration& configuration = Configuration::getInstance();
+  // IP adress of file system server
+  std::string FSAddress = configuration.getServer("fs").address;
+  // port in which file system server is listenning
+  std::string FSPort = std::to_string(configuration.getServer("fs").port);
+  // request to be send to file system server
+  HttpRequest FSRequest;
+  // Construct request with our needs
+  FSRequest.setMethod(method);
+  FSRequest.setTarget("http://" + FSAddress + ":" + FSPort + request.getTarget().getInput());
+  FSRequest.setBody(request.getBody());
 
-  // send a request to know if is a valid user sendind username and password
-  int error = loginSocket.send(request.buildString());
+  // std::cout << "Request que se enviará a file system" << std::endl;
+  // std::cout << DBRequest.toString() << std::endl;
 
-  std::string result;
+  // Send request to file system and store its result in future
+  auto future = HttpServer::fetch(FSRequest);
 
-  if (!error) {
-    // receive the response from the FS server
-    error = loginSocket.receive(result);
-  } else {
-    throw std::runtime_error("Could not send to File System Server");
-  }
+  // Get data received and create a HttResponse
+  HttpResponse FSResponse = future.get();
 
-  if (!error) {
-    // Construct the response received
-    HttpResponse validationResponse(result);
-
-    // parse the response received
-    validationResponse.parseHttpResponse(result);
-
-    // If is the received response has a succesfull status code then return true
-    return 200 <= validationResponse.getStatusCode()
-          && validationResponse.getStatusCode() < 300;
-  }
-  throw std::runtime_error("Could not receive from File System Server");
+  // Build our FSResponse
+  response.setStatusCode(FSResponse.getStatusCode());
+  response.getBody() << FSResponse.getBody().str();
+  response.setHeader("Content-Type", contentType);
+  return response.buildResponse();
 }
-
 
 bool LoginHandler::serveAuthFailed(HttpRequest& httpRequest,
                                     HttpResponse& httpResponse) {

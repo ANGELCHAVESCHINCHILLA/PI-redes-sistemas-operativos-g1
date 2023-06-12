@@ -77,7 +77,7 @@ int Authenticator::authPass(const std::string& usersFile,
     // If the username was found in FS then
     if (username == info_username) {
       // This ise the hash stored in file system for the user
-      std::string info_hashed_password = info.substr(10, 30);
+      std::string info_hashed_password = info.substr(10, 15);
       Util::trimLeft(info_hashed_password);
 
       if (hash == info_hashed_password) {
@@ -85,8 +85,6 @@ int Authenticator::authPass(const std::string& usersFile,
       } else {
         error = Error::INVALID_PASSWORD;
       }
-      // std::cout << "Hash: " + hash << std::endl;
-      // std::cout << "Hash: " + info_hashed_password << std::endl;
       found_user = true;
     }
 
