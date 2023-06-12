@@ -29,7 +29,8 @@ bool EditUserHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       std::string salt = root["salt"].asString();
       int type = root["type"].asInt();
 
-      if (!this->fileSystemApi->editUser(username, password, salt, type)) {
+      if (!this->fileSystemApi->userExists(username) &&
+          !this->fileSystemApi->editUser(username, password, salt, type)) {
         throw std::runtime_error("User doesn't exist.");
       }
 
