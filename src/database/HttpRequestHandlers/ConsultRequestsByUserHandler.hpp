@@ -76,7 +76,10 @@ class ConsultRequestsByUserHandler : public DatabaseRequestHandler {
               } else {
                 requestsAsJSON << "\"" << requestsData[i][j] << "\"";
               }
-              requestsAsJSON << (j == 10 ? "}," : ", ");
+              requestsAsJSON << (j == 10 ? "}" : ", ");
+            }
+            if (i < requestsData.size() - 1) {
+              requestsAsJSON << ",";
             }
           }
           requestsAsJSON << "}";

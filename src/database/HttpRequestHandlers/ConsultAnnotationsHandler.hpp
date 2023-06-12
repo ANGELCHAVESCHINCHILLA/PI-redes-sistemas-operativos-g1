@@ -36,7 +36,10 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
           << nameAndCompany[1] << "\", \"annotations\": {";
           for (int i = 0; i < annotationsData.size(); ++i) {
             annotationsAsJSON << "\"annotation" << (i + 1) << "\": \"";
-            annotationsAsJSON << annotationsData[i] << "\",";
+            annotationsAsJSON << annotationsData[i];
+            if (i != annotationsData.size()) {
+              annotationsAsJSON << "\",";
+            }
           }
           annotationsAsJSON << "} }";
           statusCode = 200;

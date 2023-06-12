@@ -49,7 +49,9 @@ class ConsultSalaryHandler : public DatabaseRequestHandler {
               }
               salaryAsJSON << "\"" << jsonEntry << "\": " << std::stoi(salaryData[i][j]) << (j == 2 ? "}" : ", ");
             }
-            salaryAsJSON << ",";
+            if (i < salaryData.size() - 1) {
+              salaryAsJSON << ",";
+            }
           }
           salaryAsJSON << "} }";
           statusCode = 200;
