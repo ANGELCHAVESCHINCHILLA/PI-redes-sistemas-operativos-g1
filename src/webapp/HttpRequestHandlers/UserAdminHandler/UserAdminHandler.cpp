@@ -108,8 +108,6 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
       return true;
     }
-
-    return true;
   }
 
   return false;
