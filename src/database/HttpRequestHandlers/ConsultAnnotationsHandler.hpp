@@ -31,20 +31,26 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
         int statusCode;
         std::stringstream responseBody;
         if (!annotationsData.empty() && !nameAndCompany.empty()) {
-          // pack all data into a json format string
-          std::stringstream annotationsAsJSON;
-          annotationsAsJSON << "{ \"name\": \"" << nameAndCompany[0] << "\", \"company_name\": \""
-          << nameAndCompany[1] << "\", \"annotations\": {";
-          for (int i = 0; i < annotationsData.size(); ++i) {
-            annotationsAsJSON << "\"annotation" << (i + 1) << "\": \"";
-            annotationsAsJSON << annotationsData[i];
-            if (i != annotationsData.size()) {
-              annotationsAsJSON << "\",";
-            }
+          Json::Value json;
+
+          json["name"] = nameAndCompany[0];
+          json["company_name"] = nameAndCompany[1];
+
+          Json::Value annotations;
+
+          for (size_t index = 0; index < annotationsData.size(); index++) {
+            annotations["annotation" + std::to_string(index)] = annotationsData[index];
           }
-          annotationsAsJSON << "} }";
+
+          json["annotations"] = annotations;
+
+          Json::StreamWriterBuilder writer;
+          std::string jsonString = Json::writeString(writer, json);
+
           statusCode = 200;
-          responseBody << annotationsAsJSON.str();
+          // TODO: Borrar el print
+          std::cout << jsonString << "\n";
+          responseBody << jsonString;
           Log::getInstance().write(Log::INFO, "ConsultAnnotationsHandler", "Request checked correctly");
         } else {
           statusCode = 400;
