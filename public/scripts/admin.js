@@ -1,6 +1,6 @@
 //
 
-const COMPANY_NAME = "Guachis";
+const COMPANY_NAME = "San Jose";
 
 const PEPPER = "Universidad de Costa Rica";
 
