@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include "error.hpp"
+#include "common/Log.hpp"
 
 DirectoryEntry::DirectoryEntry() : startBlock(DIRECTORY_UNDEFINED) {
   //
@@ -183,7 +184,7 @@ int FS::getFileSize(const std::string& filename) {
       block_index++;
     }
   } else {
-    std::cerr << "directory undefined" << std::endl;
+    Log::getInstance().write(Log::ERROR, "FS", "Undefined directory");
   }
 
   return size;

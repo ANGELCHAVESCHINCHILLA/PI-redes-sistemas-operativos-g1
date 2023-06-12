@@ -75,10 +75,10 @@ bool PersonalDataHandler::getData(
     response.getBody() << json;
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
   } catch (const Json::LogicError& error) {
     response.setStatusCode(401);
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
   }
 
   return true;
@@ -120,10 +120,10 @@ bool PersonalDataHandler::addData(
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
   } catch (const Json::LogicError& error) {
     response.setStatusCode(401);
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
   }
 
   return true;
@@ -151,10 +151,10 @@ bool PersonalDataHandler::removeData(
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
   } catch (const Json::LogicError& error) {
     response.setStatusCode(401);
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
   }
 
   return true;
@@ -196,10 +196,10 @@ bool PersonalDataHandler::editData(
     response.setStatusCode(200);
   } catch (const std::runtime_error& error) {
     response.setStatusCode(401);
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
   } catch (const Json::LogicError& error) {
     response.setStatusCode(401);
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::WARNING, "PersonalDataHandler", error.what());
   }
 
   return true;

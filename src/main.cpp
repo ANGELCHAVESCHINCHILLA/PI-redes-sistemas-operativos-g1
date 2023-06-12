@@ -71,10 +71,8 @@ int main(int argc, char** argv) {
 
       // Start the web server
       HttpServer::getInstance().start(address, port);
-
-      std::cout << "Servidor finalizado";
     } catch (const std::runtime_error& error) {
-      std::cerr << "error: " << error.what() << std::endl;
+      Log::getInstance().write(Log::ERROR, "Main", error.what());
     }
   }
 

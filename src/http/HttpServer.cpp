@@ -28,10 +28,10 @@ int HttpServer::appendApp(HttpApp* application) {
 }
 
 void HttpServer::stopServer(int signal) {
-  std::cerr << "Signal " << signal << " received" << std::endl;
-  Log::getInstance().write(Log::INFO, "finish", "Server closed");
+  Log::getInstance().write(Log::INFO, "HttpServer", "Server closing");
   Log::getInstance().stop();
   HttpServer::getInstance().stop();
+  Log::getInstance().write(Log::INFO, "HttpServer", "Server closed");
 }
 
 void HttpServer::stop() {
@@ -42,7 +42,7 @@ void HttpServer::stop() {
 int HttpServer::start(const std::string& address, int port) {
   int error = SocketError::OK_SOCKET;
   Log::getInstance().start("log.log");
-  Log::getInstance().write(Log::INFO, "start", "Server started");
+  Log::getInstance().write(Log::INFO, "HttpServer", "Server started");
   const std::string sport = std::to_string(port);
 
   error = this->fetchPossibleAddresses(sport.data());
@@ -57,11 +57,11 @@ int HttpServer::start(const std::string& address, int port) {
 
   if (!error) {
     error = this->server_socket.listen();
-    std::cout << "Server running at http://" << address << ":" << port << "\n";
+    Log::getInstance().write(Log::MessageType::DEBUG, "HttpServer",
+      "Server running at http://" + address + ":" + std::to_string(port));
   }
 
   error = this->acceptConnections();
-  std::cout << "Terminé de aceptar conexiones\n";
 
   return error;
 }
@@ -71,13 +71,15 @@ int HttpServer::start(const std::string& address, int port) {
 // TODO(everyone): Pensar en si es necesario agregar estos handlers.
 void HttpServer::handleClientConnection(
     const std::string& request, std::string& response, Socket& client) {
-  // Impresión para debug
-  std::cout << "Solicitud realizada:\n" << request << std::endl;
   // While the same client asks for HTTP requests in the same connection
   // while (true) {
   // Revisar si el parse falla, en teoría no debería cerrarse la conexión aún
   HttpRequest http_request(request);
   HttpResponse http_response(response);
+
+  Log::getInstance().write(Log::MessageType::DEBUG, "HttpServer",
+    "HTTP Request: " + http_request.getMethod() + " " +
+    http_request.getTarget().getPath());
 
   // Give the oportunity to apps to handle the client connection
   const bool handled = this->route(http_request, http_response);

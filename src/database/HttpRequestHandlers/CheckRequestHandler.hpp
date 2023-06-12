@@ -51,7 +51,6 @@ class CheckRequestHandler : public DatabaseRequestHandler {
             Log::getInstance().write(Log::ERROR, "DatabaseFail", INVALID_ID);
           }
         } catch(const Json::LogicError& err) {
-          std::cerr << err.what() << std::endl;
           statusCode = 400;
           responseBody = JSON_VALUES_ERROR;
           Log::getInstance().write(Log::ERROR, "DatabaseFail", JSON_VALUES_ERROR);

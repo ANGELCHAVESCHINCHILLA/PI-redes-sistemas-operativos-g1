@@ -20,7 +20,8 @@ class ConsultVacationHandler : public DatabaseRequestHandler {
         // fetch user from request url
         std::string user = request.getTarget().getQuery().find("user")->second;
         // print user
-        std::cout << user << std::endl;
+        Log::getInstance().write(Log::MessageType::DEBUG,
+          "ConsultVacationHandler", "User: " + user);
 
         // insert user into api to get the vacation balance
         std::string vacationBalance = this->databaseApi->consultVacationBalanceByUser(user);
@@ -40,7 +41,6 @@ class ConsultVacationHandler : public DatabaseRequestHandler {
         response.setStatusCode(statusCode);
         response.getBody() << responseBody.str();
       } catch(const std::bad_alloc err) {
-        std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;

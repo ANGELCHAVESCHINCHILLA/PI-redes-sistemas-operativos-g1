@@ -20,8 +20,9 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
         // fetch user from request url
         std::string user = request.getTarget().getQuery().find("user")->second;
         // print user
-        std::cout << user << std::endl;
-        
+        Log::getInstance().write(Log::MessageType::DEBUG,
+          "ConsultAnnotationsHandler", "User: " + user);
+
         // insert user into api to get the annotations data
         std::vector<std::string> annotationsData = this->databaseApi->consultRecordAnnotationsByUser(user);
         // insert user into api to get the name and company name
@@ -54,7 +55,6 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
         response.setStatusCode(statusCode);
         response.getBody() << responseBody.str();
       } catch(std::bad_alloc& err) {
-        std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;

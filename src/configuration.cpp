@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "common/Log.hpp"
+
 Configuration::Configuration() {
 }
 
@@ -53,7 +55,11 @@ int Configuration::configure(const std::string& configuration_path) {
       this->servers.insert({key, server_configuration});
     }
   } catch (const std::runtime_error& error) {
-    std::cerr << error.what() << "\n";
+    Log::getInstance().write(Log::ERROR, "Configuration", error.what());
+
+    return EXIT_FAILURE;
+  } catch (const Json::LogicError& error) {
+    Log::getInstance().write(Log::ERROR, "Configuration", error.what());
 
     return EXIT_FAILURE;
   }

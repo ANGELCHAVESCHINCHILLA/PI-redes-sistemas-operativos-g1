@@ -6,6 +6,7 @@
 
 #include <iostream>
 
+#include "../../../common/Log.hpp"
 #include "../../../configuration.hpp"
 #include "../../../http/HttpServer.hpp"
 
@@ -42,7 +43,7 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       try {
         this->callDatabase(request, response, "POST", "/data/personal_data");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << "\n";
+        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -54,7 +55,7 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       try {
         this->callFileSystem(request, response, "POST", "/auth/user");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << "\n";
+        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -66,7 +67,7 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       try {
         this->callDatabase(request, response, "PUT", "/data/personal_data");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << "\n";
+        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -78,7 +79,7 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       try {
         this->callFileSystem(request, response, "PUT", "/auth/user");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << "\n";
+        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -90,7 +91,7 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       try {
         this->callDatabase(request, response, "DELETE", "/data/personal_data");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << "\n";
+        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 
@@ -102,7 +103,7 @@ bool UserAdminHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       try {
         this->callFileSystem(request, response, "DELETE", "/auth/user");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << "\n";
+        Log::getInstance().write(Log::MessageType::WARNING, "UserAdminHandler", error.what());
         response.setStatusCode(401);
       }
 

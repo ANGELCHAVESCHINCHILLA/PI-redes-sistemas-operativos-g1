@@ -20,7 +20,6 @@ TcpServer::~TcpServer() {
 }
 
 int TcpServer::acceptConnections () {
-  std::cout << "Voy a aceptar conexiones";   // para debug
   int error = SocketError::OK_SOCKET;
 
   while (true/*!error*/) {
@@ -34,10 +33,6 @@ int TcpServer::acceptConnections () {
     std::string response;
 
     if (!error) {
-      // Impresión para debug
-      std::cout << "Logré establecer conexión con "
-        << client_socket.getFileDescriptor() << std::endl;
-
       // Receive data from client
       error = client_socket.receive(request);
     } else {

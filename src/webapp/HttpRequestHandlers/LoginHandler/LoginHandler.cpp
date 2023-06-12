@@ -3,6 +3,7 @@
 #include "LoginHandler.hpp"
 #include <iostream>
 
+#include "../../../common/Log.hpp"
 #include "../../../configuration.hpp"
 #include "../../../net/TcpClient.hpp"
 #include "../../../http/HttpServer.hpp"
@@ -17,7 +18,7 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         // send request to and receive response from data base server
         this->callToFs(request, response, "POST", "application/json");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << ".\n";
+        Log::getInstance().write(Log::MessageType::DEBUG, "LoginHandler", error.what());
         response.setStatusCode(401);
       }
       return true;
@@ -29,7 +30,7 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         // send request to and receive response from data base server
         this->callToFs(request, response, "GET", "text/plain");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << ".\n";
+        Log::getInstance().write(Log::MessageType::DEBUG, "LoginHandler", error.what());
         response.setStatusCode(401);
       }
       return true;
@@ -39,11 +40,11 @@ bool LoginHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getMethod() == "GET") {
     if (request.getTarget().getPath().rfind("/auth/salt") == 0) {
       try {
-        std::cout << "Login Handler se encargará" << std::endl;
+        Log::getInstance().write(Log::MessageType::INFO, "LoginHandler", "Getting salt from the fs.");
         // send request to and receive response from data base server
         this->callToFs(request, response, "GET", "application/json");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << ".\n";
+        Log::getInstance().write(Log::MessageType::DEBUG, "LoginHandler", error.what());
         response.setStatusCode(401);
       }
       return true;

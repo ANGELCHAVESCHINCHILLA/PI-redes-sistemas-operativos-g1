@@ -20,7 +20,8 @@ class ConsultSalaryHandler : public DatabaseRequestHandler {
         // fetch user from request url
         std::string user = request.getTarget().getQuery().find("user")->second;
         // print user
-        std::cout << user << std::endl;
+        Log::getInstance().write(Log::MessageType::DEBUG,
+          "ConsultSalaryHandler", "User: " + user);
         
         // insert user into api to get the salary data
         std::vector<std::vector<std::string>> salaryData = this->databaseApi->consultSalaryByUser(user);
@@ -66,7 +67,6 @@ class ConsultSalaryHandler : public DatabaseRequestHandler {
         response.setStatusCode(statusCode);
         response.getBody() << responseBody.str();
       } catch(const std::bad_alloc& err) {
-        std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;

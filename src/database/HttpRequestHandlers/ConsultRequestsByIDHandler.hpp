@@ -20,8 +20,8 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
         // fetch id from request url
         std::string id = request.getTarget().getQuery().find("id")->second;
         // print id
-        std::cout << id << std::endl;
-        
+        Log::getInstance().write(Log::MessageType::DEBUG, "ConsultRequestsByIDHandler", "ID: " + id);
+
         // insert id into api to get the annotations data
         std::vector<std::string> requestsData = this->databaseApi->getRequestByID(std::stoi(id));
         // pack all data into a json format string
@@ -89,13 +89,11 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
         response.setStatusCode(statusCode);
         response.getBody() << responseBody.str();
       } catch(std::bad_alloc& err) {
-        std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;
         Log::getInstance().write(Log::ERROR, "DatabaseFail", URL_ERROR);
       } catch(const std::invalid_argument& err) {
-        std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
         response.getBody() << PARAM_NOT_INTEGER;

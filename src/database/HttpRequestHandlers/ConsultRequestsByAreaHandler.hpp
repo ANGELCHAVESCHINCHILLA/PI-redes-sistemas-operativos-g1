@@ -20,7 +20,8 @@ class ConsultRequestsByAreaHandler : public DatabaseRequestHandler {
         // fetch area from request url
         std::string area = request.getTarget().getQuery().find("area")->second;
         // print area
-        std::cout << area << std::endl;
+        Log::getInstance().write(Log::MessageType::DEBUG,
+          "ConsultRequestByAreaHandler", "Area: " + area);
         
         // insert area into api to get the salary data
         std::vector<std::vector<std::string>> requestsData = this->databaseApi->getRequestsMadeByArea(area);
@@ -93,7 +94,6 @@ class ConsultRequestsByAreaHandler : public DatabaseRequestHandler {
         response.setStatusCode(statusCode);
         response.getBody() << responseBody.str();
       } catch(std::bad_alloc& err) {
-        std::cerr << err.what() << std::endl;
         // build the response
         response.setStatusCode(400);
         response.getBody() << URL_ERROR;

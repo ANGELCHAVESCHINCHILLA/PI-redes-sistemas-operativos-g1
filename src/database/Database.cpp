@@ -11,15 +11,14 @@ Database::Database(const char* absolute_path) : reference(nullptr) {
   error = sqlite3_open(absolute_path, &this->reference);
 
   if (error) {
-    // TODO: Replace with an exception
-    std::cerr << "Can't open the database.\n";
+    throw std::runtime_error("Can't open the database");
   }
 
   if (!error) {
     error = this->createTables();
 
     if (error) {
-      std::cerr << "Can't create the tables.\n";
+      throw std::runtime_error("Can't create the tables");
     }
   }
 }
@@ -45,7 +44,7 @@ int Database::query(const char* query) {
       sqlite3_exec(this->reference, query, nullptr, nullptr, &error_message);
 
   if (error != SQLITE_OK) {
-    std::cerr << error_message << "\n";
+    Log::getInstance().write(Log::ERROR, "Database", error_message);
 
     sqlite3_free(error_message);
   }
@@ -119,8 +118,7 @@ std::vector<PersonalData> Database::searchPersonalDataByUser(
       sqlite3_prepare(this->reference, query.c_str(), -1, &statement, nullptr);
 
   if (error != SQLITE_OK) {
-    // TODO: Replace with an exception
-    std::cerr << "Can't search PersonalData.\n";
+    throw std::runtime_error("Can't search Personal Data");
   }
 
   if (!error) {
@@ -163,8 +161,7 @@ std::vector<JobData> Database::searchJobDataByUser(const std::string& user) {
       sqlite3_prepare(this->reference, query.c_str(), -1, &statement, nullptr);
 
   if (error != SQLITE_OK) {
-    // TODO: Replace with an exception
-    std::cerr << "Can't search JobData.\n";
+    throw std::runtime_error("Can't search JobData");
   }
 
   if (!error) {

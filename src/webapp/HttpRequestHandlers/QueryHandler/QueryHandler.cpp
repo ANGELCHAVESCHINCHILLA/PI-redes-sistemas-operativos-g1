@@ -3,6 +3,7 @@
 #include "QueryHandler.hpp"
 #include <iostream>
 
+#include "../../../common/Log.hpp"
 #include "../../../configuration.hpp"
 #include "../../../http/HttpServer.hpp"
 
@@ -54,7 +55,7 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         // send request to and receive response from data base server
         return this->callBDToGetQuery(request, response, "GET");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << ".\n";
+        Log::getInstance().write(Log::MessageType::DEBUG, "QueryHandler", error.what());
         response.setStatusCode(401);
       }
     }
@@ -64,7 +65,7 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
       try {
         return this->callBDToGetQuery(request, response, "POST");
       } catch (const std::runtime_error& error) {
-        std::cerr << error.what() << ".\n";
+        Log::getInstance().write(Log::MessageType::DEBUG, "QueryHandler", error.what());
         response.setStatusCode(401);
       }
     }

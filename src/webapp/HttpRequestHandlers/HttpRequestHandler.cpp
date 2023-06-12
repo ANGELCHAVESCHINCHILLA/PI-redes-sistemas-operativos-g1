@@ -1,11 +1,13 @@
 // Copyright © 2023 Ángel Chaves Chinchilla, Camilo Suárez Sandí
 
-#include "./HttpRequestHandler.hpp"
+#include "HttpRequestHandler.hpp"
 
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <regex>
+
+#include "../../common/Log.hpp"
 
 #define DEFAULT_CONTENT_TYPE "application/octet-stream"
 
@@ -19,28 +21,23 @@ std::map<std::string, std::string> HttpRequestHandler::CONTENT_TYPE_MAP = {
     { ".png",        "image/png"},
 };
 
-bool HttpRequestHandler::serveStatic(const HttpRequest& request
-    , HttpResponse& response) {
+bool HttpRequestHandler::serveStatic(const HttpRequest& request,
+  HttpResponse& response) {
 
   bool couldServe = false;
     
   std::string path = request.getTarget().getPath();
 
-  std::cout << "Path generada: "<< path << std::endl;
-
-  bool fileOpen = HttpRequestHandler::readFile(response.getBody()
-                  , "public/" + path);
+  bool fileOpen = HttpRequestHandler::readFile(response.getBody(),
+    "public/" + path);
 
   if (fileOpen) {
     response.setStatusCode(200);
     response.setHeader(
-        "Content-Type", HttpRequestHandler::getContentType(request, path)
-        + "; charset=utf8");
+        "Content-Type", HttpRequestHandler::getContentType(request, path) +
+        "; charset=utf8");
     response.setHeader("Server", "AttoServer v1.0");
     couldServe = response.buildResponse();
-  } else {
-    std::cout << "no logr[e abrir el archiv]" << std::endl;
-    couldServe = false;
   }
 
   return couldServe;
@@ -81,12 +78,11 @@ bool HttpRequestHandler::readFile(std::ostream& output
 
   path /= relative_path;
 
-  std::cout << path << std::endl;
-
   std::ifstream file(path);
 
   if (!file) {
-    std::cout << "No encontr[e el archivo]";
+    Log::getInstance().write(Log::MessageType::DEBUG, "HttpRequestHandler",
+      "Can't read path: " + path.string() + ".");
     return false;
   }
 
