@@ -250,16 +250,22 @@ function reloadDetailsBtns() {
         // build request info for be put in page
         let requestInfo = `Nombre: ${request.user}<br>
         Area: ${request.area}<br><br>
-        Información: ${request.information}<br><br>`
+        Justificación de solicitud: ${request.information}<br><br>`
         // TODO: si la request es de vacaciones, se debe agregar la informacion
         if (request.request_type === "Solicitud de Vacaciones") {
           requestInfo += `Días de vacaciones: ${request.vacation_days}<br>
           Inicio de vacaciones: ${formatDate(request.vacation_start_date)}<br>
           Fin de vacaciones: ${formatDate(request.vacation_end_date)}<br>`;
         }
-        requestInfo += `Observación: ${request.feedback}<br>`;
-        if (request.ID == 1) {
+        if (request.state == 1) {
+          requestInfo += `La solicitud ha sido APROBADA<br>`;
           requestInfo += `ID de la solicitud: ${request.ID}<br>`;
+          requestInfo += `Observación: ${request.feedback}<br>`;
+        } else if(request.state == 0) {
+          requestInfo += `La solicitud se encuentra en REVISIÓN<br>`;
+        } else if(request.state == 2) {
+          requestInfo += `La solicitud ha sido rechazada<br>`;
+          requestInfo += `Observación: ${request.feedback}<br>`;
         }
 
         // The title is the request type, e.g. Constancia Salarial
