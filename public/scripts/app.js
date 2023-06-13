@@ -270,7 +270,21 @@ function reloadDetailsBtns() {
 
         // The title is the request type, e.g. Constancia Salarial
         let requestTitle = `${request.request_type}`;
-        createTextBlankPage(requestTitle, requestInfo);
+        let newPage = createTextBlankPage(requestTitle, requestInfo);
+        if (request.state === 1) {
+          if(request.request_type === "Constancia de Salarios" || request.request_type === "Constancia Laboral") {
+            console.log("Voy a agregar el boton");
+            const button = newPage.document.createElement('button');
+            button.innerText = 'Ver documento';
+            localStorage.setItem('requestID', request.ID);
+            button.addEventListener('click', () => {
+              newPage.window.location.href = 'info_solicitud.html';
+            });
+            // Add the button to the button container
+            const buttonContainer = newPage.document.getElementById('button-container');
+            buttonContainer.appendChild(button);
+          }
+        }
       });
     });
   }
@@ -436,6 +450,7 @@ function createTextBlankPage(title, content) {
             <h2>${title}</h2>
             <button id="regresar" onclick="window.close()"></button>
             <div id="text-container"> ${content} </div>
+            <div id="button-container"></div>
           </div>
         </div>
         <footer style="bottom: 0px">
