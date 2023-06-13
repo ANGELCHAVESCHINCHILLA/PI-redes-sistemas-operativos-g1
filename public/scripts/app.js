@@ -259,8 +259,8 @@ function reloadDetailsBtns() {
         }
         if (request.state == 1) {
           requestInfo += `La solicitud ha sido APROBADA<br>`;
-          requestInfo += `ID de la solicitud: ${request.ID}<br>`;
           requestInfo += `Observación: ${request.feedback}<br>`;
+          requestInfo += `ID de la solicitud: ${request.ID}<br>`;
         } else if(request.state == 0) {
           requestInfo += `La solicitud se encuentra en REVISIÓN<br>`;
         } else if(request.state == 2) {
