@@ -39,7 +39,7 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
           Json::Value annotations;
 
           for (size_t index = 0; index < annotationsData.size(); index++) {
-            annotations["annotation" + std::to_string(index)] = annotationsData[index];
+            annotations["annotation" + std::to_string(index + 1)] = annotationsData[index];
           }
 
           json["annotations"] = annotations;
