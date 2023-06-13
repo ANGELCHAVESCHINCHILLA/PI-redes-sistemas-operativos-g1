@@ -5,7 +5,7 @@ const send_annotation_btn = document.getElementById("send-annotation");
 const cancel_btn = document.getElementById("cancel");
 const back_btn = document.getElementById('regresar');
 const reload_request_btn = document.getElementById("reload-requests");
-const aprove_query_btn = document.getElementById("approve-query-btn");
+const approve_query_btn = document.getElementById("approve-query-btn");
 const deny_btn = document.getElementById("deny-btn");
 
 if (send_annotation_btn) {
@@ -39,9 +39,9 @@ if (back_btn) {
 }
 
 if (reload_request_btn) {
-    reload_request_btn.addEventListener("click",function (event) {
+    reload_request_btn.addEventListener("click", function (event) {
         reloadRequests();
-    } )
+    })
 }
 
 function reloadRequests() {
@@ -58,7 +58,7 @@ async function populateRequestContainer() {
         });
 
         const responseText = await response.text();
-        console.log(responseText);
+        // console.log(responseText);
         const requests = JSON.parse(responseText);
 
 
@@ -82,7 +82,6 @@ async function populateRequestContainer() {
 }
 
 
-
 /**
  * This method make 'Solicitud' div. The idea is call this method when
  * you want craft a 'Solicitud'.
@@ -95,10 +94,10 @@ async function populateRequestContainer() {
  * @returns
  */
 function createSolicitudDiv(nombre, solicitud, estado, id) {
-    console.log(`Request type: ${solicitud}`);
-    console.log(`User: ${nombre}`);
-    console.log(`ID: ${id}`);
-    console.log(`estado: ${estado}`);
+    // console.log(`Request type: ${solicitud}`);
+    // console.log(`User: ${nombre}`);
+    // console.log(`ID: ${id}`);
+    // console.log(`estado: ${estado}`);
     // Create the main div
     const solicitudDiv = document.createElement("div");
     solicitudDiv.classList.add("solicitud");
@@ -163,76 +162,86 @@ function reloadDetailsBtns() {
                 }
 
                 // wait the JSON response
-                const requests = await response.json();
-                console.log(requests);
+                const request = await response.json();
+                // console.log(request);
                 // build request info for be put in page
                 let requestInfo = `Nombre: ${request.user}<br>
-        Area: ${request.area}<br><br>
-        Información: ${request.information}<br><br>`
-                // TODO: si la request es de vacaciones, se debe agregar la informacion
+                    Area: ${request.area}<br><br>
+                    Información: ${request.information}<br><br>`
                 requestInfo += `Observación: ${request.feedback}<br>`;
-
+                if (request.request_type === "Solicitud de Vacaciones") {
+                    requestInfo += `Días de vacaciones: ${request.vacation_days}<br>
+                        Inicio de vacaciones: ${formatDate(request.vacation_start_date)}<br>
+                        Fin de vacaciones: ${formatDate(request.vacation_end_date)}<br>`;
+                }
+                if (request.state == 1) {
+                    requestInfo += `La solicitud ha sido APROBADA<br>`;
+                    requestInfo += `ID de la solicitud: ${request.ID}<br>`;
+                    requestInfo += `Observación: ${request.feedback}<br>`;
+                } else if (request.state == 0) {
+                    requestInfo += `La solicitud se encuentra en REVISIÓN<br>`;
+                } else if (request.state == 2) {
+                    requestInfo += `La solicitud ha sido rechazada<br>`;
+                    requestInfo += `Observación: ${request.feedback}<br>`;
+                }
                 // The title is the request type, e.g. Constancia Salarial
                 let requestTitle = `${request.request_type}`;
-                createAcceptDenyPage(requestTitle, requestInfo,request);
+                const page = createAcceptDenyPage(requestTitle, requestInfo, request);
             });
         });
     }
 }
 
-if (aprove_query_btn) {
-    aprove_query_btn.addEventListener("click", function () {
-        const request_div = document.getElementById("request_id");
-        const request_str = (request_div.getAttribute("request_id"));
-        console.log(request_str);
-        const request = JSON.parse(request_str);
+function approveQuery() {
+    const request_div = document.getElementById("request_id");
+    const request_str = (request_div.getAttribute("REQUEST"));
+    // console.log(request_str);
+    const request = JSON.parse(request_str);
 
-        const fetchInfo = {
-            request_id: request.ID,
-            state: 1,
-            feedback: "Solicitud aprobada por el supervisor del área"
+    const fetchInfo = {
+        request_id: request.ID,
+        state: 0,
+        feedback: "Solicitud aprobada por el supervisor del área" // TODO(future's david): change to dynamic feedback :*
+    }
+    fetch('/checkRequest', {
+        method: 'POST',
+        body: JSON.stringify(fetchInfo)
+    }).then(response => {
+        if (!response.ok) {
+            alert("Ha ocurrido un error en la comunicación. Rediriguiendo a la página de consultas")
+        } else {
+            alert("Solicitud APROBADA correctamente. Rediriguiendo a la página de consultas")
         }
-        fetch('/checkRequest', {
-            method: 'POST',
-            body: JSON.stringify(fetchInfo)
-        }).then(response => {
-            if (!response.ok) {
-                alert("Ha ocurrido un error en la comunicación. Rediriguiendo a la página de consultas")
-            } else {
-                alert("Solicitud APROBADA correctamente. Rediriguiendo a la página de consultas")
-            }
-            window.location.href = PAGE_QUERIES;
-        })
+        window.location.href = PAGE_QUERIES;
     })
 }
-if (deny_btn) {
-    deny_btn.addEventListener("click", function () {
-        const request_div = document.getElementById("request_id");
-        const request_int = parseInt(request_div.getAttribute("request_id"));
-        console.log(request_str);
-        const request = JSON.parse(request_str);
 
-        const fetchInfo = {
-            request_id: request.ID,
-            state: 2,
-            feedback: "Solicitud denegada por el supervisor del área"
+function denyQuery() {
+    const request_div = document.getElementById("request_id");
+    const request_str = request_div.getAttribute("REQUEST");
+    // console.log(request_str);
+    const request = JSON.parse(request_str);
+
+    const fetchInfo = {
+        request_id: request.ID,
+        state: 2,
+        feedback: "Solicitud denegada por el supervisor del área"
+    }
+    fetch('/checkRequest', {
+        method: 'POST',
+        body: JSON.stringify(fetchInfo)
+    }).then(response => {
+        if (!response.ok) {
+            alert("Ha ocurrido un error en la comunicación. Rediriguiendo a la página de consultas")
+        } else {
+            alert(`Solicitud con ID ${request.ID} DENEGADA correctamente. Rediriguiendo a la página de consultas`)
         }
-        fetch('/checkRequest', {
-            method: 'POST',
-            body: JSON.stringify(fetchInfo)
-        }).then(response => {
-            if (!response.ok) {
-                alert("Ha ocurrido un error en la comunicación. Rediriguiendo a la página de consultas")
-            } else {
-                alert("Solicitud DENEGADA correctamente. Rediriguiendo a la página de consultas")
-            }
-            window.location.href = PAGE_QUERIES;
-        })
+        window.location.href = PAGE_QUERIES;
     })
 }
 
 function createAcceptDenyPage(title, content, request) {
-    let newPage = window.open();
+    const newPage = window.open();
     newPage.document.write(`<!DOCTYPE html>
   <html>
     <head>
@@ -255,8 +264,8 @@ function createAcceptDenyPage(title, content, request) {
             <div id="text-container"> ${content} </div>
             <div id="request_id"></div>
             <div class="btn-form-container">
-            <button type="submit" id="approve-query-btn" class="button.index-btn">ACEPTAR</button>
-            <button type="submit" id="deny-btn" class="deny-btn">DENEGAR</button>
+            <button type="submit" id="approve-query-btn" class="button.index-btn" onclick=approveQuery()>ACEPTAR</button>
+            <button type="submit" id="deny-btn" class="deny-btn" onclick=denyQuery()>DENEGAR</button>
             </div>
     </div>
           </div>
@@ -265,13 +274,34 @@ function createAcceptDenyPage(title, content, request) {
           Sistema de Gestión de Recursos Humanos
         </footer>
       </div>
-      <script type="module" src="../../../scripts/supervisory.js"></script>
+      <script src=".././scripts/supervisory.js"></script>
     </body>
   </html>
   `);
-    const request_Div = document.getElementById("request_id");
+    const request_Div = newPage.document.getElementById("request_id");
     request_Div.setAttribute("REQUEST", JSON.stringify(request));
+    return newPage;
 }
 
+function formatDate(numDate) {
+    // numDate = 230523
 
+    // Obtener los componentes de la fecha
+    const year = Math.floor(numDate / 10000);
+    const month = Math.floor((numDate % 10000) / 100);
+    const day = numDate % 100;
+
+    // Crear un objeto Date con los componentes de la fecha
+    const date = new Date(year, month - 1, day);
+
+    // Obtener los componentes de la date formateados con ceros a la izquierda
+    const daysFormat = String(date.getDate()).padStart(2, '0');
+    const montFormat = String(date.getMonth() + 1).padStart(2, '0');
+    const yearFormat = String(date.getFullYear()).slice(2);
+
+    // Crear la cadena de fecha con el formato deseado
+    const dateFormat = `${daysFormat}-${montFormat}-${yearFormat}`;
+
+    return dateFormat
+}
 
