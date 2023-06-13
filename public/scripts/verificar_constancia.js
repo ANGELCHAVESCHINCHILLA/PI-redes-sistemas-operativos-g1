@@ -61,7 +61,9 @@ function formatResponseInfo(responseJSON) {
     userInfo = fetch(url, {
         method: 'GET',
     }).then(async response => {
-        return response.json();
+        let text = await response.text();
+        console.log(text);
+        return JSON.parse(text);
     })
     console.log(userInfo);
     let text =
