@@ -327,6 +327,14 @@ div#request-container {
   align-items: center;
 }
 
+div#log-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10vh;
+  justify-content: center;
+  align-items: center;
+}
+
 #employee-requests h1 {
   /* font-family: 'Public Sans';
   font-style: normal;
@@ -387,6 +395,27 @@ div#request-container {
 
 }
 
+.filter-btn{
+  height: 10vh;
+  background-color: #0078F0;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 5px rgba(0, 120, 240, 0.25);
+  border-radius: 10px;
+  background: rgba(0, 120, 240, 0.1);
+  border: 1px solid #0078F0;
+  margin-bottom: 8vh;
+
+  font-size: 11px;
+  font-family: var(--fuente-principal);
+  font-style: normal;
+  font-weight: 5000;
+  color: #0078F0;
+  text-align: center;
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .submit-btn:hover {
   background-color: #6ea9e7;
   color: #f2f2f2;
@@ -394,6 +423,14 @@ div#request-container {
 }
 
 #reload-requests{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15vh;
+  margin-bottom: 20vh;
+}
+
+#reload-logs{
   display: flex;
   justify-content: center;
   align-items: center;

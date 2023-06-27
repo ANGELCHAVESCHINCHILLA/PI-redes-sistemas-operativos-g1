@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CONSULTA DE LOGS DEL SISTEMA</title>
+    <link rel="stylesheet" href=".././styles/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100&family=Roboto:wght@300&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100&family=Public+Sans:wght@100&family=Roboto:wght@300;400&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body id="logs">
+    <div id="holder">
+        <div id="body">
+            <div class="w3-container w3-light-blue">
+                <h1>Consulta de logs del sistema</h1>
+            </div>
+            <div id="filter-btns">
+                <div class="container" style="width: 50vw; margin-left: auto; margin-right: auto; left: 0; right:0;">
+                    <div class="row" style="margin: 5vh;">
+                        <div class="col-sm filter-btn">
+                            Mostrar todos los logs
+                        </div>
+                        <div class="col-sm filter-btn">
+                            Mostrar logs de base de datos
+                        </div>
+                        <div class="col-sm filter-btn">
+                            Mostrar logs de filesystem
+                        </div>
+                        <div class="col-sm filter-btn">
+                            Mostrar logs de webapp
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="back-container"><button id="regresar"></button></div>
+            <div id="logs-container" style="padding-left: 60px;">
+                <p class="bd-log-text"> <br> [INFO] [2023-06-19 10:15:23] El servidor se ha iniciado correctamente y
+                    está
+                    listo para recibir solicitudes. </p>
+                <p class="bd-log-text"> <br> [INFO] [2023-06-19 10:15:23] El servidor ha recibido una petición de
+                    /getUserData de la ip '192.168.100.1'. </p>
+                <p class="fs-log-text"><br> [INFO] [2023-06-19 10:15:23] El servidor se ha iniciado correctamente y está
+                    listo
+                    para recibir solicitudes.</p>
+                <p class="fs-log-text"> <br> [INFO] [2023-06-19 13:15:23] El servidor ha recibido una petición de
+                    /adduser de la ip
+                    '192.168.100.1'.</p>
+                <p class="webapp-log-text"> <br> [WARNING] [2023-06-19 13:05:27] Se ha detectado un intento de acceso no
+                    autorizado desde la
+                    dirección IP 192.168.1.200 en la ruta "/admin". Se ha enviado una respuesta de error 403 al cliente.
+                </p>
+                <p class="bd-log-text"> <br> [INFO] [2023-06-19 15:15:23] El servidor ha recibido una petición de
+                    /getUserData de la ip '192.168.100.1'. </p>
+                <p class="bd-log-text"> <br> [INFO] [2023-06-19 20:16:23] El servidor ha recibido una petición de
+                    /ConsultAnnotationsByUser de la ip '192.168.100.1'.</p>
+                <p class="bd-log-text"><br> [INFO] [2023-06-19 21:20:00] El servidor ha recibido una petición de
+                    /ConsultSalaryByUser de la ip '192.168.100.1'.</p>
+                <p class="webapp-log-text"> <br> [INFO] [2023-06-19 22:17:58] El servidor ha recibido una petición de
+                    /ConsultSalaryByUser de la
+                    ip '192.168.100.1'.</p>
+                </p>
+                <p class="fs-log-text"> <br> [INFO] [2023-06-19 22:15:23] El servidor ha recibido una petición de
+                    /auth/salt?username='pedro' de la ip '192.168.100.1'.</p>
+                <p class="fs-log-text"> <br> [ERROR] [2023-06-19 22:21:37] La ruta "/admin" no fue reconocida.</p>
+
+                <p class="webapp-log-text"> [INFO] [2023-06-19 22:15:23] El servidor web se ha iniciado correctamente y
+                    está listo para recibir solicitudes.</p>
+                <p class="webapp-log-text"> <br>[INFO] [2023-06-19 22:12:45] Se ha recibido una solicitud POST en la
+                    ruta "/login".</p>
+
+
+            </div>
+            <div id="reload-logs"><button class="submit-btn">Recargar
+                    Logs</button>
+            </div>
+        </div>
+
+
+        <footer style="bottom: 0px;">
+            Sistema de Gestión de Recursos Humanos
+        </footer>
+    </div>
+    <script type="module" src=".././scripts/buttonlistener.js"></script>
+    <!-- <script type="module" src=".././scripts/show_request.js"></script> -->
+</body>
+
+</html>

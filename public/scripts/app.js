@@ -1,5 +1,5 @@
-import {NAL} from "../scripts/libs/NumeroALetras.js";
-import {FormBuilder} from "../scripts/formbuilder.js";
+import { NAL } from "../scripts/libs/NumeroALetras.js";
+import { FormBuilder } from "../scripts/formbuilder.js";
 // const NumeroALetras = require('./libs/NumeroALetras');
 // back button
 const backbtn = document.querySelector("back-btn");
@@ -11,7 +11,7 @@ const PAGE_PRINCIPAL = "index.html";
 const PAGE_LOGIN = "login.html";
 // requests page
 const PAGE_REQUESTS = "solicitudes.html";
-const DEFAUL_PAGE = 'http://127.0.0.1:8001/';
+const DEFAUL_PAGE = "http://127.0.0.1:8001/";
 const ADD_ANNOTATION = "supervisory/add_annotation_html";
 
 // common html head used. Used for quick html pages creation
@@ -30,9 +30,9 @@ const HTML_HEAD = `<title>Información de solicitud</title>
                       <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">`;
 
 if (backbtn) {
-    backbtn.addEventListener("click", function (event) {
-        window.history.back();
-    });
+  backbtn.addEventListener("click", function (event) {
+    window.history.back();
+  });
 }
 
 /**
@@ -52,14 +52,14 @@ function formatDate(numDate) {
   const date = new Date(year, month - 1, day);
 
   // Obtener los componentes de la date formateados con ceros a la izquierda
-  const daysFormat = String(date.getDate()).padStart(2, '0');
-  const montFormat = String(date.getMonth() + 1).padStart(2, '0');
+  const daysFormat = String(date.getDate()).padStart(2, "0");
+  const montFormat = String(date.getMonth() + 1).padStart(2, "0");
   const yearFormat = String(date.getFullYear()).slice(2);
 
   // Crear la cadena de fecha con el formato deseado
   const dateFormat = `${daysFormat}-${montFormat}-${yearFormat}`;
 
-  return dateFormat
+  return dateFormat;
 }
 
 /**
@@ -112,14 +112,14 @@ function reloadRequests() {
 */
 async function populateRequestContainer() {
   const status = ["PENDIENTE", "APROBADO", "RECHAZADO"];
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
 
   // send request to server
   const response = await fetch(`/consultRequestsByUser?user=${username}`, {
-    method: 'GET'
+    method: "GET",
   });
 
-  if(!response.ok) {
+  if (!response.ok) {
     alert("No tiene solicitudes por revisar");
     window.location.href = PAGE_PRINCIPAL;
   }
@@ -139,8 +139,12 @@ async function populateRequestContainer() {
       const request = requests[requestKey];
       // Populate with Solicitudes' Div
       requestContainer.appendChild(
-        createSolicitudDiv(request.user, request.request_type
-          , status[request.state], request.ID)
+        createSolicitudDiv(
+          request.user,
+          request.request_type,
+          status[request.state],
+          request.ID
+        )
       );
     }
   }
@@ -188,11 +192,11 @@ function createSolicitudDiv(nombre, solicitud, estado, id) {
   const estadoElement = document.createElement("p");
   estadoElement.textContent = `Estado: ${estado}`;
   if (estado === "APROBADO") {
-      estadoElement.classList.add("aprobado");
+    estadoElement.classList.add("aprobado");
   } else if (estado === "REVISION") {
-      estadoElement.classList.add("revision");
+    estadoElement.classList.add("revision");
   } else if (estado === "RECHAZADO") {
-      estadoElement.classList.add("rechazado");
+    estadoElement.classList.add("rechazado");
   }
   solicitudBody.appendChild(estadoElement);
 
@@ -206,7 +210,6 @@ function createSolicitudDiv(nombre, solicitud, estado, id) {
 
   return solicitudDiv;
 }
-
 
 /**
  * Add listener event to new details buttons.
@@ -238,10 +241,10 @@ function reloadDetailsBtns() {
 
         // send to server to get the request by ID
         const response = await fetch(`/consultRequestsByID?id=${requestId}`, {
-          method: 'GET'
+          method: "GET",
         });
-      
-        if(!response.ok) {
+
+        if (!response.ok) {
           window.location.href = PAGE_PRINCIPAL;
         }
 
@@ -250,7 +253,7 @@ function reloadDetailsBtns() {
         // build request info for be put in page
         let requestInfo = `Nombre: ${request.user}<br>
         Area: ${request.area}<br><br>
-        Justificación de solicitud: ${request.information}<br><br>`
+        Justificación de solicitud: ${request.information}<br><br>`;
         // TODO: si la request es de vacaciones, se debe agregar la informacion
         if (request.request_type === "Solicitud de Vacaciones") {
           requestInfo += `Días de vacaciones: ${request.vacation_days}<br>
@@ -261,9 +264,9 @@ function reloadDetailsBtns() {
           requestInfo += `La solicitud ha sido APROBADA<br>`;
           requestInfo += `Observación: ${request.feedback}<br>`;
           requestInfo += `ID de la solicitud: ${request.ID}<br>`;
-        } else if(request.state == 0) {
+        } else if (request.state == 0) {
           requestInfo += `La solicitud se encuentra en REVISIÓN<br>`;
-        } else if(request.state == 2) {
+        } else if (request.state == 2) {
           requestInfo += `La solicitud ha sido rechazada<br>`;
           requestInfo += `Observación: ${request.feedback}<br>`;
         }
@@ -272,16 +275,20 @@ function reloadDetailsBtns() {
         let requestTitle = `${request.request_type}`;
         let newPage = createTextBlankPage(requestTitle, requestInfo);
         if (request.state === 1) {
-          if(request.request_type === "Constancia de Salarios" || request.request_type === "Constancia Laboral") {
+          if (
+            request.request_type === "Constancia de Salarios" ||
+            request.request_type === "Constancia Laboral"
+          ) {
             console.log("Voy a agregar el boton");
-            const button = newPage.document.createElement('button');
-            button.innerText = 'Ver documento';
-            localStorage.setItem('requestID', request.ID);
-            button.addEventListener('click', () => {
-              newPage.window.location.href = 'info_solicitud.html';
+            const button = newPage.document.createElement("button");
+            button.innerText = "Ver documento";
+            localStorage.setItem("requestID", request.ID);
+            button.addEventListener("click", () => {
+              newPage.window.location.href = "info_solicitud.html";
             });
             // Add the button to the button container
-            const buttonContainer = newPage.document.getElementById('button-container');
+            const buttonContainer =
+              newPage.document.getElementById("button-container");
             buttonContainer.appendChild(button);
           }
         }
@@ -313,19 +320,19 @@ const json = {
  * Show the result of consult salary base
  */
 async function showBaseSalary() {
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
 
   // Send request to server
   const response = await fetch(`/consultSalaryByUser?user=${username}`, {
-    method: 'GET'
+    method: "GET",
   });
 
-  if(!response.ok) {
+  if (!response.ok) {
     window.location.href = PAGE_PRINCIPAL;
   }
 
   // wait the JSON response
-  const salaryInfo = await response.json()
+  const salaryInfo = await response.json();
 
   // Construct page
   const title = "Información salarial";
@@ -343,9 +350,17 @@ async function showBaseSalary() {
       const salaryStrNet = numeroALetras.convertir(salary.net_salary);
 
       content += `Salario ${salaryCount}<br>
-      Salario base: ${salary.gross_salary.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} (${salaryStrGross})<br>
-      Salario neto: ${salary.net_salary.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} (${salaryStrNet})<br>
-      Fecha de inicio del salario: ${formatDate(salary.salary_start_date)} <br><br>`;
+      Salario base: ${salary.gross_salary.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      })} (${salaryStrGross})<br>
+      Salario neto: ${salary.net_salary.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      })} (${salaryStrNet})<br>
+      Fecha de inicio del salario: ${formatDate(
+        salary.salary_start_date
+      )} <br><br>`;
       salaryCount++;
     }
   }
@@ -357,14 +372,17 @@ async function showBaseSalary() {
  * Show my vacations balance
  */
 async function showVacationsBalance() {
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
 
   // sent request to server
-  const response = await fetch(`/consultVacationBalanceByUser?user=${username}`, {
-    method: 'GET'
-  });
+  const response = await fetch(
+    `/consultVacationBalanceByUser?user=${username}`,
+    {
+      method: "GET",
+    }
+  );
 
-  if(!response.ok) {
+  if (!response.ok) {
     window.location.href = PAGE_PRINCIPAL;
   }
   // wait the JSON response
@@ -394,14 +412,14 @@ async function showVacationsBalance() {
  * Show my annotations to expedient
  */
 async function showExpedientAnotations() {
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
 
   // sent request to server
   const response = await fetch(`/consultAnnotationsByUser?user=${username}`, {
-    method: 'GET'
+    method: "GET",
   });
 
-  if(!response.ok) {
+  if (!response.ok) {
     alert("No tiene anotaciones al expediente");
     window.location.href = PAGE_PRINCIPAL;
   }
@@ -433,8 +451,8 @@ async function showExpedientAnotations() {
  * @param {*} content content to be showed in div 'text-container'
  */
 function createTextBlankPage(title, content) {
-    let newPage = window.open();
-    newPage.document.write(`<!DOCTYPE html>
+  let newPage = window.open();
+  newPage.document.write(`<!DOCTYPE html>
   <html>
     <head>
       ${HTML_HEAD}
@@ -461,7 +479,7 @@ function createTextBlankPage(title, content) {
 
   </html>
 `);
-    return newPage;
+  return newPage;
 }
 
 /**
@@ -470,8 +488,8 @@ function createTextBlankPage(title, content) {
  * @param {*} form content to be showed in div 'text-container'
  */
 function createFormPage(title, form) {
-    const newPage = window.open();
-    newPage.document.write(`<!DOCTYPE html>
+  const newPage = window.open();
+  newPage.document.write(`<!DOCTYPE html>
   <html>
     <head>
       ${HTML_HEAD}
@@ -499,10 +517,12 @@ function createFormPage(title, form) {
 
   </html>
 `);
-    const textContainer = newPage.document.getElementById("form-container");
-    textContainer.appendChild(form);
-    newPage.document.getElementById("enviar").addEventListener("click", makeRequest.bind(null, form, title, newPage));
-    return newPage;
+  const textContainer = newPage.document.getElementById("form-container");
+  textContainer.appendChild(form);
+  newPage.document
+    .getElementById("enviar")
+    .addEventListener("click", makeRequest.bind(null, form, title, newPage));
+  return newPage;
 }
 
 function renderRequestSuccess(page) {
@@ -548,29 +568,40 @@ function renderRequestSuccess(page) {
 */
 
 async function makeRequest(form, reqType, page) {
-  let formJson = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {});
+  let formJson = Object.values(form).reduce((obj, field) => {
+    obj[field.name] = field.value;
+    return obj;
+  }, {});
   console.log(formJson);
-  
+
   if (!formJson.information) {
     page.close();
-    alert("Error al enviar solicitud: Debe llenar el campo de motivo de solicitud");
+    alert(
+      "Error al enviar solicitud: Debe llenar el campo de motivo de solicitud"
+    );
     return;
   }
 
   if (reqType === "Solicitud de Vacaciones") {
     if (!formJson.vacationDays) {
       page.close();
-      alert("Error al enviar solicitud: Debe llenar el campo de cantidad de dias");
+      alert(
+        "Error al enviar solicitud: Debe llenar el campo de cantidad de dias"
+      );
       return;
     }
     if (!formJson.vacationStartDate) {
       page.close();
-      alert("Error al enviar solicitud: Debe llenar el campo de fecha de inicio de vacaciones");
+      alert(
+        "Error al enviar solicitud: Debe llenar el campo de fecha de inicio de vacaciones"
+      );
       return;
     }
     if (!formJson.vacationEndDate) {
       page.close();
-      alert("Error al enviar solicitud: Debe llenar el campo de fecha de final de vacaciones");
+      alert(
+        "Error al enviar solicitud: Debe llenar el campo de fecha de final de vacaciones"
+      );
       return;
     }
   }
@@ -581,40 +612,46 @@ async function makeRequest(form, reqType, page) {
     information: formJson.information,
     // TODO: get area from local storage, this below is just a dummy value
     area: "San Jose",
-    vacation_days: formJson.vacationDays ? +formJson.vacationDays.replaceAll('-', '') : 0,
-    vacation_start_date: formJson.vacationStartDate ? +formJson.vacationStartDate.replaceAll('-', '') : 0,
-    vacation_end_date: formJson.vacationEndDate ? +formJson.vacationEndDate.replaceAll('-', '') : 0
-  }
+    vacation_days: formJson.vacationDays
+      ? +formJson.vacationDays.replaceAll("-", "")
+      : 0,
+    vacation_start_date: formJson.vacationStartDate
+      ? +formJson.vacationStartDate.replaceAll("-", "")
+      : 0,
+    vacation_end_date: formJson.vacationEndDate
+      ? +formJson.vacationEndDate.replaceAll("-", "")
+      : 0,
+  };
   console.log(body);
 
-  fetch('makeRequest', {
-    method: 'POST',
+  fetch("makeRequest", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   })
-  .then(function (response) {
-    console.log(response.status);
-    return response.status;
-  })
-  .then(function (status) {
-    if (status === 200) {
-      renderRequestSuccess(page);
-    }
-    if (status === 401) {
-      window.location.href = DEFAUL_PAGE;
-    }
-  })
-  .catch(function (error) {
+    .then(function (response) {
+      console.log(response.status);
+      return response.status;
+    })
+    .then(function (status) {
+      if (status === 200) {
+        renderRequestSuccess(page);
+      }
+      if (status === 401) {
+        window.location.href = DEFAUL_PAGE;
+      }
+    })
+    .catch(function (error) {
       // Manejar el error en caso de que la solicitud falle
-      alert('Error al enviar la solicitud:', error);
-  });
+      alert("Error al enviar la solicitud:", error);
+    });
 }
 
 function createAcceptDenyPage(title, content) {
-    let newPage = window.open();
-    newPage.document.write(`<!DOCTYPE html>
+  let newPage = window.open();
+  newPage.document.write(`<!DOCTYPE html>
   <html>
     <head>
       ${HTML_HEAD}
@@ -644,83 +681,83 @@ function createAcceptDenyPage(title, content) {
 }
 
 function createUserRegistrationPage() {
-    let title = "Registrar Usuario";
-    let form = new FormBuilder()
-        .addTextField("nomnre", "Nombre:", true)
-        .addTextField("apellido-1", "Primer Apellido:", true)
-        .addTextField("apellido-2", "Segundo Apellido:", true)
-        .addTextField("cedula", "Cédula:", true)
-        .addTextField("numero", "Número telefónico:", true)
-        .addTextField("residencia", "Residencia:", true)
-        .addTextField("iban", "Número IBAN:", true)
-        .addDateField("fecha-nacimiento", "Fecha de Nacimiento:")
-        .build();
+  let title = "Registrar Usuario";
+  let form = new FormBuilder()
+    .addTextField("nomnre", "Nombre:", true)
+    .addTextField("apellido-1", "Primer Apellido:", true)
+    .addTextField("apellido-2", "Segundo Apellido:", true)
+    .addTextField("cedula", "Cédula:", true)
+    .addTextField("numero", "Número telefónico:", true)
+    .addTextField("residencia", "Residencia:", true)
+    .addTextField("iban", "Número IBAN:", true)
+    .addDateField("fecha-nacimiento", "Fecha de Nacimiento:")
+    .build();
 
-    return createFormPage(title, form);
+  return createFormPage(title, form);
 }
 
 function openSalaryConstanceForm() {
-    let title = "Constancia de Salarios";
-    let form = new FormBuilder();
-    let user = localStorage.getItem('username');
-    form
-        .addReadOnlyText("user", "Usuario:", user)
-        .addTextField("information", "Motivo de la solicitud:", true)
-    createFormPage(title, form.build());
+  let title = "Constancia de Salarios";
+  let form = new FormBuilder();
+  let user = localStorage.getItem("username");
+  form
+    .addReadOnlyText("user", "Usuario:", user)
+    .addTextField("information", "Motivo de la solicitud:", true);
+  createFormPage(title, form.build());
 }
 
 function openEmploymentCertificateForm() {
-    let title = "Constancia laboral";
-    let form = new FormBuilder();
-    let user = localStorage.getItem('username');
-    form
-        .addReadOnlyText("user", "Usuario:", user)
-        .addTextField("information", "Motivo de la solicitud:", true);
-    createFormPage(title, form.build());
+  let title = "Constancia laboral";
+  let form = new FormBuilder();
+  let user = localStorage.getItem("username");
+  form
+    .addReadOnlyText("user", "Usuario:", user)
+    .addTextField("information", "Motivo de la solicitud:", true);
+  createFormPage(title, form.build());
 }
 
 function openVacationsForm() {
-    let title = "Solicitud de Vacaciones";
-    let form = new FormBuilder();
-    let user = localStorage.getItem('username');
-    form
-        .addReadOnlyText("user", "Usuario:", user)
-        .addTextField("information", "Motivo de la solicitud:", true)
-        .addNumericField("vacationDays", "Especifique la cantidad de días", true)
-        .addDateField("vacationStartDate", "Fecha de inicio de las vacaciones")
-        .addDateField("vacationEndDate", "Fecha final de las vacaciones");
-    createFormPage(title, form.build());
+  let title = "Solicitud de Vacaciones";
+  let form = new FormBuilder();
+  let user = localStorage.getItem("username");
+  form
+    .addReadOnlyText("user", "Usuario:", user)
+    .addTextField("information", "Motivo de la solicitud:", true)
+    .addNumericField("vacationDays", "Especifique la cantidad de días", true)
+    .addDateField("vacationStartDate", "Fecha de inicio de las vacaciones")
+    .addDateField("vacationEndDate", "Fecha final de las vacaciones");
+  createFormPage(title, form.build());
 }
 
 function openPaymentProofForm() {
-    let title = "Constancia de Pago";
-    let form = new FormBuilder();
-    let user = localStorage.getItem('username');
-    form
-        .addReadOnlyText("user", "Usuario:", user)
-        .addTextField("information", "Motivo de la solicitud:", true);
-    createFormPage(title, form.build());
+  let title = "Constancia de Pago";
+  let form = new FormBuilder();
+  let user = localStorage.getItem("username");
+  form
+    .addReadOnlyText("user", "Usuario:", user)
+    .addTextField("information", "Motivo de la solicitud:", true);
+  createFormPage(title, form.build());
 }
 
 function openRequestForm(id) {
-    // TODO: Check if the employee make another request in the past 24 hours
-    // if true, decline the access to the form
-    switch (id) {
-        case "salarial-btn":
-            openSalaryConstanceForm();
-            break;
-        case "laboral-btn":
-            openEmploymentCertificateForm();
-            break;
-        case "pago-btn":
-            openPaymentProofForm();
-            break;
-        case "vacaciones-btn":
-            openVacationsForm();
-            break;
-        default:
-            console.error(`Error: the button with id ${id} couldn't be handled`);
-    }
+  // TODO: Check if the employee make another request in the past 24 hours
+  // if true, decline the access to the form
+  switch (id) {
+    case "salarial-btn":
+      openSalaryConstanceForm();
+      break;
+    case "laboral-btn":
+      openEmploymentCertificateForm();
+      break;
+    case "pago-btn":
+      openPaymentProofForm();
+      break;
+    case "vacaciones-btn":
+      openVacationsForm();
+      break;
+    default:
+      console.error(`Error: the button with id ${id} couldn't be handled`);
+  }
 }
 
 /**
@@ -731,111 +768,139 @@ function openRequestForm(id) {
  * Back to page
  */
 function toBackPage() {
-    window.history.back();
+  window.history.back();
 }
 
 function cancelar() {
-    /** Nothing for now ;) */
+  /** Nothing for now ;) */
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkLogin();
-    if (window.location.pathname == '/index.html') {
-        const permissions = localStorage.getItem('permissions');
-        if (permissions) {
-            populateIndexButtons(parseInt(permissions));
-        } else {
-            window.location.href = DEFAUL_PAGE;
-        }
+document.addEventListener("DOMContentLoaded", () => {
+  checkLogin();
+  if (window.location.pathname == "/index.html") {
+    const permissions = localStorage.getItem("permissions");
+    if (permissions) {
+      populateIndexButtons(parseInt(permissions));
+    } else {
+      window.location.href = DEFAUL_PAGE;
     }
+  }
 
-    console.log(window.location.pathname);
+  console.log(window.location.pathname);
 });
 
 function checkLogin() {
-    var data = localStorage.getItem('logged');
+  var data = localStorage.getItem("logged");
 
-    fetch('/validate', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({data: data})
+  fetch("/validate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ data: data }),
+  })
+    .then(function (response) {
+      return response.status;
     })
-        .then(function (response) {
-            return response.status;
-        })
-        .then(function (status) {
-            if (status === 401) {
-                window.location.href = DEFAUL_PAGE;
-            }
-        })
-        .catch(function (error) {
-            // Manejar el error en caso de que la solicitud falle
-            console.error('Error al enviar la solicitud:', error);
-        });
+    .then(function (status) {
+      if (status === 401) {
+        window.location.href = DEFAUL_PAGE;
+      }
+    })
+    .catch(function (error) {
+      // Manejar el error en caso de que la solicitud falle
+      console.error("Error al enviar la solicitud:", error);
+    });
 }
 
-
 function populateIndexButtons(permissions) {
-    if (permissions === 2) {
-        const divContainer = document.getElementById("supervisory-btns")
-        addSupervisorButtons(divContainer);
-    }
-
-    if (permissions === 4) {
-        addAdministratorButtons();
-    }
+  switch (permissions) {
+    case 2:
+      const divContainer = document.getElementById("supervisory-btns");
+      addSupervisorButtons(divContainer);
+      break;
+    case 4:
+      addAdministratorButtons();
+      break;
+    case 5:
+      addDebuggerButtons();
+      break;
+  }
 }
 
 function addSupervisorButtons(divcontainer) {
-    const solicitudesBtn = document.createElement('button');
-    const anotacionesBtn = document.createElement('button');
-    const header = document.createElement('h2');
+  const solicitudesBtn = document.createElement("button");
+  const anotacionesBtn = document.createElement("button");
+  const header = document.createElement("h2");
 
-    header.textContent = "Opciones de Supervisor";
-    solicitudesBtn.textContent = "REVISAR SOLICITUDES";
-    anotacionesBtn.textContent = "CREAR ANOTACIÓN";
+  header.textContent = "Opciones de Supervisor";
+  solicitudesBtn.textContent = "REVISAR SOLICITUDES";
+  anotacionesBtn.textContent = "CREAR ANOTACIÓN";
 
-    solicitudesBtn.type = 'submit';
-    anotacionesBtn.type = 'submit';
+  solicitudesBtn.type = "submit";
+  anotacionesBtn.type = "submit";
 
-    solicitudesBtn.classList.add("index-btn");
-    anotacionesBtn.classList.add("index-btn");
+  solicitudesBtn.classList.add("index-btn");
+  anotacionesBtn.classList.add("index-btn");
 
-    solicitudesBtn.id = 'supervisor-solicitudes';
-    anotacionesBtn.id = 'supervisor-anotaciones';
+  solicitudesBtn.id = "supervisor-solicitudes";
+  anotacionesBtn.id = "supervisor-anotaciones";
 
-    solicitudesBtn.addEventListener("click", openSupervisoryQueriesPage);
-    anotacionesBtn.addEventListener("click", openMakeAnnotationsPage);
+  solicitudesBtn.addEventListener("click", openSupervisoryQueriesPage);
+  anotacionesBtn.addEventListener("click", openMakeAnnotationsPage);
 
-    divcontainer.appendChild(header);
-    divcontainer.appendChild(solicitudesBtn);
-    divcontainer.appendChild(anotacionesBtn);
+  divcontainer.appendChild(header);
+  divcontainer.appendChild(solicitudesBtn);
+  divcontainer.appendChild(anotacionesBtn);
 }
 
 function addAdministratorButtons() {
-    const divContainer = document.querySelector("#admin-btns");
+  const divContainer = document.querySelector("#admin-btns");
 
-    divContainer.style.display = 'block';
+  divContainer.style.display = "block";
+}
+
+function addDebuggerButtons() {
+  const divContainer = document.querySelector("#debugger-btns");
+  const header = document.createElement("h2");
+  divContainer.style.display = "block";
+
+  const logsBtn = document.createElement("button");
+
+  header.textContent = "Opciones de Debugger";
+  logsBtn.textContent = "Ver registros de auditoría";
+
+  logsBtn.type = "submit";
+
+  logsBtn.classList.add("index-btn");
+
+  logsBtn.id = "debugger-btn";
+
+  logsBtn.addEventListener("click", openDebuggerPage);
+
+  divContainer.appendChild(header);
+  divContainer.appendChild(logsBtn);
+}
+
+function openDebuggerPage() {
+  window.location.href = "/view_debugger_page";
 }
 
 function openMakeAnnotationsPage() {
-    window.location.href = "/add_annotation";
+  window.location.href = "/add_annotation";
 }
 
 function openSupervisoryQueriesPage() {
-    window.location.href = "/supervisory_queries";
+  window.location.href = "/supervisory_queries";
 }
 
-
 export {
-    openSolicitudesPage,
-    showExpedientAnotations,
-    showVacationsBalance,
-    showBaseSalary,
-    openRequestForm,
-    reloadRequests,
-    toBackPage,
-    openMakeAnnotationsPage,
+  openSolicitudesPage,
+  showExpedientAnotations,
+  showVacationsBalance,
+  showBaseSalary,
+  openRequestForm,
+  reloadRequests,
+  toBackPage,
+  openMakeAnnotationsPage,
 };
