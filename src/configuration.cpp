@@ -51,6 +51,9 @@ int Configuration::configure(const std::string& configuration_path) {
 
       this->servers.insert({key, server_configuration});
     }
+
+    this->certificate_file_path = root["certificate_file_path"].asString();
+    this->private_key_file_path = root["private_key_file_path"].asString();
   } catch (const std::runtime_error& error) {
     Log::getInstance().write(Log::ERROR, "Configuration", error.what());
 

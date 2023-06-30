@@ -19,6 +19,9 @@ class Configuration {
   std::set<std::string> apps;
   std::map<std::string, ServerConfiguration> servers;
 
+  std::string certificate_file_path;
+  std::string private_key_file_path;
+
  private:
   // Constructor
   Configuration();

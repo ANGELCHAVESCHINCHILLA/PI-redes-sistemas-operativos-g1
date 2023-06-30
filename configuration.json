@@ -1,6 +1,6 @@
 {
     "apps": [
-        "db"
+        "web"
     ],
     "port": 8080,
     "servers": {
@@ -20,5 +20,7 @@
             "address": "127.0.0.1",
             "port": 8000
         }
-    }
+    },
+    "certificate_file_path": "/home/usr/PI-redes-sistemas-operativos-g1/server.crt",
+    "private_key_file_path": "/home/usr/PI-redes-sistemas-operativos-g1/server.key"
 }
