@@ -25,16 +25,16 @@ class ConsultSalaryHandler : public DatabaseRequestHandler {
         
         // insert user into api to get the salary data
         std::vector<std::vector<std::string>> salaryData = this->databaseApi->consultSalaryByUser(user);
-        // insert user into api to get the name and company name
-        std::vector<std::string> nameAndCompany = this->databaseApi->consultNameAndEnterpriseByUser(user);
+        // insert user into api to get the name and area
+        std::vector<std::string> nameAndArea = this->databaseApi->consultNameAndAreaByUser(user);
         // pack all data into a json format string
 
         int statusCode;
         std::stringstream responseBody;
-        if (!salaryData.empty() && !nameAndCompany.empty()) {
+        if (!salaryData.empty() && !nameAndArea.empty()) {
           std::stringstream salaryAsJSON;
-          salaryAsJSON << "{ \"name\": \"" << nameAndCompany[0] << "\", \"company_name\": \""
-          << nameAndCompany[1] << "\", \"salaries\": {";
+          salaryAsJSON << "{ \"name\": \"" << nameAndArea[0] << "\", \"area\": \""
+          << nameAndArea[1] << "\", \"salaries\": {";
           for (int i = 0; i < salaryData.size(); ++i) {
             salaryAsJSON << "\"salary" << (i + 1) << "\": { ";
             for (int j = 0; j < salaryData[i].size(); ++j) {

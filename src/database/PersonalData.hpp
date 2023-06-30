@@ -17,7 +17,7 @@ class PersonalData {
   std::string user;
   std::string employee_name;
   std::string job_name;
-  std::string company_name;
+  std::string area;
   std::string email;
   int phone_number;
 
@@ -45,7 +45,7 @@ class PersonalData {
   const std::string& getUser() const;
   const std::string& getEmployeeName() const;
   const std::string& getJobName() const;
-  const std::string& getCompanyName() const;
+  const std::string& getArea() const;
   const std::string& getEmail() const;
   int getPhoneNumber() const;
 
@@ -67,7 +67,7 @@ class PersonalData::Builder {
   Builder& setUser(const std::string& value);
   Builder& setEmployeeName(const std::string& value);
   Builder& setJobName(const std::string& value);
-  Builder& setCompanyName(const std::string& value);
+  Builder& setArea(const std::string& value);
   Builder& setEmail(const std::string& value);
   Builder& setPhoneNumber(int value);
 

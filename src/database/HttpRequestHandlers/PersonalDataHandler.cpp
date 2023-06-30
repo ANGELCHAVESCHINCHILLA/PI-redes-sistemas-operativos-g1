@@ -62,7 +62,7 @@ bool PersonalDataHandler::getData(
     for (auto& personal_data : personal_data_list) {
       output["employee_name"] = personal_data.getEmployeeName();
       output["job_name"] = personal_data.getJobName();
-      output["company_name"] = personal_data.getCompanyName();
+      output["area"] = personal_data.getArea();
       output["email"] = personal_data.getEmail();
       output["phone_number"] = personal_data.getPhoneNumber();
       // TODO: We know about this break, it should be removed
@@ -101,7 +101,7 @@ bool PersonalDataHandler::addData(
     std::string user = input["user"].asString();
     std::string employee_name = input["employee_name"].asString();
     std::string job_name = input["job_name"].asString();
-    std::string company_name = input["company_name"].asString();
+    std::string area = input["area"].asString();
     std::string email = input["email"].asString();
     int phone_number = input["phone_number"].asInt();
 
@@ -109,7 +109,7 @@ bool PersonalDataHandler::addData(
       .setUser(user)
       .setEmployeeName(employee_name)
       .setJobName(job_name)
-      .setCompanyName(company_name)
+      .setArea(area)
       .setEmail(email)
       .setPhoneNumber(phone_number)
       .build();
@@ -179,7 +179,7 @@ bool PersonalDataHandler::editData(
     std::string user = input["user"].asString();
     std::string employee_name = input["employee_name"].asString();
     std::string job_name = input["job_name"].asString();
-    std::string company_name = input["company_name"].asString();
+    std::string area = input["area"].asString();
     std::string email = input["email"].asString();
     int phone_number = input["phone_number"].asInt();
 
@@ -187,7 +187,7 @@ bool PersonalDataHandler::editData(
       .setUser(user)
       .setEmployeeName(employee_name)
       .setJobName(job_name)
-      .setCompanyName(company_name)
+      .setArea(area)
       .setEmail(email)
       .setPhoneNumber(phone_number)
       .build();

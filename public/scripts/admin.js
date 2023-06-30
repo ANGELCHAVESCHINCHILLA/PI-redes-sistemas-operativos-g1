@@ -1,6 +1,6 @@
 //
 
-const COMPANY_NAME = "San Jose";
+const AREA = "San Jose";
 
 const PEPPER = "Universidad de Costa Rica";
 
@@ -81,7 +81,7 @@ if (add_user_send_button !== null) {
             user: user_id.value,
             employee_name: user_name.value,
             job_name: user_job_name.value,
-            company_name: COMPANY_NAME,
+            area: AREA,
             email: user_email.value,
             phone_number: parseInt(user_phone_number.value),
         };
@@ -174,7 +174,7 @@ if (edit_user_send_button !== null) {
             user: user_id.value,
             employee_name: user_name.value,
             job_name: user_job_name.value,
-            company_name: COMPANY_NAME,
+            area: AREA,
             email: user_email.value,
             phone_number: parseInt(user_phone_number.value),
         };

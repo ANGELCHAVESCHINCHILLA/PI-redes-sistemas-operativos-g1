@@ -131,7 +131,7 @@ std::vector<PersonalData> Database::searchPersonalDataByUser(
           reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
       builder.setJobName(
           reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
-      builder.setCompanyName(
+      builder.setArea(
           reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
       builder.setEmail(
           reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));

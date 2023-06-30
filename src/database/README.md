@@ -82,7 +82,7 @@ Response body:
 ```json
 {
   "name": "Miranda Jop",
-  "company_name": "Amazon",
+  "area": "Amazon",
   "annotations": {
     "annotation1": "Miranda chocó el carro en el parqueo de la compañía el día 22/3/23",
     "annotation2": "Miranda se robó una computadora el día 23/3/23",
@@ -254,7 +254,7 @@ Response body:
 ```json
 {
   "name": "Carlos Montoya",
-  "company_name": "Apple",
+  "area": "Apple",
   "salaries": {
     "salary1": {
       "gross_salary": 2000,
@@ -325,7 +325,7 @@ Response body: "Error in the url given"
   "user": "abc",
   "employee_name": "A B C",
   "job_name": "A B C",
-  "company_name": "A B C",
+  "area": "A B C",
   "email": "a@b.c",
   "phone_number": 123
 }
@@ -345,7 +345,7 @@ Response body: "Error in the url given"
   "user": "abc",
   "employee_name": "A B C",
   "job_name": "A B C",
-  "company_name": "A B C",
+  "area": "A B C",
   "email": "a@b.c",
   "phone_number": 123
 }
@@ -386,7 +386,7 @@ Response body: "Error in the url given"
   "user": "abc",
   "employee_name": "A B C",
   "job_name": "A B C",
-  "company_name": "A B C",
+  "area": "A B C",
   "email": "a@b.c",
   "phone_number": 123
 }

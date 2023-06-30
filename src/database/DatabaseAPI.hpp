@@ -49,12 +49,12 @@ class DatabaseAPI {
   std::vector<std::string> consultRecordAnnotationsByUser(const std::string user) const;
 
   /**
-   * @brief consults the name and the enterprise of a user
+   * @brief consults the name and the area of a user
    * 
-   * @param user the user whose name and enterprise will be consulted
-   * @return std::vector<std::string> the vector containing the name and the enterprise of the user
+   * @param user the user whose name and area will be consulted
+   * @return std::vector<std::string> the vector containing the name and the area of the user
    */
-  std::vector<std::string> consultNameAndEnterpriseByUser(const std::string user) const;
+  std::vector<std::string> consultNameAndAreaByUser(const std::string user) const;
 
   /**
    * @brief consults all requests made by a user

@@ -25,16 +25,16 @@ class ConsultAnnotationsHandler : public DatabaseRequestHandler {
 
         // insert user into api to get the annotations data
         std::vector<std::string> annotationsData = this->databaseApi->consultRecordAnnotationsByUser(user);
-        // insert user into api to get the name and company name
-        std::vector<std::string> nameAndCompany = this->databaseApi->consultNameAndEnterpriseByUser(user);
+        // insert user into api to get the name and area name
+        std::vector<std::string> nameAndArea = this->databaseApi->consultNameAndAreaByUser(user);
         
         int statusCode;
         std::stringstream responseBody;
-        if (!annotationsData.empty() && !nameAndCompany.empty()) {
+        if (!annotationsData.empty() && !nameAndArea.empty()) {
           Json::Value json;
 
-          json["name"] = nameAndCompany[0];
-          json["company_name"] = nameAndCompany[1];
+          json["name"] = nameAndArea[0];
+          json["area"] = nameAndArea[1];
 
           Json::Value annotations;
 

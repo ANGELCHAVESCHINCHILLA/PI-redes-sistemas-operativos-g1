@@ -301,7 +301,7 @@ function reloadDetailsBtns() {
 asi se ve el json de respuesta que da el servidor para la parte de salarios
 const json = {
   "name": "Carlos Montoya",
-  "company_name": "Apple",
+  "area": "Apple",
   "salaries": {
     "salary1": {
       "gross_salary": 2000,
@@ -338,7 +338,7 @@ async function showBaseSalary() {
   const title = "Información salarial";
 
   let content = `Nombre: ${salaryInfo.name} <br>
-  Área: ${salaryInfo.company_name}<br><br>`;
+  Área: ${salaryInfo.area}<br><br>`;
 
   let salaryCount = 1;
 
@@ -401,7 +401,7 @@ async function showVacationsBalance() {
 /*
 {
   "name": "Miranda Jop",
-  "company_name": "Amazon",
+  "area": "Amazon",
   "annotations": {
     "annotation1": "Miranda chocó el carro en el parqueo de la compañía el día 22/3/23",
     "annotation2": "Miranda se robó una computadora el día 23/3/23",
@@ -429,7 +429,7 @@ async function showExpedientAnotations() {
   let title = "Anotaciones al expediente";
 
   let content = `Nombre: ${annotations.name}<br>
-  Área: ${annotations.company_name}<br><br>`;
+  Área: ${annotations.area}<br><br>`;
 
   let annotCount = 1;
   // Recorrer las anotaciones utilizando un bucle for...in

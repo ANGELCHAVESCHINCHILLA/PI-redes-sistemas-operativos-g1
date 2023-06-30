@@ -115,18 +115,18 @@ std::vector<std::string> DatabaseAPI::consultRecordAnnotationsByUser(const std::
   return result;
 }
 
-static int consultNameAndEnterpriseByUserCallback(void* NotUsed, int argc, char** argv, char** szColName) {
+static int consultNameAndAreaByUserCallback(void* NotUsed, int argc, char** argv, char** szColName) {
   (void) argc;
   (void) szColName;
 
   std::vector<std::string>* vector = reinterpret_cast<std::vector<std::string>*>(NotUsed);
   vector->push_back(argv[0]);
   vector->push_back(argv[1]);
-  std::cout << "the name is: " << argv[0] << "and the company is: " << argv[1] << std::endl;
+  std::cout << "the name is: " << argv[0] << "and the area is: " << argv[1] << std::endl;
   return 0;
 }
 
-std::vector<std::string> DatabaseAPI::consultNameAndEnterpriseByUser(const std::string user) const {
+std::vector<std::string> DatabaseAPI::consultNameAndAreaByUser(const std::string user) const {
   int error = SQLITE_OK;
 
   std::vector<std::string> result;
@@ -134,17 +134,17 @@ std::vector<std::string> DatabaseAPI::consultNameAndEnterpriseByUser(const std::
 
   char* error_message;
 
-  std::string query = "SELECT EmployeeName, CompanyName from PersonalData where User = '";
+  std::string query = "SELECT EmployeeName, Area from PersonalData where User = '";
   query.append(user);
   query.append("'");
 
   error =
-    sqlite3_exec(this->database.reference, query.c_str(), consultNameAndEnterpriseByUserCallback, pointer, &error_message);
+    sqlite3_exec(this->database.reference, query.c_str(), consultNameAndAreaByUserCallback, pointer, &error_message);
 
   if (error != SQLITE_OK) {
     std::cerr << error_message << "\n";
     sqlite3_free(error_message);
-    throw std::runtime_error("failed at exec from consult name and enterprise" );
+    throw std::runtime_error("failed at exec from consult name and area" );
   }
   
   return result;

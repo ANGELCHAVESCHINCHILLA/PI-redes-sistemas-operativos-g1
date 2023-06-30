@@ -11,14 +11,14 @@ const std::string PersonalData::CREATE_TABLE_QUERY =
     User CHAR(16),
     EmployeeName CHAR(32),
     JobName CHAR(32),
-    CompanyName CHAR(32),
+    Area CHAR(32),
     Email CHAR(32),
     PhoneNumber INT
 );
 )";
 
 const std::string PersonalData::INSERT_INTO_QUERY =
-    R"(INSERT INTO PersonalData (User, EmployeeName, JobName, CompanyName, Email, PhoneNumber) )";
+    R"(INSERT INTO PersonalData (User, EmployeeName, JobName, Area, Email, PhoneNumber) )";
 
 const std::string PersonalData::SELECT_FROM_QUERY =
     R"(SELECT * FROM PersonalData )";
@@ -35,8 +35,8 @@ const std::string& PersonalData::getJobName() const {
   return this->job_name;
 }
 
-const std::string& PersonalData::getCompanyName() const {
-  return this->company_name;
+const std::string& PersonalData::getArea() const {
+  return this->area;
 }
 
 const std::string& PersonalData::getEmail() const {
@@ -58,7 +58,7 @@ std::string PersonalData::getInsertIntoQuery() const {
   ss << "', '";
   ss << this->job_name;
   ss << "', '";
-  ss << this->company_name;
+  ss << this->area;
   ss << "', '";
   ss << this->email;
   ss << "', ";
@@ -75,7 +75,7 @@ std::string PersonalData::getUpdateQuery() const {
   ss << "User = '" << this->user << "', ";
   ss << "EmployeeName = '" << this->employee_name << "', ";
   ss << "JobName = '" << this->job_name << "', ";
-  ss << "CompanyName = '" << this->company_name << "', ";
+  ss << "Area = '" << this->area << "', ";
   ss << "Email = '" << this->email << "', ";
   ss << "PhoneNumber = " << this->phone_number << " ";
   ss << "WHERE user = '" << this->user << "'";
@@ -112,9 +112,9 @@ PersonalData::Builder& PersonalData::Builder::setJobName(
   return *this;
 }
 
-PersonalData::Builder& PersonalData::Builder::setCompanyName(
+PersonalData::Builder& PersonalData::Builder::setArea(
     const std::string& value) {
-  this->object.company_name = value;
+  this->object.area = value;
   return *this;
 }
 
