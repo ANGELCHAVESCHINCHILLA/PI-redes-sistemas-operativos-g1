@@ -35,7 +35,8 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
   // {"username":"adf","password":"sdf"}
   if (request.getMethod() == "GET") {
-    if (request.getTarget().getPath().find("consult") != std::string::npos) {
+    if (request.getTarget().getPath().find("consult") != std::string::npos || 
+      request.getTarget().getPath().find("/data/personal_data") != std::string::npos) {
       /*
       // Esto es para testear sin conectarse a la base de datos utilizando datos
       // genéricos

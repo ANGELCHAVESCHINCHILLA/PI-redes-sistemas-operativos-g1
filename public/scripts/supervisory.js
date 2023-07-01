@@ -50,7 +50,7 @@ function reloadRequests() {
 
 async function populateRequestContainer() {
     const status = ["APROBADO", "REVISION", "RECHAZADO"];
-    const area = 'SanJose';
+    const area = localStorage.getItem('area');
 
     try {
         const response = await fetch(`/consultRequestsByArea?area=${area}`, {
@@ -58,7 +58,6 @@ async function populateRequestContainer() {
         });
 
         const responseText = await response.text();
-        // console.log(responseText);
         const requests = JSON.parse(responseText);
 
 

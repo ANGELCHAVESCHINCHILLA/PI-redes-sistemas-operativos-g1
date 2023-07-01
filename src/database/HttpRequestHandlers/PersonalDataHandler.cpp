@@ -42,11 +42,8 @@ bool PersonalDataHandler::getData(
   Json::Value output(Json::objectValue);
 
   try {
-    if (!reader.parse(request.getBody(), input)) {
-      throw std::runtime_error("Can't parse the personal data json.");
-    }
 
-    std::string user = input["user"].asString();
+    std::string user = request.getTarget().getQuery().find("user")->second;
 
     output["user"] = user;
 

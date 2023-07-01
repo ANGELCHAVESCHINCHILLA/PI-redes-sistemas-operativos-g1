@@ -36,6 +36,25 @@ if (backbtn) {
 }
 
 /**
+ * Immediately Invoked Function Expression (IIEF) to get the area of the user
+ */
+(async function() {
+  // Send request to get personal data from current user
+  const personalDataResponse = await fetch(`/data/personal_data?user=${localStorage.getItem('username')}`, {
+    method: 'GET'
+  });
+
+  if (!personalDataResponse.ok) {
+    alert("El area del usuario no pudo ser obtenida");
+  } else {
+    const userData = await personalDataResponse.json();
+
+    localStorage.setItem('area', userData.area);
+    console.log("area stored successfully, it was " + userData.area);
+  }
+})();
+
+/**
  * Formats a date from num to string
  * @param {*int} numDate The num in format ddmmyy as a integer, e.g. 230523
  * @returns The date in format dd-mm-yy as a string, e.g. "23-05-23"
@@ -611,7 +630,7 @@ async function makeRequest(form, reqType, page) {
     request_type: reqType,
     information: formJson.information,
     // TODO: get area from local storage, this below is just a dummy value
-    area: "San Jose",
+    area: localStorage.getItem('area'),
     vacation_days: formJson.vacationDays
       ? +formJson.vacationDays.replaceAll("-", "")
       : 0,
