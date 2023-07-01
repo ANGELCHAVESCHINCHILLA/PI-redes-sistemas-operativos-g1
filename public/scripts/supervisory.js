@@ -68,9 +68,11 @@ async function populateRequestContainer() {
         for (const requestKey in requests) {
             if (requests.hasOwnProperty(requestKey)) {
                 const request = requests[requestKey];
-                requestContainer.appendChild(
-                    createSolicitudDiv(request.user, request.request_type, status[request.state], request.ID)
-                );
+                if (request.user != localStorage.getItem("username")) {
+                    requestContainer.appendChild(
+                        createSolicitudDiv(request.user, request.request_type, status[request.state], request.ID)
+                    );
+                }
             }
         }
         reloadDetailsBtns();
