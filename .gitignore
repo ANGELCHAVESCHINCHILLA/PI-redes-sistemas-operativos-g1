@@ -42,5 +42,7 @@ logs
 package-lock.json
 yarn.lock
 
-server.crt
-server.key
+*.crt
+*.csr
+*.key
+*.pem

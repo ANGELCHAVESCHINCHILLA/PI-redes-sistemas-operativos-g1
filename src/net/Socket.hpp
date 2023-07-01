@@ -5,8 +5,11 @@
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <openssl/err.h>
+#include <openssl/ssl.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+
 #include <memory>
 #include <string>
 
@@ -24,7 +27,7 @@ enum SocketError {
   //
   CANT_SEND_DATA,
   CANT_RECEIVE_DATA,
-  
+
   CANT_FETCH_ADDRESSES,
 };
 
@@ -37,12 +40,13 @@ class Socket {
   /// Objects of this class can be copied, but avoid innecesary copies
   DECLARE_RULE4(Socket, default);
 
- protected:
+ public:
   /// Copies of this object share the same socket file descriptor and buffers
   /// The sharedSocket contents all the info of this Socket
   std::shared_ptr<SharedSocket> sharedSocket;
 
- public:
+  SSL* ssl;
+  
   /**
    * @brief Default constructor.
    *
