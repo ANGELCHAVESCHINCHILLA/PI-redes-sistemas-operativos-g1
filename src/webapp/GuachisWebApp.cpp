@@ -5,6 +5,7 @@
 
 #include "HttpRequestHandlers/ValidateHandler/ValidateHandler.hpp"
 #include "HttpRequestHandlers/UserAdminHandler/UserAdminHandler.hpp"
+#include "HttpRequestHandlers/WebLogHandler.hpp"
 
 GuachisWebApp::GuachisWebApp() {
   this->requestHandlers.push_back(new UserAdminHandler());
@@ -13,6 +14,7 @@ GuachisWebApp::GuachisWebApp() {
   this->requestHandlers.push_back(new LoginHandler());
   this->requestHandlers.push_back(new QueryHandler());
   this->requestHandlers.push_back(new ValidateHandler());
+  this->requestHandlers.push_back(new WebLogHandler());
 }
 
 GuachisWebApp::~GuachisWebApp() {
