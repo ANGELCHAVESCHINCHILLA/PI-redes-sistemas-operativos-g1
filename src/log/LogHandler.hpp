@@ -7,6 +7,8 @@
 #include <vector>
 
 #include "../common/common.hpp"
+#include "../http/HttpRequest.hpp"
+#include "../http/HttpResponse.hpp"
 
 class LogHandler {
   DISABLE_COPY(LogHandler);
@@ -27,6 +29,12 @@ class LogHandler {
   size_t getLinesCount();
 
   std::string getLine(size_t offset);
+
+  bool handleCount(
+      HttpRequest& request, HttpResponse& response, const std::string& url);
+
+  bool handleFile(
+      HttpRequest& request, HttpResponse& response, const std::string& url);
 };
 
 #endif  // LOG_HANDLER_HPP_

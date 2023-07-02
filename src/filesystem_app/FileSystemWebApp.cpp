@@ -11,6 +11,7 @@
 #include "HttpRequestHandlers/PermissionsHandler.hpp"
 #include "HttpRequestHandlers/RemoveUserHandler.hpp"
 #include "HttpRequestHandlers/SaltHandler.hpp"
+#include "HttpRequestHandlers/FileSystemLogHandler.hpp"
 
 FileSystemWebApp::FileSystemWebApp() {
   this->fileSystemApi = new FileSystemAPI();
@@ -28,6 +29,7 @@ void FileSystemWebApp::initHandlers() {
   this->requestHandlers.push_back(new SaltHandler(this->fileSystemApi));
   this->requestHandlers.push_back(new RemoveUserHandler(this->fileSystemApi));
   this->requestHandlers.push_back(new EditUserHandler(this->fileSystemApi));
+  this->requestHandlers.push_back(new FileSystemLogHandler(this->fileSystemApi));
 }
 
 bool FileSystemWebApp::start() {
