@@ -82,8 +82,7 @@ bool LogHandler::handleFile(
         response.getBody() << this->getLine(offset + index) << "\n";
       }
     } catch (const std::out_of_range& exception) {
-      Log::getInstance().write(Log::WARNING, "LogHandler",
-          "Request is missing a parameter or there's an overflow");
+      Log::getInstance().write(Log::WARNING, "LogHandler", exception.what());
       response.setStatusCode(400);
     }
 
