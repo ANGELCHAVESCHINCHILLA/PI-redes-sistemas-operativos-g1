@@ -18,13 +18,38 @@ bool WebLogHandler::canHandle(HttpRequest& request, HttpResponse& response) {
   if (request.getTarget().getPath() == "/log/web/count") {
     int error = this->log_handler.read();
 
-    if (error != -1) {
-      size_t count = this->log_handler.getLinesCount();
-
-      response.getBody() << count;
-      response.setStatusCode(200);
-    } else {
+    if (error == -1) {
       response.setStatusCode(500);
+      return true;
+    }
+
+    size_t count = this->log_handler.getLinesCount();
+
+    response.getBody() << count;
+    response.setStatusCode(200);
+
+    return true;
+  }
+
+  if (request.getTarget().getPath() == "/log/web/file") {
+    int error = this->log_handler.read();
+
+    if (error == -1) {
+      response.setStatusCode(500);
+      return true;
+    }
+
+    try {
+      size_t offset = std::stoi(request.getTarget().getQuery().at("offset"));
+      size_t lines = std::stoi(request.getTarget().getQuery().at("lines"));
+
+      for (size_t index = 0; index < lines; index++) {
+        response.getBody() << this->log_handler.getLine(offset + index) << "\n";
+      }
+    } catch (const std::out_of_range& exception) {
+      Log::getInstance().write(
+          Log::WARNING, "WebLogHandler", "Request is missing a parameter or there's an overflow");
+      response.setStatusCode(400);
     }
 
     return true;
