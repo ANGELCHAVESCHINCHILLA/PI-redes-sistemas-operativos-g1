@@ -35,6 +35,9 @@ if (backbtn) {
   });
 }
 
+console.log(localStorage.getItem("logged"));
+console.log(localStorage.getItem("permissions"));
+
 /**
  * Immediately Invoked Function Expression (IIEF) to get the area of the user
  */
@@ -844,7 +847,15 @@ function populateIndexButtons(permissions) {
     case 5:
       addDebuggerButtons();
       break;
+    case 6:
+      addDebuggerButtons();
+      removeDefaultButtons();
+      break;
   }
+}
+
+function removeDefaultButtons() {
+  document.getElementById("botones").style.display = "none";
 }
 
 function addSupervisorButtons(divcontainer) {
@@ -881,28 +892,17 @@ function addAdministratorButtons() {
 
 function addDebuggerButtons() {
   const divContainer = document.querySelector("#debugger-btns");
-  const header = document.createElement("h2");
-  divContainer.style.display = "block";
+  
+  divContainer.innerHTML = `<h2>Opciones de Debugger</h2>
+  <button id="debugger-btn" type="submit" class="index-btn" style="margin: auto; margin-top: 30px; margin-bottom: 10vh;">
+    <b>VER REGISTROS DE AUDITORIA</b>
+  </button>`;
 
-  const logsBtn = document.createElement("button");
-
-  header.textContent = "Opciones de Debugger";
-  logsBtn.textContent = "Ver registros de auditoría";
-
-  logsBtn.type = "submit";
-
-  logsBtn.classList.add("index-btn");
-
-  logsBtn.id = "debugger-btn";
-
-  logsBtn.addEventListener("click", openDebuggerPage);
-
-  divContainer.appendChild(header);
-  divContainer.appendChild(logsBtn);
+  divContainer.addEventListener("click", openDebuggerPage);
 }
 
 function openDebuggerPage() {
-  window.location.href = "/view_debugger_page";
+  window.location.href = "/log";
 }
 
 function openMakeAnnotationsPage() {

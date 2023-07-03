@@ -404,7 +404,7 @@ div#log-container {
   border: 1px solid #0078F0;
   margin-bottom: 8vh;
 
-  font-size: 11px;
+  font-size: 1em;
   font-family: var(--fuente-principal);
   font-style: normal;
   font-weight: 5000;
@@ -416,7 +416,22 @@ div#log-container {
   align-items: center;
 }
 
-.submit-btn:hover {
+#logs-container {
+  background-color: #151515;
+  border-radius: 10px;
+  margin-right: 5vw;
+  margin-left: 5vw;
+}
+
+#logs-container>p{
+  text-align: left;
+  font-size: 1.25em;
+  font-family: monospace;
+  white-space: normal;
+  color: white;
+}
+
+.submit-btn:hover, .filter-btn:hover {
   background-color: #6ea9e7;
   color: #f2f2f2;
   cursor: pointer;

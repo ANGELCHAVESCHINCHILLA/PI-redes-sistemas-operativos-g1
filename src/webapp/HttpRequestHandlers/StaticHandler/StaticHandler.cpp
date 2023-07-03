@@ -53,6 +53,13 @@ bool StaticHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         return true;
       }
     }
+
+    if (request.getTarget().getPath() == "/log") {
+      if (this->servePage(request, response, "log.html")) {
+        return true;
+      }
+    }
+
     if (this->serveStatic(request, response)) {
       return true;
     }
