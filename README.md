@@ -22,94 +22,9 @@ El repositorio incluye los diferentes programas necesarios para ejecutar cada un
 
 [Enlace al Documento de Google](https://docs.google.com/document/d/10L8kM7qYIKsOVK85LlFsSmQQPOhCoMRJuhMxhY76kJw/edit)
 
-## Instalación
+## Manual de usuario
 
-Ejecutar el comando `make install` para instalar las dependencias del programa.
-
-## Ejecución
-
-## En un dispositivo
-
-Para ejecutar en un dispositivo compilar el programa y ejecutar en diferentes terminales de comando en las que las aplicaciones tienen la misma dirección y diferentes puertos. 
-
-Puede usar los archivos de configuración de prueba ya creados en el directorio `test` para hacer pruebas.
-
-### Ejemplo
-
-Terminal 1:
-
-`make run ARGS="test/configuration_web.json"`
-
-Terminal 2:
-
-`make run ARGS="test/configuration_fs.json"`
-
-Terminal 3:
-
-`make run ARGS="test/configuration_db.json"`
-
-## En varios dispositivos
-
-Para ejecutar en varios dispositivos compilar el programa y ejecutar en cada uno de los dispositivos, es necesario configurar los servidores con las direcciones de los otros dispositivos.
-
-### Ejemplo
-
-Dispositivo A (192.168.1.11):
-```json
-{
-    "apps": [
-        "web"
-    ],
-    "servers": {
-        "fs": {
-            "address": "192.168.1.12",
-            "port": 8000
-        },
-        "db": {
-            "address": "192.168.1.13",
-            "port": 8000
-        }
-    }
-}
-```
-
-Dispositivo B (192.168.1.12):
-```json
-{
-    "apps": [
-        "fs"
-    ],
-    "servers": {
-        "web": {
-            "address": "192.168.1.11",
-            "port": 8000
-        },
-        "db": {
-            "address": "192.168.1.13",
-            "port": 8000
-        }
-    }
-}
-```
-
-Dispositivo C (192.168.1.13):
-```json
-{
-    "apps": [
-        "db"
-    ],
-    "servers": {
-        "web": {
-            "address": "192.168.1.11",
-            "port": 8000
-        },
-        "fs": {
-            "address": "192.168.1.12",
-            "port": 8000
-        }
-    }
-}
-```
+Diríjase al documento [Manual de usuario](./documentation/user_manual.md)
 
 ## Integrantes
 
