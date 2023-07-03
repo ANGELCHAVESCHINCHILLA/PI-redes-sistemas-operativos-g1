@@ -17,7 +17,7 @@ class HRRequest {
   std::string user;
   int id;
   int state;
-  std::string padding;
+  int supState;
   std::string information;
   std::string feedback;
   std::string requestType;
@@ -50,7 +50,7 @@ class HRRequest {
   const std::string& getUser() const;
   int getID() const;
   int getState() const;
-  const std::string& getPadding() const;
+  int getSupState() const;
   const std::string& getInformation() const;
   const std::string& getFeedback() const;
   const std::string& getRequestType() const;
@@ -73,7 +73,7 @@ class HRRequest::Builder {
   Builder& setUser(const std::string& value);
   Builder& setID(int value);
   Builder& setState(int value);
-  Builder& setPadding(const std::string& value);
+  Builder& setSupState(int value);
   Builder& setInformation(const std::string& value);
   Builder& setFeedback(const std::string& value);
   Builder& setRequestType(const std::string& value);

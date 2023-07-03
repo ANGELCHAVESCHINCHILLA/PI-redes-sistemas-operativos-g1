@@ -43,7 +43,7 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
                 jsonEntry = "state";
                 break;
               case 3:
-                jsonEntry = "padding";
+                jsonEntry = "supState";
                 break;
               case 4:
                 jsonEntry = "information";
@@ -68,7 +68,7 @@ class ConsultRequestsByIDHandler : public DatabaseRequestHandler {
                 break;
             }
             requestsAsJSON << "\"" << jsonEntry << "\": ";
-            if (i == 1 || i == 2 || i == 7 || i == 8 || i == 9) {
+            if (i == 1 || i == 2 || i == 3 || i == 7 || i == 8 || i == 9) {
               requestsAsJSON << std::stoi(requestsData[i]);
             } else {
               requestsAsJSON << "\"" << requestsData[i] << "\"";

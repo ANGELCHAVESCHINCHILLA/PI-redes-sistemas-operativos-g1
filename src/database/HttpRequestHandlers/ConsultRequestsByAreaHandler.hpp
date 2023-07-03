@@ -47,7 +47,7 @@ class ConsultRequestsByAreaHandler : public DatabaseRequestHandler {
                   jsonEntry = "state";
                   break;
                 case 3:
-                  jsonEntry = "padding";
+                  jsonEntry = "supState";
                   break;
                 case 4:
                   jsonEntry = "information";
@@ -72,7 +72,7 @@ class ConsultRequestsByAreaHandler : public DatabaseRequestHandler {
                   break;
               }
               requestsAsJSON << "\"" << jsonEntry << "\": ";
-              if (j == 1 || j == 2 || j == 7 || j == 8 || j == 9) {
+              if (j == 1 || j == 2 || j == 3 || j == 7 || j == 8 || j == 9) {
                 requestsAsJSON << std::stoi(requestsData[i][j]);
               } else {
                 requestsAsJSON << "\"" << requestsData[i][j] << "\"";

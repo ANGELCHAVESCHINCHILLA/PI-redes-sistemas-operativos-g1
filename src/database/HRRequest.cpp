@@ -9,7 +9,7 @@ const std::string HRRequest::CREATE_TABLE_QUERY =
     User CHAR(16),
     ID INTEGER PRIMARY KEY,
     State TINYINT,
-    Padding BLOB(391),
+    SupState TINYINT,
     Information BLOB(412),
     Feedback BLOB(256),
     RequestType CHAR(20),
@@ -21,7 +21,7 @@ const std::string HRRequest::CREATE_TABLE_QUERY =
 )";
 
 const std::string HRRequest::INSERT_INTO_QUERY =
-    R"(INSERT INTO HRRequest (User, State, Padding, Information, Feedback, RequestType, VacationDays, VacationStartDate, VacationEndDate, Area) )";
+    R"(INSERT INTO HRRequest (User, State, SupState, Information, Feedback, RequestType, VacationDays, VacationStartDate, VacationEndDate, Area) )";
 
 const std::string& HRRequest::getUser() const {
   return this->user;
@@ -35,8 +35,8 @@ int HRRequest::getState() const {
   return this->state;
 }
 
-const std::string& HRRequest::getPadding() const {
-  return this->padding;
+int HRRequest::getSupState() const {
+  return this->supState;
 }
 
 const std::string& HRRequest::getInformation() const {
@@ -76,7 +76,7 @@ std::string HRRequest::getInsertIntoQuery() const {
   ss << "', '";
   ss << this->state;
   ss << "', '";
-  ss << this->padding;
+  ss << this->supState;
   ss << "', '";
   ss << this->information;
   ss << "', '";
@@ -111,8 +111,8 @@ HRRequest::Builder& HRRequest::Builder::setState(int value) {
   return *this;
 }
 
-HRRequest::Builder& HRRequest::Builder::setPadding(const std::string& value) {
-  this->object.padding = value;
+HRRequest::Builder& HRRequest::Builder::setSupState(int value) {
+  this->object.supState = value;
   return *this;
 }
 

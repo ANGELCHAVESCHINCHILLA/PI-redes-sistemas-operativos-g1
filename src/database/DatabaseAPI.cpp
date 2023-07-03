@@ -201,7 +201,7 @@ bool DatabaseAPI::makeRequest(const std::string user, const std::string requestT
   builder.setUser(user);
   // builder.setID(23); // generate it
   builder.setState(0);
-  builder.setPadding("      "); // ??
+  builder.setSupState(0);
   builder.setInformation(information);
   builder.setFeedback(" "); // empty for now
   builder.setRequestType(requestType);
