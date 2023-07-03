@@ -3,6 +3,7 @@
 #include "LogHandler.hpp"
 
 #include <fstream>
+#include <jsoncpp/json/json.h>
 
 #include "../common/Log.hpp"
 
@@ -77,10 +78,30 @@ bool LogHandler::handleFile(
     try {
       size_t offset = std::stoi(request.getTarget().getQuery().at("offset"));
       size_t lines = std::stoi(request.getTarget().getQuery().at("lines"));
-
+      
+      std::stringstream responseBody;
+      Json::Value json;
       for (size_t index = 0; index < lines; index++) {
-        response.getBody() << this->getLine(offset + index) << "\n";
+        Json::Value line;
+        char time[10];
+        char type[30];
+        char server[30];
+        char message[99];
+
+        std::sscanf(this->getLine(offset + index).c_str(), "[%[^]]] %s\t%s\t\t%99[^\n]", time,
+         type, server, message);
+
+        line["time"] = time;
+        line["type"] = type;
+        line["server"] = server;
+        line["message"] = message;
+        
+        json["line" + std::to_string(index + 1)] = line;
       }
+
+      Json::StreamWriterBuilder writer;
+
+      response.getBody() << Json::writeString(writer, json);
     } catch (const std::out_of_range& exception) {
       Log::getInstance().write(Log::WARNING, "LogHandler", exception.what());
       response.setStatusCode(400);
