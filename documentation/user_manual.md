@@ -166,10 +166,9 @@ Archivo [configuration_fs](../test/configuration_fs.json):
 }
 ```
 
+2. Abra 3 terminales ubicadas en el directorio del proyecto, cada una de estas ejecutará un servidor distinto.
 
-1. Abra 3 terminales ubicadas en el directorio del proyecto, cada una de estas ejecutará un servidor distinto.
-
-2. Ejecute los siguientes comandos dependiendo de la terminal:
+3. Ejecute los siguientes comandos dependiendo de la terminal:
 
 Terminal 1:
 
@@ -183,14 +182,16 @@ Terminal 3:
 
 `make run ARGS="test/configuration_db.json"`
 
-3. Abra el navegador web de su preferencia y escriba la URI `http://127.0.0.1:8001/`, de esta forma podrá hacer uso de las funcionalidades del sistema las cuales son explicadas en la sección **3. Guía de funcionalidades** de este documento.
+4. Abra el navegador web de su preferencia y escriba la URI `http://127.0.0.1:8001/`, de esta forma podrá hacer uso de las funcionalidades del sistema las cuales son explicadas en la sección **3. Guía de funcionalidades** de este documento.
 
 
 ### 2.3 En varios dispositivos
 
-Para ejecutar en varios dispositivos, compilar el programa y ejecutar en cada uno de los dispositivos, es necesario configurar los servidores con las direcciones de los otros dispositivos.
+Para ejecutar en varios dispositivos, compilar el programa y ejecutar en cada uno de los dispositivos, es necesario configurar los servidores con las direcciones de los otros dispositivos, los pasos serían los siguiente:
 
-### Ejemplo
+1. Configure los archivos de configuración ubicados en la carpeta [test](../test/) tomando en cuenta lo expuesto en la sección **2.1 Archivos de configuración**
+
+Un ejemplo de los archivos de configuración sería el siguiente:
 
 Dispositivo A con dirección IP `192.168.1.11`:
 ```json
@@ -231,7 +232,6 @@ Dispositivo B con dirección IP `192.168.1.12`:
 ```
 
 Dispositivo C con dirección IP `192.168.1.13`:
-
 ```json
 {
     "apps": [
@@ -250,8 +250,62 @@ Dispositivo C con dirección IP `192.168.1.13`:
 }
 ```
 
+2. Abra una terminal por dispotivo, ubicándose en el directorio del proyecto, cada una de estas ejecutará un servidor distinto.
 
+3. Ejecute los siguientes comandos dependiendo del dispotivo:
+
+Terminal Dispositivo A:
+
+`make run ARGS="test/configuration_web.json"`
+
+Terminal Dispositivo B:
+
+`make run ARGS="test/configuration_fs.json"`
+
+Terminal Dispositivo C:
+
+`make run ARGS="test/configuration_db.json"`
+
+4. Abra el navegador web de su preferencia en un dispotivo pertenience a la misma red del servidor web y escriba la URI `http://192.168.1.11:8001/` (esta URI es dependiente de las direcciones IP y puertos especificados en los archivos de configuración), de esta forma podrá hacer uso de las funcionalidades del sistema las cuales son explicadas en la sección **3. Guía de funcionalidades** de este documento.
 
 ## 3. Guía de funcionalidades
 
 ### 3.1 Login
+
+![Pantalla Login](./img/usermanual_1.png)
+
+El usuario indicará su nombre de usuario y contraseña, de acuerdo a sus permisos será redirigido a una página con las funcionalidades disponibles. Los datos de autenticación son almacenados en el servidor del File System por lo que este servidor debe estar corriendo y tener los datos actualizados para que se pueda acceder al sistema.
+
+### 3.2 Usuario Empleado
+
+![Pantalla de empleado](./img/usermanual_2.png)
+
+El usuario empleado tendrá las opciones generales para la mayoría de usuarios del sistema, podrá realizar consultas como:
+
+* Salario Base
+* Anotaciones al expediente
+* Estado de solicitudes
+* Saldo de vacaciones.
+
+También podrá realizar solicitudes como:
+
+* Constancia Salarial
+* Constancia Laboral
+* Comprobantes de pago
+* Solicitud de vacaciones
+
+### 3.3 Usuario Supervisor
+
+![Opciones de supervisor](./img/usermanual_3.png)
+
+Tiene las funcionalidades especificadas para el empleado, además una opcion para aprobar o desaprobar solicitudes realizadas en un área específica (para nuestro ejemplo de sistema, un área es una provincia de Costa Rica) y otra opción para crear anotaciones a un empleado específico.
+
+### 3.4 Usuario Administrador
+
+![Opciones de administrador](./img/usermanual_4.png)
+
+Tiene las funcionalidades especificadas para el empleado, además opciones para:
+
+* Agregar usuario: Crea los datos personales y de autenticación del usuario, estos se almacenan en los respectivos servidores.
+* Editar usuario: Permite editar datos personales o datos de autenticación del usuario.
+* Borrar usuario: Elimina al usuairo del sistema a partir de su username almacenado en el servidor de autenticación (servidor FileSystem).
