@@ -47,6 +47,12 @@ bool StaticHandler::canHandle(HttpRequest& request, HttpResponse& response) {
         return true;
       }
     }
+    if (request.getTarget().getPath().rfind("/executive_queries", 0) == 0) {
+      if (this->servePage(
+              request, response, "executive/executive_queries.html")) {
+        return true;
+      }
+    }
     if (request.getTarget().getPath().rfind("/info_solicitud.html", 0) == 0) {
       if (this->servePage(
               request, response, "info_solicitud.html")) {
