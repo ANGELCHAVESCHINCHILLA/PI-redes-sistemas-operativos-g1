@@ -50,8 +50,8 @@ function reloadRequests() {
 
 async function populateRequestContainer() {
     const status = ["APROBADO", "REVISION", "RECHAZADO"];
-    const area = localStorage.getItem('area');
-
+    //const area = localStorage.getItem('area');
+    const area = "Puntarenas"
     try {
         const response = await fetch(`/consultRequestsByArea?area=${area}`, {
             method: 'GET'
@@ -68,7 +68,7 @@ async function populateRequestContainer() {
         for (const requestKey in requests) {
             if (requests.hasOwnProperty(requestKey)) {
                 const request = requests[requestKey];
-                if (request.user != localStorage.getItem("username")) {
+                if (request.user != localStorage.getItem("username") && request.supstate === 1) {
                     requestContainer.appendChild(
                         createSolicitudDiv(request.user, request.request_type, status[request.state], request.ID)
                     );

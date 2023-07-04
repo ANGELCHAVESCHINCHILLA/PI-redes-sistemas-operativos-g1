@@ -836,10 +836,15 @@ function checkLogin() {
 }
 
 function populateIndexButtons(permissions) {
+  let divContainer;
   switch (permissions) {
     case 2:
-      const divContainer = document.getElementById("supervisory-btns");
+      divContainer = document.getElementById("supervisory-btns");
       addSupervisorButtons(divContainer);
+      break;
+    case 3:
+      divContainer = document.getElementById("supervisory-btns");
+      addExecutiveButtons(divContainer);
       break;
     case 4:
       addAdministratorButtons();
@@ -877,6 +882,36 @@ function addSupervisorButtons(divcontainer) {
   anotacionesBtn.id = "supervisor-anotaciones";
 
   solicitudesBtn.addEventListener("click", openSupervisoryQueriesPage);
+  anotacionesBtn.addEventListener("click", openMakeAnnotationsPage);
+
+  divcontainer.appendChild(header);
+  divcontainer.appendChild(solicitudesBtn);
+  divcontainer.appendChild(anotacionesBtn);
+}
+
+function openExecutiveQueriesPage() {
+  window.location.href = "/executive_queries";
+}
+
+function addExecutiveButtons(divcontainer) {
+  const solicitudesBtn = document.createElement("button");
+  const anotacionesBtn = document.createElement("button");
+  const header = document.createElement("h2");
+
+  header.textContent = "Opciones de Gerente";
+  solicitudesBtn.textContent = "REVISAR SOLICITUDES";
+  anotacionesBtn.textContent = "CREAR ANOTACIÓN";
+
+  solicitudesBtn.type = "submit";
+  anotacionesBtn.type = "submit";
+
+  solicitudesBtn.classList.add("index-btn");
+  anotacionesBtn.classList.add("index-btn");
+
+  solicitudesBtn.id = "supervisor-solicitudes";
+  anotacionesBtn.id = "supervisor-anotaciones";
+
+  solicitudesBtn.addEventListener("click", openExecutiveQueriesPage);
   anotacionesBtn.addEventListener("click", openMakeAnnotationsPage);
 
   divcontainer.appendChild(header);
