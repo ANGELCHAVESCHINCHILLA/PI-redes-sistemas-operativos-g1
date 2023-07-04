@@ -860,7 +860,9 @@ function populateIndexButtons(permissions) {
 }
 
 function removeDefaultButtons() {
-  document.getElementById("botones").style.display = "none";
+  console.log("HOILI");
+  document.querySelector(".botones").style.display = "none";
+  // document.getElementsByClassName("botones").style.display = "none";
 }
 
 function addSupervisorButtons(divcontainer) {

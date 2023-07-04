@@ -25,8 +25,8 @@ bool WebLogHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
   if (request.getTarget().getPath() == "/log/db/count") {
     try {
-      Log::getInstance().write(
-          Log::DEBUG, "WebLogHandler", "Call database to get the logs count");
+      // Log::getInstance().write(
+      //     Log::DEBUG, "WebLogHandler", "Call database to get the logs count");
       this->callDatabase(request, response, "GET", "/log/db/count");
     } catch (const std::runtime_error& error) {
       Log::getInstance().write(Log::WARNING, "WebLogHandler", error.what());
@@ -38,8 +38,8 @@ bool WebLogHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
   if (request.getTarget().getPath() == "/log/db/file") {
     try {
-      Log::getInstance().write(
-          Log::DEBUG, "WebLogHandler", "Call database to get the logs");
+      // Log::getInstance().write(
+      //     Log::DEBUG, "WebLogHandler", "Call database to get the logs");
       this->callDatabase(request, response, "GET", "/log/db/file");
     } catch (const std::runtime_error& error) {
       Log::getInstance().write(Log::WARNING, "WebLogHandler", error.what());
@@ -51,8 +51,8 @@ bool WebLogHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
   if (request.getTarget().getPath() == "/log/fs/count") {
     try {
-      Log::getInstance().write(Log::DEBUG, "WebLogHandler",
-          "Call file system to get the logs count");
+      // Log::getInstance().write(Log::DEBUG, "WebLogHandler",
+      //     "Call file system to get the logs count");
       this->callFileSystem(request, response, "GET", "/log/fs/count");
     } catch (const std::runtime_error& error) {
       Log::getInstance().write(Log::WARNING, "WebLogHandler", error.what());
@@ -64,8 +64,8 @@ bool WebLogHandler::canHandle(HttpRequest& request, HttpResponse& response) {
 
   if (request.getTarget().getPath() == "/log/fs/file") {
     try {
-      Log::getInstance().write(
-          Log::DEBUG, "WebLogHandler", "Call file system to get the logs");
+      // Log::getInstance().write(
+      //     Log::DEBUG, "WebLogHandler", "Call file system to get the logs");
       this->callFileSystem(request, response, "GET", "/log/fs/file");
     } catch (const std::runtime_error& error) {
       Log::getInstance().write(Log::WARNING, "WebLogHandler", error.what());

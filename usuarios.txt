@@ -10,3 +10,4 @@ AngelaChav	A123		Administrador
 CamilaSua	C123		Administrador
 MirandaLa	M123		Supervisor
 ElBichoCR7	E132		Gerente
+CrisHern C123     Auditor
