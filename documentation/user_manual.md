@@ -37,7 +37,6 @@ Antes de mostrar ejemplos de ejecución, es importante entender la funcionalidad
     "apps": [
         "web"
     ],
-    "port": 8080,
     "servers": {
         "web": {
             "address": "127.0.0.1",
@@ -86,7 +85,6 @@ Archivo [configuration_web](../test/configuration_web.json):
     "apps": [
         "web"
     ],
-    "port": 8080,
     "servers": {
         "web": {
             "address": "127.0.0.1",
