@@ -790,7 +790,12 @@ function openRequestForm(id) {
  * Back to page
  */
 function toBackPage() {
-  window.history.back();
+  if (window.location.pathname == "/index.html") {
+    window.location.href = window.location.href.replace("/index.html", "");
+  } else {
+    window.history.back();
+  }
+
 }
 
 function cancelar() {
