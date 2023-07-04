@@ -68,7 +68,7 @@ async function populateRequestContainer() {
         for (const requestKey in requests) {
             if (requests.hasOwnProperty(requestKey)) {
                 const request = requests[requestKey];
-                if (request.user != localStorage.getItem("username")) {
+                if (request.user != localStorage.getItem("username") && request.supState === 0) {
                     requestContainer.appendChild(
                         createSolicitudDiv(request.user, request.request_type, status[request.state], request.ID)
                     );
@@ -200,9 +200,11 @@ function approveQuery() {
     const request = JSON.parse(request_str);
 
     const fetchInfo = {
+
         request_id: request.ID,
-        state: 0,
-        feedback: "Solicitud aprobada por el supervisor del área" // TODO(future's david): change to dynamic feedback :*
+        state: 1,
+        feedback: "Solicitud aprobada por el supervisor del área",
+        supState: 1
     }
     fetch('/checkRequest', {
         method: 'POST',
@@ -210,6 +212,7 @@ function approveQuery() {
     }).then(response => {
         if (!response.ok) {
             alert("Ha ocurrido un error en la comunicación. Rediriguiendo a la página de consultas")
+            console.log(response.statusText);
         } else {
             alert("Solicitud APROBADA correctamente. Rediriguiendo a la página de consultas")
         }

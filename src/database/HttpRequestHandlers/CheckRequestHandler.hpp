@@ -16,30 +16,34 @@ class CheckRequestHandler : public DatabaseRequestHandler {
     if (request.getMethod() == "POST" && request.getTarget().getPath() 
       == "/checkRequest") {
       // fetch body from request
+      std::cout<< "A" << std::endl;
       std::string body = request.getBody();
       Json::Value requestBody;
       Json::Reader reader;
 
       // parse to json for easier manipulation
       bool parsed = reader.parse(body, requestBody);
-
+      std::cout<< "Body: " + body << std::endl;
       int statusCode;
       std::string responseBody;
 
       if (parsed) {
         try {
+          std::cout<< "C" << std::endl;
           // access json data
           int requestID = requestBody["request_id"].asInt();
           int state = requestBody["state"].asInt();
           std::string feedback = requestBody["feedback"].asString();
-
+          int supState = requestBody["supState"].asInt();
+          std::cout<< "Sup1: " + supState << std::endl;
           // check if id is valid
           bool idIsValid = this->databaseApi->idWasFound(requestID);
-
+          std::cout<< "D" << std::endl;
           if (idIsValid) {
+            std::cout<< "E" << std::endl;
             // add data to request database
             bool couldCheckRequest = this->databaseApi->checkRequest(requestID,
-            state, feedback);
+            state, supState, feedback);
 
             // check for errors while adding data
             statusCode = couldCheckRequest ? 200 : 400;

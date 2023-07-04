@@ -262,26 +262,27 @@ std::vector<std::vector<std::string>> DatabaseAPI::getRequestsMadeByArea(const s
   return result;
 }
 
-bool DatabaseAPI::checkRequest(const int requestID, const int state, const std::string feedback) const {
+bool DatabaseAPI::checkRequest(const int requestID, const int state,  const int supState, const std::string feedback) const {
   int error = SQLITE_OK;
-
   bool result = false;
-
   char* error_message;
 
-  std::string query = "UPDATE HRRequest SET State =";
+  std::string query = "UPDATE HRRequest SET State = ";
   query.append(std::to_string(state));
   query.append(", Feedback = '");
   query.append(feedback);
-  query.append("' where ID = ");
+  query.append("', SupState = ");
+  query.append(std::to_string(supState));
+  std::cout << supState << std::endl;
+  query.append(" WHERE ID = ");
   query.append(std::to_string(requestID));
   query.append(";");
 
-  error =
-    sqlite3_exec(this->database.reference, query.c_str(), nullptr, nullptr, &error_message);
+  error = sqlite3_exec(this->database.reference, query.c_str(),
+      nullptr, nullptr, &error_message);
 
   if (error != SQLITE_OK) {
-    std::cerr << error_message << "\n";
+    std::cerr << error_message << "PPP"<< "\n";
     sqlite3_free(error_message);
   } else {
     result = true;

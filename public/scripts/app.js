@@ -48,7 +48,7 @@ console.log(localStorage.getItem("permissions"));
   });
 
   if (!personalDataResponse.ok) {
-    alert("El area del usuario no pudo ser obtenida");
+    // alert("El area del usuario no pudo ser obtenida");
   } else {
     const userData = await personalDataResponse.json();
 

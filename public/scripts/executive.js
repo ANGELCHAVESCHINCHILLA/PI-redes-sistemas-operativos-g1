@@ -1,5 +1,5 @@
 const PAGE_PRINCIPAL = "/index.html";
-const PAGE_QUERIES = "/supervisory_queries";
+const PAGE_QUERIES = "/executive_queries";
 
 const send_annotation_btn = document.getElementById("send-annotation");
 const cancel_btn = document.getElementById("cancel");
@@ -51,7 +51,7 @@ function reloadRequests() {
 async function populateRequestContainer() {
     const status = ["APROBADO", "REVISION", "RECHAZADO"];
     //const area = localStorage.getItem('area');
-    const area = "Puntarenas"
+    const area = "Cartago"
     try {
         const response = await fetch(`/consultRequestsByArea?area=${area}`, {
             method: 'GET'
@@ -59,7 +59,7 @@ async function populateRequestContainer() {
 
         const responseText = await response.text();
         const requests = JSON.parse(responseText);
-
+        console.log(requests);
 
         const requestContainer = document.getElementById("request-container");
         while (requestContainer.firstChild) {
@@ -68,7 +68,7 @@ async function populateRequestContainer() {
         for (const requestKey in requests) {
             if (requests.hasOwnProperty(requestKey)) {
                 const request = requests[requestKey];
-                if (request.user != localStorage.getItem("username") && request.supstate === 1) {
+                if (request.user != localStorage.getItem("username") && request.supState === 1) {
                     requestContainer.appendChild(
                         createSolicitudDiv(request.user, request.request_type, status[request.state], request.ID)
                     );
@@ -202,7 +202,8 @@ function approveQuery() {
     const fetchInfo = {
         request_id: request.ID,
         state: 0,
-        feedback: "Solicitud aprobada por el supervisor del área" // TODO(future's david): change to dynamic feedback :*
+        feedback: "Solicitud aprobada por el Gerente del área",
+        supState: 2
     }
     fetch('/checkRequest', {
         method: 'POST',
@@ -226,7 +227,8 @@ function denyQuery() {
     const fetchInfo = {
         request_id: request.ID,
         state: 2,
-        feedback: "Solicitud denegada por el supervisor del área"
+        feedback: "Solicitud denegada por el Gerente del área",
+        supState: 2
     }
     fetch('/checkRequest', {
         method: 'POST',
@@ -275,7 +277,7 @@ function createAcceptDenyPage(title, content, request) {
           Sistema de Gestión de Recursos Humanos
         </footer>
       </div>
-      <script src=".././scripts/supervisory.js"></script>
+      <script src=".././scripts/executive.js"></script>
     </body>
   </html>
   `);
