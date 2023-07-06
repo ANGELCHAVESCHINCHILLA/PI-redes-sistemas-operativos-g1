@@ -632,7 +632,6 @@ async function makeRequest(form, reqType, page) {
     user: formJson.user,
     request_type: reqType,
     information: formJson.information,
-    // TODO: get area from local storage, this below is just a dummy value
     area: localStorage.getItem('area'),
     vacation_days: formJson.vacationDays
       ? +formJson.vacationDays.replaceAll("-", "")

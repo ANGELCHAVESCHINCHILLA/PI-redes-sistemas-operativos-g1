@@ -63,7 +63,8 @@ bool QueryHandler::canHandle(HttpRequest& request, HttpResponse& response) {
     }
   }
   if (request.getMethod() == "POST") {
-    if (request.getTarget().getPath().find("Request") != std::string::npos) {
+    if (request.getTarget().getPath().find("Request") != std::string::npos ||
+      request.getTarget().getPath().find("make") != std::string::npos) {
       try {
         return this->callBDToGetQuery(request, response, "POST");
       } catch (const std::runtime_error& error) {

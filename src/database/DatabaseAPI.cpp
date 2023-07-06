@@ -352,3 +352,26 @@ bool DatabaseAPI::idWasFound(const int id) const {
   
   return result;
 }
+
+bool DatabaseAPI::makeAnnotation(const std::string user, const std::string information) const {
+  int error = SQLITE_OK;
+
+  bool result = false;
+
+  Annotation::Builder builder = Annotation::Builder();
+
+  builder.setUser(user);
+  builder.setInformation(information);
+
+  Annotation annotation = builder.build();
+
+  error = this->database.addAnnotation(annotation);
+
+  if (!error) {
+    result = true;
+  } else {
+    std::cerr << "could not add row to Annotation database" << std::endl;
+  }
+  
+  return result;
+}
