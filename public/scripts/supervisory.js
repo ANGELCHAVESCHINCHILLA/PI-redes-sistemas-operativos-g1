@@ -50,7 +50,7 @@ async function sendAnnotation(username, annotation) {
         information: annotation
     }
 
-    fetch("makeAnnotation", {
+    fetch("/makeAnnotation", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

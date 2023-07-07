@@ -34,7 +34,6 @@ class MakeAnnotationHandler : public DatabaseRequestHandler {
 
           // add data to annotation database
           bool couldMakeAnnotation = this->databaseApi->makeAnnotation(user, information);
-
           // check for errors while adding data
           statusCode = couldMakeAnnotation ? 200 : 400;
           responseBody = couldMakeAnnotation ? POST_SUCCESS : POST_FAIL;

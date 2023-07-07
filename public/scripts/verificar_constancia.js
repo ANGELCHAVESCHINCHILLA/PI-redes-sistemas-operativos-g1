@@ -10,31 +10,27 @@ async function buscarConstancia() {
         method: 'GET',
     }).then(async response => {
         console.log("Status: " + response.status)
-        if (response.status == 200) {
+         if (response.status === 200) {
+             const newWindow = window.open('');
+             const pageHTML = await formatResponseInfo(await response.json());
 
-            const newWindow = window.open('');
-            const pageHTML = await formatResponseInfo(await response.json());
+             const divContainer = newWindow.document.createElement('div');
+             divContainer.classList.add('constancy_container');
+             const textContainer = newWindow.document.createElement('p');
 
-            const divContainer = newWindow.document.createElement('div');
-            divContainer.classList.add('constancy_container');
-            divContainer.style.display = 'flex';
-            divContainer.style.justifyContent = 'center';
-            divContainer.style.alignItems = 'center';
+             const styleLink = newWindow.document.createElement('link');
+             styleLink.rel = 'stylesheet';
+             styleLink.href = '.././styles/verificar_constancia.css';
 
-            const styleLink = newWindow.document.createElement('link');
-            styleLink.rel = 'stylesheet';
-            styleLink.href = '.././styles/styles.css';
+             textContainer.innerHTML = pageHTML;
 
-            const contentDiv = newWindow.document.createElement('div');
-            contentDiv.innerHTML = pageHTML;
-
-            divContainer.appendChild(contentDiv);
-            newWindow.document.head.appendChild(styleLink);
-            newWindow.document.body.appendChild(divContainer);
-        } else {
-            const errorText = await response.text();
-            document.write(errorText);
-        }
+             divContainer.appendChild(textContainer);
+             newWindow.document.head.appendChild(styleLink);
+             newWindow.document.body.appendChild(divContainer);
+         } else {
+             const errorText = await response.text();
+             document.write(errorText);
+         }
     }).catch(error => {
         console.log(error);
     })

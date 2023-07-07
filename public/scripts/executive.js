@@ -8,23 +8,19 @@ const reload_request_btn = document.getElementById("reload-requests");
 const approve_query_btn = document.getElementById("approve-query-btn");
 const deny_btn = document.getElementById("deny-btn");
 
-if (send_annotation_btn) {
-    send_annotation_btn.addEventListener("submit", function (event) {
-        // event.preventDefault();
+send_annotation_btn?.addEventListener("click", function (event) {
+    event.preventDefault();
 
-        // Obtener los valores de los campos
-        const username = document.getElementById("username").value;
-        const annotation = document.getElementById("annotation").value;
+    // Obtener los valores de los campos
+    const username = document.getElementById("username").value;
+    const annotation = document.getElementById("annotation").value;
 
-        if (username && annotation) {
-            // TODO(future's david): when DB has a function to add an annotation, finish this :*
-            alert("Enviado!")
-        }
-        document.getElementById("username").value = "";
-        document.getElementById("anotacion").value = "";
-    });
-
-}
+    if (username && annotation) {
+        sendAnnotation(username, annotation);
+    }
+    document.getElementById("username").value = "";
+    document.getElementById("annotation").value = "";
+});
 
 if (cancel_btn) {
     cancel_btn.addEventListener("click", function (event) {
@@ -306,5 +302,30 @@ function formatDate(numDate) {
     const dateFormat = `${daysFormat}-${montFormat}-${yearFormat}`;
 
     return dateFormat
+}
+async function sendAnnotation(username, annotation) {
+    const body = {
+        user: username,
+        information: annotation
+    }
+
+    fetch("makeAnnotation", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+    })
+        .then(function (response) {
+            if (!response.ok) {
+                alert("Ha ocurrido un error en la comunicación. Rediriguiendo a la página principal");
+                console.log(response.statusText);
+                window.location.href = PAGE_PRINCIPAL;
+            } else {
+                alert("Anotacion creada correctamente!")
+            }
+        }).catch((error) => {
+        alert(error);
+    })
 }
 
