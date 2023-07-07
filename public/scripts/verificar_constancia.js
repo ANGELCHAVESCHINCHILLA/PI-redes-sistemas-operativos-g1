@@ -13,7 +13,7 @@ async function buscarConstancia() {
         if (response.status == 200) {
 
             const newWindow = window.open('');
-            const pageHTML = formatResponseInfo(await response.json());
+            const pageHTML = await formatResponseInfo(await response.json());
 
             const divContainer = newWindow.document.createElement('div');
             divContainer.classList.add('constancy_container');
@@ -52,21 +52,26 @@ function parseState(stateNumber) {
     return stateSt;
 }
 
-function formatResponseInfo(responseJSON) {
+async function formatResponseInfo(responseJSON) {
     console.log(responseJSON);
     const stateNumber = responseJSON.state;
     const stateStr = parseState(stateNumber);
     let userInfo;
     const url = `/data/personal_data?user=${responseJSON.user}`;
-    userInfo = fetch(url, {
-        method: 'GET',
-    }).then(async response => {
-        let text = await response.text();
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+        });
+        const text = await response.text();
         console.log(text);
-        return JSON.parse(text);
-    })
+        const json = JSON.parse(text);
+        userInfo = json;
+    } catch (error) {
+        console.error('Error fetching personal data:', error);
+        userInfo = null;
+    }
     console.log(userInfo);
-    let text =
+    const text =
         `San José, Costa Rica <br>San Pedro, 7001<br><br>
     CONSTANCIA <br>
     <br>
@@ -78,7 +83,7 @@ function formatResponseInfo(responseJSON) {
     <br>
     Para la constancia o solicitud de tipo: <strong> ${responseJSON.request_type}</strong>, se encuentra en categoría de
     <strong> ${stateStr} </strong>.Las labores y responsabilidades desempeñadas por ${userInfo.employee_name} incluyeron las actividades típicas
-    del puesto:  Empleado.  <br> Dicha solicitud, en caso de ser aprobada o denegada, recibió la retroalimentación por parte de altos
+    del puesto:  ${userInfo.job_name}.  <br> Dicha solicitud, en caso de ser aprobada o denegada, recibió la retroalimentación por parte de altos
     cargos, a continuación presente:   " ${responseJSON.feedback} ".<br>
     A lo largo de su tiempo en nuestra institución/empresa, el titular se mostró como un colaborador dedicado y comprometido,
     aportando de manera significativa a nuestro equipo y a nuestros objetivos organizacionales.Sin embargo pedimos comprensión hacia el estado o retroalimentación recibida <br>
@@ -89,8 +94,9 @@ function formatResponseInfo(responseJSON) {
         Atentamente,<br>
         <br>
         Altos cargos de la jefatura. <br>
-        ID: ${responseJSON.ID}
-    `
+        ID: ${responseJSON.ID}<br>
+        Fecha y hora local: ${new Date()}
+    `;
     return text;
 }
 
