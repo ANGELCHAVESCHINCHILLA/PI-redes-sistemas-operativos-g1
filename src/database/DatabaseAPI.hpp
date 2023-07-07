@@ -79,7 +79,9 @@ class DatabaseAPI {
    * @return true if the inserting of the row was successfull
    * @return false if it wasn't possible to insert the row
    */
-  bool makeRequest(const std::string user, const std::string requestType, const std::string information, const std::string area, const int vacationDays = 0, const int vacationStartDate = 0, const int vacationEndDate = 0) const;
+  bool makeRequest(const std::string user, const std::string requestType, 
+    const std::string information, const std::string area, const int vacationDays = 0,
+    const int vacationStartDate = 0, const int vacationEndDate = 0) const;
 
   /**
    * @brief Get the Requests Made in a certain Area
@@ -116,6 +118,16 @@ class DatabaseAPI {
    * @return false if it wasn't found
    */
   bool idWasFound(const int id) const;
+
+  /**
+   * @brief it makes an annotation, creating a new row in the Annotation table
+   * 
+   * @param user the user whose annotation is made
+   * @param information the information associated to that annotation
+   * @return true if the inserting of the row was successfull
+   * @return false if it wasn't possible to insert the row
+   */
+  bool makeAnnotation(const std::string user, const std::string information) const;
 };
 
 #endif  // DATABASE_API_HPP_

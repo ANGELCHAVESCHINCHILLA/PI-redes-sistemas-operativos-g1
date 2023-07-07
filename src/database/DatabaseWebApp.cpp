@@ -12,6 +12,7 @@
 #include "HttpRequestHandlers/JobDataHandler.hpp"
 #include "HttpRequestHandlers/PersonalDataHandler.hpp"
 #include "HttpRequestHandlers/DatabaseLogHandler.hpp"
+#include "HttpRequestHandlers/MakeAnnotationHandler.hpp"
 
 DatabaseWebApp::DatabaseWebApp() {
   this->databaseApi = new DatabaseAPI();
@@ -34,6 +35,7 @@ void DatabaseWebApp::initHandlers() {
   this->requestHandlers.push_back(new JobDataHandler(this->databaseApi));
   this->requestHandlers.push_back(new PersonalDataHandler(this->databaseApi));
   this->requestHandlers.push_back(new DatabaseLogHandler(this->databaseApi));
+  this->requestHandlers.push_back(new MakeAnnotationHandler(this->databaseApi));
 }
 
 bool DatabaseWebApp::start() {
